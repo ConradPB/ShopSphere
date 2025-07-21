@@ -1,2 +1,2 @@
 # AI-Powered-E-Commerce-Platform(ShopSphere)
-The AI-Powered E-Commerce Platform is an innovative online marketplace that leverages artificial intelligence to enhance the shopping experience.
+ShopSphere AI is a cutting-edge e-commerce platform that redefines online shopping through advanced artificial intelligence. Powered by multimodal AI, it delivers hyper-personalized product recommendations, dynamic image generation, real-time visual search, and intelligent chatbot support. 
