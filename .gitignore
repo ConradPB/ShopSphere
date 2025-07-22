@@ -1,0 +1,29 @@
+# Node.js/Yarn/pnpm
+node_modules/
+.pnpm-store/
+package-lock.json
+# Only ignore lockfiles at root, not in client/server
+/yarn.lock
+/pnpm-lock.yaml
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.production
+
+# Build outputs
+client/.next/
+server/dist/
+*.log
+
+# Vercel
+.vercel/
+
+# Testing
+coverage/
+
+# Editor/IDE
+.vscode/
+.idea/
+.DS_Store
