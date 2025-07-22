@@ -1,12 +1,14 @@
 {
-  "name": "ShopSphere",
+  "name": "shopsphere",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "client:dev": "cd client && yarn dev",
+    "server:dev": "cd server && pnpm start",
+    "test": "pnpm run test --filter=server && yarn test --prefix client",
+    "install-all": "pnpm install --filter=server && yarn install --cwd client"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "devDependencies": {
+    "pnpm": "^8.0.0"
+  }
 }
