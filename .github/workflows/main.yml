@@ -1,0 +1,28 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+      - name: Install backend dependencies
+        run: pnpm install
+        working-directory: ./server
+      - name: Run backend tests
+        run: pnpm test
+        working-directory: ./server
+      - name: Install frontend dependencies
+        run: yarn install
+        working-directory: ./client
+      - name: Run frontend tests
+        run: yarn test
+        working-directory: ./client
+      - name: Run Playwright tests
+        run: yarn playwright test
+        working-directory: ./client
