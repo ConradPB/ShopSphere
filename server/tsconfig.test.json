@@ -1,9 +1,19 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "types": ["jest", "node"],
+    "types": [
+      "jest",
+      "node"
+    ],
     "rootDir": ".",
     "noEmit": true
   },
-  "include": ["tests/**/*", "jest.config.ts"]
+  "include": [
+    "tests/**/*",
+    "jest.config.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }
