@@ -1,7 +1,5 @@
 import request from "supertest";
 import app from "../src/app";
-
-// If using TypeScript, add the following for Jest types:
 import { describe, beforeAll, afterAll, it, expect } from "@jest/globals";
 
 describe("Health Endpoint", () => {
