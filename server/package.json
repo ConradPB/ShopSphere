@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@fastify/type-provider-typebox": "^5.2.0",
+    "@sinclair/typebox": "^0.34.38",
     "@supabase/supabase-js": "^2.52.0",
     "fastify": "^5.4.0"
   },
