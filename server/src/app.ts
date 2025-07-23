@@ -1,6 +1,5 @@
 import Fastify from "fastify";
 import { TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
-import { Type } from "@sinclair/typebox";
 import healthRoutes from "./routes/health";
 
 const app = Fastify({ logger: true }).withTypeProvider<TypeBoxTypeProvider>();
