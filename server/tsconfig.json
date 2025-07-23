@@ -7,7 +7,11 @@
         "strictNullChecks": true,
         "esModuleInterop": true,
         "outDir": "./dist",
-        "rootDir": "./src"
+        "rootDir": "./src",
+        "types": [
+            "jest",
+            "node"
+        ]
     },
     "exclude": [
         "node_modules",
