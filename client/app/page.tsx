@@ -56,7 +56,7 @@ const Home: FC = async () => {
                 <p className="text-gray-600">\$${product.price.toFixed(2)}</p>
               </div>
             ))}
-          </div
+          </div>
         </div>
       </section>
     </div>
