@@ -29,7 +29,13 @@ const Home: FC = async () => {
         </div>
       </section>
       {/* Product Highlights */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8"></section>
+      <section className="py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-8">
+            Featured Products
+          </h2>
+        </div>
+      </section>
     </div>
   );
 };
