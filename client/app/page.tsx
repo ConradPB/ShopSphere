@@ -34,6 +34,22 @@ const Home: FC = async () => {
           <h2 className="text-3xl font-bold text-center mb-8">
             Featured Products
           </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {((products as Product[]) || []).map((product) => (
+              <div
+                key={product.id}
+                className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition"
+              >
+                <img
+                  src={product.image_url}
+                  alt={product.name}
+                  className="h-48 w-full object-cover rounded-md mb-4"
+                />
+                <h3 className="text-lg font-semibold">{product.name}</h3>
+                <p className="text-gray-600">\$${product.price.toFixed(2)}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
     </div>
