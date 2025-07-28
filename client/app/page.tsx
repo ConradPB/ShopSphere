@@ -21,6 +21,26 @@ const Home: FC = () => {
         </div>
       </section>
       {/* Product Highlights */}
+      <section className="py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-8">
+            Featured Products
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Placeholder for product cards */}
+            {[1, 2, 3, 4].map((item) => (
+              <div
+                key={item}
+                className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition"
+              >
+                <div className="h-48 bg-gray-200 rounded-md mb-4"></div>
+                <h3 className="text-lg font-semibold">Product {item}</h3>
+                <p className="text-gray-600">.99</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 };
