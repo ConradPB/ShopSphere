@@ -1,42 +1,36 @@
 {
-  "name": "client",
-  "version": "0.1.0",
+  "name": "shopsphere-client",
+  "version": "1.0.0",
+  "type": "module",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "test": "jest",
+    "lint": "eslint ."
   },
   "dependencies": {
-    "next": "^15.4.3",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "next": "latest",
+    "react": "^18",
+    "react-dom": "^18",
+    "@supabase/supabase-js": "latest"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
-    "@eslint/js": "^9.32.0",
-    "@playwright/test": "^1.54.1",
-    "@supabase/supabase-js": "^2.53.0",
-    "@tailwindcss/postcss": "^4",
-    "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^16.3.0",
-    "@types/node": "^24.1.0",
-    "@types/react": "18",
-    "@types/react-dom": "18",
-    "autoprefixer": "10.4.15",
-    "axios": "^1.11.0",
-    "eslint": "9.32.0",
-    "eslint-config-next": "^15.4.3",
-    "eslint-plugin-next": "^0.0.0",
-    "eslint-plugin-react": "^7.37.5",
-    "globals": "^16.3.0",
-    "jest": "^30.0.5",
-    "postcss": "8.4.31",
-    "tailwindcss": "3.4.3",
-    "typescript": "^5.8.3",
-    "typescript-eslint": "^8.38.0"
-  },
-  "main": "index.js",
-  "license": "MIT"
+    "typescript": "^5",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "@types/node": "^20",
+    "eslint": "^9.32.0",
+    "eslint-plugin-next": "latest",
+    "eslint-plugin-react": "latest",
+    "@eslint/js": "latest",
+    "tailwindcss": "^3.4.3",
+    "postcss": "^8.4.31",
+    "autoprefixer": "^10.4.15",
+    "jest": "latest",
+    "@testing-library/react": "latest",
+    "@testing-library/jest-dom": "latest",
+    "@playwright/test": "latest"
+  }
 }
