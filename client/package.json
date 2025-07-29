@@ -11,26 +11,27 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@supabase/supabase-js": "latest",
     "next": "latest",
     "react": "^18",
-    "react-dom": "^18",
-    "@supabase/supabase-js": "latest"
+    "react-dom": "^18"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@eslint/js": "latest",
+    "@playwright/test": "latest",
+    "@testing-library/jest-dom": "latest",
+    "@testing-library/react": "latest",
+    "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "@types/node": "^20",
+    "autoprefixer": "^10.4.15",
     "eslint": "^9.32.0",
     "eslint-plugin-next": "latest",
     "eslint-plugin-react": "latest",
-    "@eslint/js": "latest",
-    "tailwindcss": "^3.4.3",
-    "postcss": "^8.4.31",
-    "autoprefixer": "^10.4.15",
     "jest": "latest",
-    "@testing-library/react": "latest",
-    "@testing-library/jest-dom": "latest",
-    "@playwright/test": "latest"
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.4.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5"
   }
 }
