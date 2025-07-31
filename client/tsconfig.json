@@ -27,13 +27,19 @@
       "@/*": [
         "./*"
       ]
-    }
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
-    "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "run-test-supabase.cjs"
+    "next-env.d.ts",
+    "run-test-supabase.cjs",
+    ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"
