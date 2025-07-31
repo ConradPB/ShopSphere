@@ -1,1 +1,1 @@
-import "./lib/test-supabase";
+import './lib/test-supabase';
