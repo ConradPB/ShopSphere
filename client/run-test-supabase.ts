@@ -1,7 +1,7 @@
-require('ts-node').register({
-  project: './tsconfig.json',
+require("ts-node").register({
+  project: "./tsconfig.json",
   esm: true,
   transpileOnly: true,
 });
-require('tsconfig-paths/register');
-require('./lib/test-supabase.ts');
+require("tsconfig-paths/register");
+import "./lib/test-supabase.js";
