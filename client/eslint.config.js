@@ -25,7 +25,7 @@ export default [
         node: true,
         React: 'writable', // For React imports
         console: 'readonly', // For console.log
-        process: 'readonly', // For process.env
+        process: 'readonly', // 
       },
     },
     rules: {
