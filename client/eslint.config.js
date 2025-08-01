@@ -21,7 +21,7 @@ export default [
       sourceType: 'module',
       globals: {
         browser: true,
-        
+        es2020: true,
         node: true,
         React: 'writable', // For React imports
         console: 'readonly', // For console.log
