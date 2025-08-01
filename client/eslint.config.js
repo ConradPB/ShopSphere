@@ -9,6 +9,7 @@ export default [
   eslint.configs.recommended,
   {
     files: ['**/*.ts', '**/*.tsx'],
+    ignores: ['.next/**', 'node_modules/**'], // Exclude .next/ and node_modules/
     plugins: {
       '@typescript-eslint': tseslint,
       '@next/next': nextPlugin,
@@ -22,11 +23,14 @@ export default [
         browser: true,
         es2020: true,
         node: true,
+        React: 'writable', // For React imports
+        console: 'readonly', // For console.log
+        process: 'readonly', // For process.env
       },
     },
     rules: {
-      'react/react-in-jsx-scope': 'off',
-      'react/prop-types': 'off',
+      'react/react-in-jsx-scope': 'off', // React 17+ doesn't need import React
+      'react/prop-types': 'off', // TypeScript handles prop types
       '@typescript-eslint/no-unused-vars': ['warn', { varsIgnorePattern: '^_' }],
       '@next/next/no-html-link-for-pages': 'error',
       '@next/next/no-sync-scripts': 'error',
