@@ -38,23 +38,24 @@ export default [
         version: 'detect', // Auto-detect React version
       },
     },
-    rules: {
-      // React rules
-      'react/react-in-jsx-scope': 'off', // Not needed with React 17+
-      'react/prop-types': 'off', // TypeScript handles prop types
-      // TypeScript rules
-      '@typescript-eslint/no-unused-vars': ['warn', { varsIgnorePattern: '^_' }],
-      // Next.js rules
-      '@next/next/no-html-link-for-pages': 'error',
-      '@next/next/no-sync-scripts': 'error',
-      '@next/next/google-font-display': 'off', // Disabled temporarily
-      '@next/next/no-img-element': 'warn', // Allow <img> for now
-      // React Hooks rules
-      'react-hooks/rules-of-hooks': 'error',
-      'react-hooks/exhaustive-deps': 'warn',
-      // Include all recommended Next.js rules
-      ...nextPlugin.configs.recommended.rules,
-      ...nextPlugin.configs['core-web-vitals'].rules,
-    },
+    rules: Object.assign(
+      {
+        // React rules
+        'react/react-in-jsx-scope': 'off', // Not needed with React 17+
+        'react/prop-types': 'off', // TypeScript handles prop types
+        // TypeScript rules
+        '@typescript-eslint/no-unused-vars': ['warn', { varsIgnorePattern: '^_' }],
+        // Next.js rules
+        '@next/next/no-html-link-for-pages': 'error',
+        '@next/next/no-sync-scripts': 'error',
+        '@next/next/google-font-display': 'off', // Disabled temporarily
+        '@next/next/no-img-element': 'warn', // Allow <img> for now
+        // React Hooks rules
+        'react-hooks/rules-of-hooks': 'error',
+        'react-hooks/exhaustive-deps': 'warn',
+      },
+      nextPlugin.configs.recommended.rules,
+      nextPlugin.configs['core-web-vitals'].rules
+    ),
   },
 ];
