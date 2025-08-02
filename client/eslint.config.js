@@ -5,18 +5,14 @@ import hooksPlugin from 'eslint-plugin-react-hooks';
 import nextPlugin from '@next/eslint-plugin-next';
 
 export default [
-  // Base ESLint recommended rules
   eslint.configs.recommended,
-  // TypeScript recommended rules
   ...tseslint.configs.recommended,
-  // React recommended rules
   reactPlugin.configs.flat.recommended,
-  // Custom configuration for TypeScript and Next.js files
   {
     files: ['**/*.ts', '**/*.tsx'],
     ignores: ['.next/**', 'node_modules/**'],
     plugins: {
-      // Remove "@typescript-eslint" since it's already provided
+      '@typescript-eslint': tseslint,
       'react': reactPlugin,
       'react-hooks': hooksPlugin,
       '@next/next': nextPlugin,
@@ -28,31 +24,26 @@ export default [
         browser: true,
         es2020: true,
         node: true,
-        React: 'writable', // Avoid 'React is not defined'
-        console: 'readonly', // Avoid 'console is not defined'
-        process: 'readonly', // Avoid 'process is not defined'
+        React: 'writable',
+        console: 'readonly',
+        process: 'readonly',
       },
     },
     settings: {
       react: {
-        version: 'detect', // Auto-detect React version
+        version: 'detect',
       },
     },
     rules: {
-      // React rules
-      'react/react-in-jsx-scope': 'off', // Not needed with React 17+
-      'react/prop-types': 'off', // TypeScript handles prop types
-      // TypeScript rules
+      'react/react-in-jsx-scope': 'off',
+      'react/prop-types': 'off',
       '@typescript-eslint/no-unused-vars': ['warn', { varsIgnorePattern: '^_' }],
-      // Next.js rules
       '@next/next/no-html-link-for-pages': 'error',
       '@next/next/no-sync-scripts': 'error',
-      '@next/next/google-font-display': 'off', // Disabled temporarily
-      '@next/next/no-img-element': 'warn', // Allow <img> for now
-      // React Hooks rules
+      '@next/next/google-font-display': 'off',
+      '@next/next/no-img-element': 'warn',
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
-      // Include all recommended Next.js rules
       ...nextPlugin.configs.recommended.rules,
       ...nextPlugin.configs['core-web-vitals'].rules,
     },
