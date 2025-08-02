@@ -29,5 +29,21 @@ export default [
       'react-hooks/exhaustive-deps': 'warn',
     },
   },
+  // Next.js configuration
+  {
+    files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
+    plugins: {
+      '@next/next': nextPlugin,
+    },
+    rules: {
+      ...nextPlugin.configs.recommended.rules,
+      ...nextPlugin.configs['core-web-vitals'].rules,
+      '@next/next/no-html-link-for-pages': 'error',
+      '@next/next/no-sync-scripts': 'error',
+      '@next/next/google-font-display': 'off', // Disabled until fonts confirmed
+      '@next/next/no-img-element': 'off', // Temporarily disabled
+    },
+  },
+  // Custom TypeScript configuration
  
 ];
