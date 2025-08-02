@@ -1,15 +1,12 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import type { FC } from "react";
+import type { FC } from 'react';
+import { Roboto } from 'next/font/google';
+import './globals.css';
 
-export const metadata: Metadata = {
-  title: "ShopSphere",
-  description: "A stunning e-commerce platform",
-};
+const roboto = Roboto({ subsets: ['latin'], display: 'swap' });
 
 const RootLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <html lang="en">
+    <html lang="en" className={roboto.className}>
       <body>{children}</body>
     </html>
   );
