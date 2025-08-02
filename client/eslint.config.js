@@ -7,14 +7,14 @@ import nextPlugin from '@next/eslint-plugin-next';
 export default [
   // Base ESLint recommended rules
   eslint.configs.recommended,
-  // TypeScript recommended rules (includes @typescript-eslint plugin)
+  // TypeScript recommended rules
   ...tseslint.configs.recommended,
   // React recommended rules
   reactPlugin.configs.flat.recommended,
-  // Custom configuration for TypeScript and Next.js files
+  // Next.js recommended rules
   {
     files: ['**/*.ts', '**/*.tsx'],
-    ignores: ['.next/**', 'node_modules/**'],
+    ignores: ['.next/**', 'node_modules/**', 'dist/**', 'build/**'],
     plugins: {
       'react': reactPlugin,
       'react-hooks': hooksPlugin,
@@ -46,12 +46,12 @@ export default [
       // Next.js rules
       '@next/next/no-html-link-for-pages': 'error',
       '@next/next/no-sync-scripts': 'error',
-      '@next/next/google-font-display': 'off', // Disabled temporarily
+      '@next/next/google-font-display': 'off', // Disabled until fonts confirmed
       '@next/next/no-img-element': 'warn', // Allow <img> for now
       // React Hooks rules
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
-      // Include all recommended Next.js rules
+      // Include all Next.js recommended rules
       ...nextPlugin.configs.recommended.rules,
       ...nextPlugin.configs['core-web-vitals'].rules,
     },
