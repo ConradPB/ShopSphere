@@ -1,21 +1,35 @@
-import type { FC } from "react";
-import Image from "next/image";
-import { supabase } from "@/lib/supabase";
+import type { FC } from 'react';
+import Image from 'next/image';
+import { supabase } from '@/lib/supabase';
 
 interface Product {
   id: number;
   name: string;
   price: number;
-  image_url: string;
+  image_url: string | null; // Allow null for safety
+  category?: string;
 }
+
+// Fallback image URL (use a valid placeholder, e.g., from Unsplash or local asset)
+const FALLBACK_IMAGE = 'https://via.placeholder.com/300x192';
+
+const isValidUrl = (url: string | null): boolean => {
+  if (!url) return false;
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+};
 
 const Home: FC = async () => {
   try {
     const { data: products, error } = await supabase
-      .from("products")
-      .select("*");
+      .from('products')
+      .select('*');
 
-    console.log("Supabase Response:", { products, error });
+    console.log('Supabase Response:', { products, error });
 
     if (error) {
       return (
@@ -41,9 +55,7 @@ const Home: FC = async () => {
               <h2 className="text-3xl font-bold text-center mb-8">
                 Featured Products
               </h2>
-              <p className="text-center text-red-600">
-                Error loading products: {error.message}
-              </p>
+              <p className="text-center text-red-600">Error loading products: {error.message}</p>
             </div>
           </section>
         </div>
@@ -111,14 +123,14 @@ const Home: FC = async () => {
                   className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition"
                 >
                   <Image
-                    src={product.image_url}
-                    alt={product.name}
+                    src={isValidUrl(product.image_url) ? product.image_url : FALLBACK_IMAGE}
+                    alt={product.name || 'Product image'}
                     width={300}
                     height={192}
                     className="w-full object-cover rounded-md mb-4"
                   />
-                  <h3 className="text-lg font-semibold">{product.name}</h3>
-                  <p className="text-gray-600">\${product.price.toFixed(2)}</p>
+                  <h3 className="text-lg font-semibold">{product.name || 'Unnamed Product'}</h3>
+                  <p className="text-gray-600">${(product.price || 0).toFixed(2)}</p>
                 </div>
               ))}
             </div>
@@ -127,7 +139,7 @@ const Home: FC = async () => {
       </div>
     );
   } catch (e) {
-    console.error("Unexpected error:", e);
+    console.error('Unexpected error:', e);
     return (
       <div className="min-h-screen bg-gray-100">
         <section className="bg-blue-600 text-white py-20 px-4 sm:px-6 lg:px-8">
@@ -151,9 +163,7 @@ const Home: FC = async () => {
             <h2 className="text-3xl font-bold text-center mb-8">
               Featured Products
             </h2>
-            <p className="text-center text-red-600">
-              Unexpected error loading products
-            </p>
+            <p className="text-center text-red-600">Unexpected error loading products</p>
           </div>
         </section>
       </div>
