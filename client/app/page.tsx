@@ -6,22 +6,11 @@ interface Product {
   id: number;
   name: string;
   price: number;
-  image_url: string | null; // Allow null for safety
+  image_url: string | null;
   category?: string;
 }
 
-// Fallback image URL (use a valid placeholder, e.g., from Unsplash or local asset)
 const FALLBACK_IMAGE = 'https://via.placeholder.com/300x192';
-
-const isValidUrl = (url: string | null): boolean => {
-  if (!url) return false;
-  try {
-    new URL(url);
-    return true;
-  } catch {
-    return false;
-  }
-};
 
 const Home: FC = async () => {
   try {
@@ -123,8 +112,8 @@ const Home: FC = async () => {
                   className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition"
                 >
                   <Image
-                    src={isValidUrl(product.image_url) ? product.image_url : FALLBACK_IMAGE}
-                    alt={product.name || 'Product image'}
+                    src={product.image_url ?? FALLBACK_IMAGE} // Ensure src is string
+                    alt={product.name || 'Unnamed Product'}
                     width={300}
                     height={192}
                     className="w-full object-cover rounded-md mb-4"
