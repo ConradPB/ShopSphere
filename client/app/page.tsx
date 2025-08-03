@@ -2,7 +2,7 @@ import type { FC } from "react";
 import Image from "next/image";
 import { supabase } from "@/lib/supabase";
 
-interface Product 
+interface Product {
   id: number;
   name: string;
   price: number;
