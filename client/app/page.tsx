@@ -1,6 +1,6 @@
 import type { FC } from "react";
 import Image from "next/image";
-import { supabase } from "../lib/supabase";
+import { supabase } from "../lib/";
 
 interface Product {
   id: number;
