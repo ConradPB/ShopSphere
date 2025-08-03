@@ -36,7 +36,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var supabase_1 = require("./supabase");
+var supabase_js_1 = require("@supabase/supabase-js");
+var supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+var supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+if (!supabaseUrl || !supabaseKey) {
+    throw new Error('Missing Supabase environment variables');
+}
+var supabase = (0, supabase_js_1.createClient)(supabaseUrl, supabaseKey);
 function testSupabase() {
     return __awaiter(this, void 0, void 0, function () {
         var _a, products, error, e_1;
@@ -44,20 +50,20 @@ function testSupabase() {
             switch (_b.label) {
                 case 0:
                     _b.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, supabase_1.supabase
-                            .from("products")
-                            .select("*")];
+                    return [4 /*yield*/, supabase
+                            .from('products')
+                            .select('*')];
                 case 1:
                     _a = _b.sent(), products = _a.data, error = _a.error;
                     if (error) {
-                        console.error("Supabase Error:", error.message);
+                        console.error('Supabase Error:', error.message);
                         return [2 /*return*/];
                     }
-                    console.log("Products:", products);
+                    console.log('Products:', products);
                     return [3 /*break*/, 3];
                 case 2:
                     e_1 = _b.sent();
-                    console.error("Unexpected Error:", e_1);
+                    console.error('Unexpected Error:', e_1);
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
