@@ -6,7 +6,7 @@ const roboto = Roboto({ subsets: ["latin"], display: "swap" });
 
 const RootLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <html lang="en" clasName={roboto.className}>
+    <html lang="en" className={roboto.className}>
       <body>{children}</body>
     </html>
   );
