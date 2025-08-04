@@ -7,7 +7,7 @@ interface Product {
   name: string;
   price: number;
   image_url: string | null;
-  category?: string;
+  category?: strin;
 }
 
 const FALLBACK_IMAGE = "https://via.placeholder.com/300x192";
