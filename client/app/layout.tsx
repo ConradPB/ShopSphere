@@ -2,7 +2,7 @@ import type { FC } from "react";
 import { Roboto } from "next/font/google";
 import "./globals.css";
 
-const roboto = Roboto({ subsets: ["latin"], display: "swap" });
+const roboto = Roboto({ subsets: ["latin"], display: "ap" });
 
 const RootLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
