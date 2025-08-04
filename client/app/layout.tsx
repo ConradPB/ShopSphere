@@ -8,7 +8,7 @@ const RootLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <html lang="en" className={roboto.className}>
       <body>{children}</body>
-    </html
+    </html>
   );
 };
 
