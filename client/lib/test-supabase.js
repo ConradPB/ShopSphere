@@ -44,7 +44,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 // Object.defineProperty(exports, "__esModule", { value: true });
 import { createClient } from "@supabase/supabase-js";
 // Provide a fallback for console if not defined (for restricted environments)
-if (typeof console === "undefined") {
+if (typeof globalThis.console === "undefined") {
     globalThis.console = { log: function () {}, error: function () {} };
 }
 // Replace the following with your actual Supabase credentials or import them from a config file
@@ -67,14 +67,14 @@ function testSupabase() {
                 case 1:
                     var _c = _b.sent(), products = _c.data, error = _c.error;
                     if (error) {
-                        console.error("Supabase Error:", error.message);
+                        globalThis.console.error("Supabase Error:", error.message);
                         return [2 /*return*/];
                     }
-                    console.log("Products:", products);
+                    globalThis.console.log("Products:", products);
                     return [3 /*break*/, 3];
                 case 2:
                     e_1 = _b.sent();
-                    console.error("Unexpected Error:", e_1);
+                    globalThis.console.error("Unexpected Error:", e_1);
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
