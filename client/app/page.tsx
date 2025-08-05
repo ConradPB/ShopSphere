@@ -1,4 +1,3 @@
-// app/page.tsx
 import { FC } from "react";
 import Image from "next/image";
 import { supabase } from "@/lib/supabase";
