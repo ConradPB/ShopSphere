@@ -11,28 +11,8 @@
     "forceConsistentCasingInFileNames": true,
     "jsx": "preserve",
     "allowJs": true,
-    "noEmit": false,
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "incremental": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ]
+    "noEmit": false
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    ".next"
-  ]
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", ".next"]
 }
