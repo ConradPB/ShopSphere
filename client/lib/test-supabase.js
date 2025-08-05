@@ -4,13 +4,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { 
-            if (result.done) {
-                return resolve(result.value);
-            } else {
-                return adopt(result.value).then(fulfilled, rejected);
-            }
-        }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -41,40 +35,35 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-// Object.defineProperty(exports, "__esModule", { value: true });
-import { createClient } from "@supabase/supabase-js";
-// Provide a fallback for console if not defined (for restricted environments)
-if (typeof globalThis.console === "undefined") {
-    globalThis.console = { log: function () {}, error: function () {} };
-}
-// Replace the following with your actual Supabase credentials or import them from a config file
-var supabaseUrl = "<YOUR_SUPABASE_URL>";
-var supabaseKey = "<YOUR_SUPABASE_ANON_KEY>";
+Object.defineProperty(exports, "__esModule", { value: true });
+var supabase_js_1 = require("@supabase/supabase-js");
+var supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+var supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 if (!supabaseUrl || !supabaseKey) {
     throw new Error("Missing Supabase environment variables");
 }
-var supabase = createClient(supabaseUrl, supabaseKey);
+var supabase = (0, supabase_js_1.createClient)(supabaseUrl, supabaseKey);
 function testSupabase() {
     return __awaiter(this, void 0, void 0, function () {
-        var e_1;
+        var _a, products, error, e_1;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
-                    _b.trys.push([0, 2, 3]);
+                    _b.trys.push([0, 2, , 3]);
                     return [4 /*yield*/, supabase
                             .from("products")
                             .select("*")];
                 case 1:
-                    var _c = _b.sent(), products = _c.data, error = _c.error;
+                    _a = _b.sent(), products = _a.data, error = _a.error;
                     if (error) {
-                        globalThis.console.error("Supabase Error:", error.message);
+                        console.error("Supabase Error:", error.message);
                         return [2 /*return*/];
                     }
-                    globalThis.console.log("Products:", products);
+                    console.log("Products:", products);
                     return [3 /*break*/, 3];
                 case 2:
                     e_1 = _b.sent();
-                    globalThis.console.error("Unexpected Error:", e_1);
+                    console.error("Unexpected Error:", e_1);
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
