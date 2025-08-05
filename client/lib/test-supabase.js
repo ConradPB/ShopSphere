@@ -56,7 +56,7 @@ if (!supabaseUrl || !supabaseKey) {
 var supabase = createClient(supabaseUrl, supabaseKey);
 function testSupabase() {
     return __awaiter(this, void 0, void 0, function () {
-        var _a, products, e_1;
+        var _a, e_1;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
