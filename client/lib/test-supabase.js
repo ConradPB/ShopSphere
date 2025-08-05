@@ -49,6 +49,10 @@ var supabaseKey = "<YOUR_SUPABASE_ANON_KEY>";
 if (!supabaseUrl || !supabaseKey) {
     throw new Error("Missing Supabase environment variables");
 }
+// Provide a fallback for console if not defined (for restricted environments)
+if (typeof console === "undefined") {
+    globalThis.console = { log: function () {}, error: function () {} };
+}
 var supabase = createClient(supabaseUrl, supabaseKey);
 function testSupabase() {
     return __awaiter(this, void 0, void 0, function () {
