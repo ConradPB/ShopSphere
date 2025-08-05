@@ -43,15 +43,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 // Object.defineProperty(exports, "__esModule", { value: true });
 import { createClient } from "@supabase/supabase-js";
+// Provide a fallback for console if not defined (for restricted environments)
+if (typeof console === "undefined") {
+    globalThis.console = { log: function () {}, error: function () {} };
+}
 // Replace the following with your actual Supabase credentials or import them from a config file
 var supabaseUrl = "<YOUR_SUPABASE_URL>";
 var supabaseKey = "<YOUR_SUPABASE_ANON_KEY>";
 if (!supabaseUrl || !supabaseKey) {
     throw new Error("Missing Supabase environment variables");
-}
-// Provide a fallback for console if not defined (for restricted environments)
-if (typeof console === "undefined") {
-    globalThis.console = { log: function () {}, error: function () {} };
 }
 var supabase = createClient(supabaseUrl, supabaseKey);
 function testSupabase() {
