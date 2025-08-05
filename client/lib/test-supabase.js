@@ -60,7 +60,7 @@ function testSupabase() {
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
-                    _b.trys.push([0, 2, , 3]);
+                    _b.trys.push([0, 2, 3]);
                     return [4 /*yield*/, supabase
                             .from("products")
                             .select("*")];
