@@ -27,7 +27,7 @@ const isValidUrl = (url: string | null): boolean => {
 const Home: FC = async () => {
   // Fetch products from Supabase
   const { data: products, error } = await supabase
-    .from<Product>("products")
+    .from<Product, Product>("products")
     .select("*");
 
   if (error) {
