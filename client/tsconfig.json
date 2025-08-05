@@ -2,46 +2,29 @@
   "compilerOptions": {
     "target": "es2020",
     "module": "esnext",
-    "jsx": "preserve",
+    "moduleResolution": "node",
+    "outDir": "./lib",
+    "rootDir": "./",
     "strict": true,
     "esModuleInterop": true,
-    "moduleResolution": "node",
-    "types": [
-      "node"
-    ],
-    "allowJs": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
-    "incremental": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "jsx": "preserve",
+    "allowJs": true,
+    "noEmit": false,
     "baseUrl": ".",
     "paths": {
       "@/*": [
         "./*"
       ]
-    },
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ]
+    }
   },
   "include": [
     "**/*.ts",
-    "**/*.tsx",
-    "next-env.d.ts",
-    ".next/types/**/*.ts",
-    "lib/test-supabase.ts",
-    "lib/supabase.cjs"
+    "**/*.tsx"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    ".next"
   ]
 }
