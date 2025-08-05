@@ -18,7 +18,7 @@ const isValidUrl = (url: string | null): boolean => {
   try {
     new URL(url);
     return true;
-  } catch (_) {
+  } catch {
     return false;
   }
 };
