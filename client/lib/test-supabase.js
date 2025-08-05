@@ -61,7 +61,7 @@ function testSupabase() {
                             .from("products")
                             .select("*")];
                 case 1:
-                    _a = _b.sent(), products = _a.data, error = _a.error;
+                    var _c = _b.sent(), products = _c.data, error = _c.error;
                     if (error) {
                         console.error("Supabase Error:", error.message);
                         return [2 /*return*/];
