@@ -38,7 +38,7 @@
     "**/*.tsx",
     "next-env.d.ts",
     ".next/types/**/*.ts",
-    "lib/test-supabase.cjs",
+    "lib/test-supabase.ts",
     "lib/supabase.cjs"
   ],
   "exclude": [
