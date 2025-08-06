@@ -1,1 +1,1 @@
-import "./lib/test-supa
+import "./lib/test-supabase";
