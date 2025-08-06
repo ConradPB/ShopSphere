@@ -7,7 +7,7 @@ describe("Health Endpoint", () => {
 
   beforeAll(async () => {
     server = app;
-    await server.ready();
+    await ready();
   });
 
   afterAll(async () => {
