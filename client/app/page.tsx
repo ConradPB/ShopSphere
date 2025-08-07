@@ -55,6 +55,7 @@ const Home: NextPage = async () => {
                   width={300}
                   height={192}
                   className="w-full object-cover rounded-md mb-4"
+                  unoptimized={true}
                 />
                 <h3 className="text-lg font-semibold">
                   {product.name || "Unnamed Product"}
