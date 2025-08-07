@@ -15,6 +15,10 @@ const Home: NextPage = async () => {
   if (error) {
     return <div>Error loading products: {error.message}</div>;
   }
+
+  if (!products || products.length === 0) {
+    return <div>No products available.</div>;
+  }
 };
 
 export default Home;
