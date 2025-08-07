@@ -6,7 +6,10 @@ async function testSupabase() {
       .from('products')
       .select('*')
 
-    
+    if (error) {
+      console.error('Supabase Error:', error.message)
+      return
+    }
 
     console.log('Products:', products)
   }
