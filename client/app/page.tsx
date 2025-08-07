@@ -38,6 +38,35 @@ const Home: NextPage = async () => {
           </a>
         </div>
       </section>
+      <section className="py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-8">
+            Featured Products
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {products.map((product: Product) => (
+              <div
+                key={product.id}
+                className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition"
+              >
+                <Image
+                  src={product.image_url || "/fallback-image.jpg"}
+                  alt={product.name || "Unnamed Product"}
+                  width={300}
+                  height={192}
+                  className="w-full object-cover rounded-md mb-4"
+                />
+                <h3 className="text-lg font-semibold">
+                  {product.name || "Unnamed Product"}
+                </h3>
+                <p className="text-gray-600">
+                  ${(product.price || 0).toFixed(2)}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 };
