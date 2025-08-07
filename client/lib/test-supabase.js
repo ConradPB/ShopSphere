@@ -36,10 +36,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var dotenv_1 = require("dotenv");
+var dotenv = require("dotenv");
 var supabase_js_1 = require("@supabase/supabase-js");
 // Load environment variables
-dotenv_1.default.config();
+dotenv.config();
 var supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 var supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 if (!supabaseUrl || !supabaseKey) {
