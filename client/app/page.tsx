@@ -11,6 +11,10 @@ interface Product {
 
 const Home: NextPage = async () => {
   const { data: products, error } = await supabase.from("products").select("*");
+
+  if (error) {
+    return <div>Error loading products: {error.message}</div>;
+  }
 };
 
 export default Home;
