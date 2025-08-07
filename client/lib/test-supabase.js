@@ -36,7 +36,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var supabase_1 = require("./supabase");
+var dotenv_1 = require("dotenv");
+var supabase_js_1 = require("@supabase/supabase-js");
+// Load environment variables
+dotenv_1.default.config();
+var supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+var supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+if (!supabaseUrl || !supabaseKey) {
+    throw new Error("Missing Supabase environment variables");
+}
+var supabase = (0, supabase_js_1.createClient)(supabaseUrl, supabaseKey);
 function testSupabase() {
     return __awaiter(this, void 0, void 0, function () {
         var _a, products, error, e_1;
@@ -44,7 +53,7 @@ function testSupabase() {
             switch (_b.label) {
                 case 0:
                     _b.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, supabase_1.supabase
+                    return [4 /*yield*/, supabase
                             .from("products")
                             .select("*")];
                 case 1:
