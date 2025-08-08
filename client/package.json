@@ -8,7 +8,6 @@
     "start": "next start",
     "lint": "next lint",
     "test": "jest"
-
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.53.0",
@@ -27,6 +26,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/testing-library__react": "^10.2.0",
     "eslint": "^9",
     "eslint-config-next": "15.4.6",
     "jest": "^30.0.5",
