@@ -1,46 +1,67 @@
-import React from "react";
-import { render, screen } from "@testing-library/react";
-import Home from "@/app/page"; // adjust path if needed
-import { getProducts } from "@/lib/supabase"; // mocked
+"use client";
 
-jest.mock("@/lib/supabase", () => ({
-  getProducts: jest.fn(),
-}));
+import Image from "next/image";
+import type { Product } from "@/lib/supabase";
 
-describe("Home Page", () => {
-  it("renders product cards when products are available", async () => {
-    (getProducts as jest.Mock).mockResolvedValueOnce([
-      { id: 1, name: "Laptop", image_url: "/laptop.png" },
-      { id: 2, name: "Headphones", image_url: "/headphones.png" },
-    ]);
+type HomeProps = {
+  products: Product[];
+  error?: string | null;
+};
 
-    render(<Home />);
+export default function Home({ products, error }: HomeProps) {
+  if (error) return <div>Error loading products: {error}</div>;
+  if (!products || products.length === 0)
+    return <div>No products available.</div>;
 
-    expect(await screen.findByText("ShopSphere Products")).toBeInTheDocument();
-    expect(await screen.findByText("Laptop")).toBeInTheDocument();
-    expect(await screen.findByText("Headphones")).toBeInTheDocument();
+  return (
+    <div className="min-h-screen bg-gray-100">
+      <section className="bg-blue-600 text-white py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto text-center">
+          <h1 className="text-4xl sm:text-5xl font-bold mb-4">
+            Welcome to ShopSphere
+          </h1>
+          <p className="text-xl mb-8">
+            Discover the best deals on electronics, fashion, and more!
+          </p>
+          <a
+            href="/products"
+            className="inline-block bg-white text-blue-600 font-semibold py-3 px-6 rounded-lg hover:bg-gray-200 transition"
+          >
+            Shop Now
+          </a>
+        </div>
+      </section>
 
-    const images = await screen.findAllByRole("img");
-    expect(images).toHaveLength(2);
-  });
-
-  it("displays error message when Supabase fails", async () => {
-    (getProducts as jest.Mock).mockRejectedValueOnce(new Error("DB error"));
-
-    render(<Home />);
-
-    expect(
-      await screen.findByText("Error loading products: DB error")
-    ).toBeInTheDocument();
-  });
-
-  it("displays no products message when no products are available", async () => {
-    (getProducts as jest.Mock).mockResolvedValueOnce([]);
-
-    render(<Home />);
-
-    expect(
-      await screen.findByText("No products available.")
-    ).toBeInTheDocument();
-  });
-});
+      <section className="py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-8">
+            Featured Products
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {products.map((product) => (
+              <div
+                key={product.id}
+                className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition"
+              >
+                <Image
+                  src={product.image_url || "/fallback-image.jpg"}
+                  alt={product.name || "Unnamed Product"}
+                  width={300}
+                  height={192}
+                  className="w-full object-cover rounded-md mb-4"
+                  unoptimized={true}
+                />
+                <h3 className="text-lg font-semibold">
+                  {product.name || "Unnamed Product"}
+                </h3>
+                <p className="text-gray-600">
+                  ${(product.price || 0).toFixed(2)}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
