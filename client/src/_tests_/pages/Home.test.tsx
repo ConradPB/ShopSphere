@@ -31,8 +31,7 @@ describe("Home Page", () => {
       select: jest.fn().mockResolvedValue({ data: mockProducts, error: null }),
     });
 
-    const HomeComponent = await Home();
-    render(HomeComponent);
+    render(<Home />);
 
     expect(screen.getByText("ShopSphere Products")).toBeInTheDocument();
     expect(screen.getByText("Laptop")).toBeInTheDocument();
@@ -47,8 +46,7 @@ describe("Home Page", () => {
         .mockResolvedValue({ data: null, error: { message: "DB error" } }),
     });
 
-    const HomeComponent = await Home();
-    render(HomeComponent);
+    render(<Home />);
 
     expect(
       screen.getByText("Error loading products: DB error")
@@ -60,8 +58,7 @@ describe("Home Page", () => {
       select: jest.fn().mockResolvedValue({ data: [], error: null }),
     });
 
-    const HomeComponent = await Home();
-    render(HomeComponent);
+    render(<Home />);
 
     expect(screen.getByText("No products available.")).toBeInTheDocument();
   });
