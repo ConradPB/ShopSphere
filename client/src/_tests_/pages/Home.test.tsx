@@ -1,8 +1,14 @@
-import { render, screen } from "@testing-library/react";
-import Home from "@/app/page";
+import { render } from "@testing-library/react";
+import Home from "@/pages/index";
 import { supabase } from "@/lib/supabase";
 
-jest.mock("@/lib/supabase");
+jest.mock("@/lib/supabase", () => ({
+  supabase: {
+    from: jest.fn(() => ({
+      select: jest.fn(),
+    })),
+  },
+}));
 
 describe("Home Page", () => {
   const mockProducts = [
@@ -31,12 +37,12 @@ describe("Home Page", () => {
       select: jest.fn().mockResolvedValue({ data: mockProducts, error: null }),
     });
 
-    render(<Home />);
-
-    expect(screen.getByText("ShopSphere Products")).toBeInTheDocument();
-    expect(screen.getByText("Laptop")).toBeInTheDocument();
-    expect(screen.getByText("Headphones")).toBeInTheDocument();
-    expect(screen.getAllByRole("img")).toHaveLength(2);
+    // If Home uses getStaticProps, pass mock props
+    const { getByText, getAllByRole } = render(<Home />);
+    expect(getByText("ShopSphere Products")).toBeInTheDocument();
+    expect(getByText("Laptop")).toBeInTheDocument();
+    expect(getByText("Headphones")).toBeInTheDocument();
+    expect(getAllByRole("img")).toHaveLength(2);
   });
 
   it("displays error message when Supabase fails", async () => {
@@ -46,11 +52,8 @@ describe("Home Page", () => {
         .mockResolvedValue({ data: null, error: { message: "DB error" } }),
     });
 
-    render(<Home />);
-
-    expect(
-      screen.getByText("Error loading products: DB error")
-    ).toBeInTheDocument();
+    const { getByText } = render(<Home />);
+    expect(getByText("Error loading products: DB error")).toBeInTheDocument();
   });
 
   it("displays no products message when no products are available", async () => {
@@ -58,8 +61,7 @@ describe("Home Page", () => {
       select: jest.fn().mockResolvedValue({ data: [], error: null }),
     });
 
-    render(<Home />);
-
-    expect(screen.getByText("No products available.")).toBeInTheDocument();
+    const { getByText } = render(<Home />);
+    expect(getByText("No products available.")).toBeInTheDocument();
   });
 });
