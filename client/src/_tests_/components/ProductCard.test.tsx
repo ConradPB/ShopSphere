@@ -1,5 +1,4 @@
 import { render } from "@testing-library/react";
-import { screen } from "@testing-library/dom";
 import ProductCard from "@/components/ProductCard";
 
 describe("ProductCard", () => {
@@ -11,10 +10,10 @@ describe("ProductCard", () => {
   };
 
   it("renders product name, price, and image", () => {
-    render(<ProductCard product={product} />);
-    expect(screen.getByText("Laptop")).toBeInTheDocument();
-    expect(screen.getByText("$999.99")).toBeInTheDocument();
-    expect(screen.getByRole("img", { name: "Laptop" })).toHaveAttribute(
+    const { getByText, getByRole } = render(<ProductCard product={product} />);
+    expect(getByText("Laptop")).toBeInTheDocument();
+    expect(getByText("$999.99")).toBeInTheDocument();
+    expect(getByRole("img", { name: "Laptop" })).toHaveAttribute(
       "src",
       expect.stringContaining("placehold.co")
     );
@@ -22,8 +21,8 @@ describe("ProductCard", () => {
 
   it("handles null image_url with fallback", () => {
     const productNoImage = { ...product, image_url: null };
-    render(<ProductCard product={productNoImage} />);
-    expect(screen.getByRole("img", { name: "Laptop" })).toHaveAttribute(
+    const { getByRole } = render(<ProductCard product={productNoImage} />);
+    expect(getByRole("img", { name: "Laptop" })).toHaveAttribute(
       "src",
       expect.stringContaining("fallback-image.jpg")
     );
@@ -31,7 +30,7 @@ describe("ProductCard", () => {
 
   it("handles missing name with default", () => {
     const productNoName = { ...product, name: "" };
-    render(<ProductCard product={productNoName} />);
-    expect(screen.getByText("Unnamed Product")).toBeInTheDocument();
+    const { getByText } = render(<ProductCard product={productNoName} />);
+    expect(getByText("Unnamed Product")).toBeInTheDocument();
   });
 });
