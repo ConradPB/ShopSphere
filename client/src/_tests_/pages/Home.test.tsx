@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import Home from "@/app/page";
-import { supabase } from "@/src/lib/supabase";
+import { supabase } from "@/lib/supabase";
 
 jest.mock("@/lib/supabase");
 
