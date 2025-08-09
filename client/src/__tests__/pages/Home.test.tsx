@@ -1,4 +1,3 @@
-// src/__tests__/pages/Home.test.tsx
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import Home from "@/app/page"; // adjust path if needed
