@@ -13,10 +13,6 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
-/**
- * Helper to fetch products. Throws an Error on Supabase error.
- * Returns an array (empty if no rows).
- */
 export async function getProducts(): Promise<Product[]> {
   const { data, error } = await supabase.from<Product>("products").select("*");
   if (error) throw new Error(error.message);
