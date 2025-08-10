@@ -9,6 +9,6 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   const { data: products, error } = await getProducts();
-  // products is always an array (possibly empty), error is string |
+  // products is always an array (possibly empty), error is string | null
   return <Home products={products} error={error} />;
 }
