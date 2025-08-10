@@ -7,6 +7,7 @@ type Product = {
   id: string;
   name: string;
   price: number;
+  image_url: string;
 };
 
 export default function Page() {
@@ -32,13 +33,8 @@ export default function Page() {
     fetchProducts();
   }, []);
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
-  if (products.length === 0) {
-    return <p>No products found.</p>;
-  }
+  if (loading) return <p>Loading...</p>;
+  if (products.length === 0) return <p>No products found.</p>;
 
   return (
     <main style={{ padding: "2rem" }}>
@@ -46,6 +42,11 @@ export default function Page() {
       <ul>
         {products.map((p) => (
           <li key={p.id}>
+            <img
+              src={p.image_url}
+              alt={p.name}
+              style={{ width: "100px", marginRight: "10px" }}
+            />
             {p.name} — ${p.price}
           </li>
         ))}
