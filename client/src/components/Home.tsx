@@ -1,67 +1,38 @@
 "use client";
 
-import Image from "next/image";
-import type { Product } from "@/lib/supabase";
+import { useEffect, useState } from "react";
+import { getProducts, Product } from "@/lib/supabase";
 
-type HomeProps = {
-  products: Product[];
-  error?: string | null;
-};
+export default function Home() {
+  const [products, setProducts] = useState<Product[]>([]);
 
-export default function Home({ products, error }: HomeProps) {
-  if (error) return <div>Error loading products: {error}</div>;
-  if (!products || products.length === 0)
-    return <div>No products available.</div>;
+  useEffect(() => {
+    async function loadProducts() {
+      const data = await getProducts();
+      setProducts(data);
+    }
+    loadProducts();
+  }, []);
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <section className="bg-blue-600 text-white py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-4xl sm:text-5xl font-bold mb-4">
-            Welcome to ShopSphere
-          </h1>
-          <p className="text-xl mb-8">
-            Discover the best deals on electronics, fashion, and more!
-          </p>
-          <a
-            href="/products"
-            className="inline-block bg-white text-blue-600 font-semibold py-3 px-6 rounded-lg hover:bg-gray-200 transition"
-          >
-            Shop Now
-          </a>
-        </div>
-      </section>
-
-      <section className="py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-8">
-            Featured Products
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {products.map((product) => (
-              <div
-                key={product.id}
-                className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition"
-              >
-                <Image
-                  src={product.image_url || "/fallback-image.jpg"}
-                  alt={product.name || "Unnamed Product"}
-                  width={300}
-                  height={192}
-                  className="w-full object-cover rounded-md mb-4"
-                  unoptimized={true}
-                />
-                <h3 className="text-lg font-semibold">
-                  {product.name || "Unnamed Product"}
-                </h3>
-                <p className="text-gray-600">
-                  ${(product.price || 0).toFixed(2)}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-    </div>
+    <main style={{ padding: "2rem" }}>
+      <h1>Product List</h1>
+      {products.length === 0 ? (
+        <p>No products available.</p>
+      ) : (
+        <ul style={{ display: "grid", gap: "1rem" }}>
+          {products.map((product) => (
+            <li
+              key={product.id}
+              style={{ border: "1px solid #ccc", padding: "1rem" }}
+            >
+              <img src={product.image_url} alt={product.name} width={200} />
+              <h2>{product.name}</h2>
+              <p>${product.price.toFixed(2)}</p>
+            </li>
+          ))}
+        </ul>
+      )}
+    </main>
   );
 }
