@@ -32,8 +32,13 @@ export default function Home() {
     fetchProducts();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
-  if (products.length === 0) return <p>No products found.</p>;
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (products.length === 0) {
+    return <p>No products found.</p>;
+  }
 
   return (
     <main style={{ padding: "2rem" }}>
