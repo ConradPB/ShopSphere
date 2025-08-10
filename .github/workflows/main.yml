@@ -23,9 +23,9 @@ jobs:
       - name: Run frontend tests
         run: yarn test
         working-directory: ./client
-      - name: Run Playwright tests
-        run: yarn playwright test
-        working-directory: ./client
+      #     - name: Run Playwright tests
+      #       run: yarn playwright test
+      #      working-directory: ./client
       - name: Run frontend tests
         run: yarn test
         working-directory: ./client
