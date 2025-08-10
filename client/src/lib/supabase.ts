@@ -4,19 +4,24 @@ export type Product = {
   id: number;
   name: string;
   price: number;
-  image_url: string | null;
-  created_at?: string;
+  image_url: string;
 };
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  // warning only so tests/CI without env vars don't crash; in prod/dev you may prefer to throw
-  // eslint-disable-next-line no-console
-  console.warn(
-    "NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY is not set."
-  );
-}
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+export async function getProducts(): Promise<Product[]> {
+  const { data, error } = await supabase
+    .from<Product>("products")
+    .select("*")
+    .order("id", { ascending: true });
+
+  if (error) {
+    console.error("Error fetching products:", error.message);
+    return [];
+  }
+
+  return data || [];
+}
