@@ -1,24 +1,12 @@
-import type { NextPage } from "next";
 import Image from "next/image";
-import { supabase } from "@/lib/supabase";
+import { getProducts, type Product } from "@/lib/supabase";
 
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  image_url: string | null;
-}
+export default async function Home() {
+  const { data: products, error } = await getProducts();
 
-const Home: NextPage = async () => {
-  const { data: products, error } = await supabase.from("products").select("*");
-
-  if (error) {
-    return <div>Error loading products: {error.message}</div>;
-  }
-
-  if (!products || products.length === 0) {
+  if (error) return <div>Error loading products: {error}</div>;
+  if (!products || products.length === 0)
     return <div>No products available.</div>;
-  }
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -38,6 +26,7 @@ const Home: NextPage = async () => {
           </a>
         </div>
       </section>
+
       <section className="py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-8">
@@ -70,6 +59,4 @@ const Home: NextPage = async () => {
       </section>
     </div>
   );
-};
-
-export default Home;
+}
