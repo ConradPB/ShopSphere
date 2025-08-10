@@ -26,3 +26,11 @@ jest.mock("@/lib/supabase", () => ({
     }),
   },
 }));
+
+describe("Page component", () => {
+  it("renders products from mock data", async () => {
+    render(await Page());
+    expect(await screen.findByText(/Laptop/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Headphones/i)).toBeInTheDocument();
+  });
+});
