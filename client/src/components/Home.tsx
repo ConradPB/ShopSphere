@@ -1,38 +1,50 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getProducts, Product } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
+
+type Product = {
+  id: string;
+  name: string;
+  price: number;
+};
 
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function loadProducts() {
-      const data = await getProducts();
-      setProducts(data);
+    async function fetchProducts() {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .order("name");
+
+      if (error) {
+        console.error("Error fetching products:", error.message);
+      } else {
+        setProducts(data || []);
+      }
+      setLoading(false);
     }
-    loadProducts();
+
+    fetchProducts();
   }, []);
+
+  if (loading) return <p>Loading...</p>;
+  if (products.length === 0) return <p>No products found.</p>;
 
   return (
     <main style={{ padding: "2rem" }}>
-      <h1>Product List</h1>
-      {products.length === 0 ? (
-        <p>No products available.</p>
-      ) : (
-        <ul style={{ display: "grid", gap: "1rem" }}>
-          {products.map((product) => (
-            <li
-              key={product.id}
-              style={{ border: "1px solid #ccc", padding: "1rem" }}
-            >
-              <img src={product.image_url} alt={product.name} width={200} />
-              <h2>{product.name}</h2>
-              <p>${product.price.toFixed(2)}</p>
-            </li>
-          ))}
-        </ul>
-      )}
+      <h1>Products</h1>
+      <ul>
+        {products.map((p) => (
+          <li key={p.id}>
+            {p.name} — ${p.price}
+          </li>
+        ))}
+      </ul>
     </main>
   );
 }
