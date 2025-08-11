@@ -1,35 +1,32 @@
 import React from "react";
 
-export type UiProduct = {
-  id: string;
-  name: string;
-  price: number;
-  image: string | null;
+interface ProductCardProps {
+  product: {
+    id: string;
+    name?: string;
+    image_url?: string;
+    price?: number;
+  };
+}
+
+const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  const imageSrc =
+    product.image_url && product.image_url.trim() !== ""
+      ? product.image_url
+      : "https://placehold.co/600x400?text=No+Image";
+
+  const displayName =
+    product.name && product.name.trim() !== ""
+      ? product.name
+      : "Unnamed Product";
+
+  return (
+    <div className="product-card" data-testid="product-card">
+      <img src={imageSrc} alt={displayName} />
+      <h3>{displayName}</h3>
+      <p>${product.price ?? 0}</p>
+    </div>
+  );
 };
 
-export default function ProductCard({ product }: { product: UiProduct }) {
-  return (
-    <article
-      className="bg-white border border-gray-100 rounded-lg shadow-sm hover:shadow-md transform transition hover:-translate-y-1"
-      role="group"
-    >
-      <div className="overflow-hidden rounded-t-lg">
-        <img
-          src={product.image ?? "/fallback-image.jpg"}
-          alt={product.name}
-          className="w-full h-48 object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
-          loading="lazy"
-        />
-      </div>
-
-      <div className="p-4">
-        <h3 className="text-lg font-semibold text-gray-900 truncate">
-          {product.name}
-        </h3>
-        <p className="text-indigo-600 font-bold mt-2">
-          ${Number(product.price).toFixed(2)}
-        </p>
-      </div>
-    </article>
-  );
-}
+export default ProductCard;
