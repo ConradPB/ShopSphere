@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import { Menu, X } from "lucide-react";
 
@@ -5,83 +7,52 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="sticky top-0 z-50 bg-gradient-to-r from-indigo-700 via-purple-700 to-pink-600 shadow-lg">
+    <nav className="sticky top-0 z-50 bg-gradient-to-r from-purple-600 via-pink-500 to-red-500 text-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between h-16 items-center">
           {/* Logo */}
-          <h1 className="text-white text-2xl font-extrabold tracking-wide drop-shadow-md">
-            ShopSphere
-          </h1>
+          <div className="text-2xl font-bold tracking-wide">ShopSphere</div>
 
-          {/* Desktop Links */}
+          {/* Desktop Menu */}
           <div className="hidden md:flex space-x-6">
-            <a
-              href="#"
-              className="text-white font-medium hover:text-yellow-300 transition-colors duration-200"
-            >
+            <a href="#" className="hover:text-yellow-300 transition-colors">
               Home
             </a>
-            <a
-              href="#"
-              className="text-white font-medium hover:text-yellow-300 transition-colors duration-200"
-            >
-              Products
+            <a href="#" className="hover:text-yellow-300 transition-colors">
+              Shop
             </a>
-            <a
-              href="#"
-              className="text-white font-medium hover:text-yellow-300 transition-colors duration-200"
-            >
+            <a href="#" className="hover:text-yellow-300 transition-colors">
               About
             </a>
-            <a
-              href="#"
-              className="text-white font-medium hover:text-yellow-300 transition-colors duration-200"
-            >
+            <a href="#" className="hover:text-yellow-300 transition-colors">
               Contact
             </a>
           </div>
 
           {/* Mobile Menu Button */}
           <div className="md:hidden">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="text-white focus:outline-none"
-            >
+            <button onClick={() => setIsOpen(!isOpen)}>
               {isOpen ? <X size={28} /> : <Menu size={28} />}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile Dropdown */}
+      {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden bg-gradient-to-r from-indigo-700 via-purple-700 to-pink-600 shadow-lg">
-          <div className="px-4 py-4 space-y-3">
-            <a
-              href="#"
-              className="block text-white font-medium hover:text-yellow-300 transition-colors duration-200"
-            >
-              Home
-            </a>
-            <a
-              href="#"
-              className="block text-white font-medium hover:text-yellow-300 transition-colors duration-200"
-            >
-              Products
-            </a>
-            <a
-              href="#"
-              className="block text-white font-medium hover:text-yellow-300 transition-colors duration-200"
-            >
-              About
-            </a>
-            <a
-              href="#"
-              className="block text-white font-medium hover:text-yellow-300 transition-colors duration-200"
-            >
-              Contact
-            </a>
-          </div>
+        <div className="md:hidden bg-gradient-to-r from-purple-700 via-pink-600 to-red-600 text-white px-4 py-3 space-y-2">
+          <a href="#" className="block hover:text-yellow-300 transition-colors">
+            Home
+          </a>
+          <a href="#" className="block hover:text-yellow-300 transition-colors">
+            Shop
+          </a>
+          <a href="#" className="block hover:text-yellow-300 transition-colors">
+            About
+          </a>
+          <a href="#" className="block hover:text-yellow-300 transition-colors">
+            Contact
+          </a>
         </div>
       )}
     </nav>
