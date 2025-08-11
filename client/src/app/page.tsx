@@ -1,84 +1,30 @@
-import { getProducts, type Product } from "@/lib/supabase";
 import { fallbackProducts } from "@/lib/products";
 
-export default async function Page() {
-  const { data: products, error } = await getProducts();
-
-  if (error) {
-    return (
-      <main className="flex items-center justify-center min-h-screen px-6">
-        <div className="max-w-xl w-full text-center">
-          <h1 className="text-2xl font-semibold text-red-600 mb-4">
-            Failed to load products
-          </h1>
-          <p className="text-gray-600">{error}</p>
-        </div>
-      </main>
-    );
-  }
-
+export default function Page() {
   return (
-    <main className="px-6 py-12 max-w-7xl mx-auto">
-      {/* Hero */}
-      <section className="text-center mb-12">
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4">
-          ShopSphere
-        </h1>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Discover curated products — clean design, great prices. Fast shipping,
-          secure checkout.
-        </p>
-        <div className="mt-8">
-          <a
-            href="#products"
-            className="inline-block bg-indigo-600 text-white px-6 py-3 rounded-md font-medium shadow hover:bg-indigo-700 transition"
+    <main className="p-6 max-w-7xl mx-auto">
+      <h1 className="text-3xl font-bold mb-6 text-gray-900">
+        Featured Products
+      </h1>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {fallbackProducts.map((product) => (
+          <div
+            key={product.id}
+            className="bg-white rounded-lg shadow hover:shadow-lg transition p-4"
           >
-            Browse Featured
-          </a>
-        </div>
-      </section>
-
-      {/* Featured products */}
-      <section id="products" aria-labelledby="featured-heading">
-        <h2
-          id="featured-heading"
-          className="text-2xl font-semibold text-gray-900 mb-6 text-center"
-        >
-          Featured Products
-        </h2>
-
-        {products && products.length > 0 ? (
-          <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {products.map((product: Product) => (
-              <article
-                key={product.id}
-                className="bg-white border border-gray-100 rounded-lg shadow-sm hover:shadow-md transform transition hover:-translate-y-1"
-                role="group"
-              >
-                <div className="overflow-hidden rounded-t-lg">
-                  <img
-                    src={product.image_url ?? "/fallback-image.jpg"}
-                    alt={product.name}
-                    className="w-full h-48 object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
-                    loading="lazy"
-                  />
-                </div>
-
-                <div className="p-4">
-                  <h3 className="text-lg font-semibold text-gray-900 truncate">
-                    {product.name}
-                  </h3>
-                  <p className="text-indigo-600 font-bold mt-2">
-                    ${Number(product.price).toFixed(2)}
-                  </p>
-                </div>
-              </article>
-            ))}
+            <img
+              src={product.image}
+              alt={product.title}
+              className="w-full h-48 object-cover rounded"
+            />
+            <h2 className="mt-4 font-semibold text-lg text-gray-800">
+              {product.title}
+            </h2>
+            <p className="text-indigo-600 font-bold">${product.price}</p>
           </div>
-        ) : (
-          <p className="text-center text-gray-500">No products available.</p>
-        )}
-      </section>
+        ))}
+      </div>
     </main>
   );
 }
