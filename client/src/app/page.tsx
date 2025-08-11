@@ -1,85 +1,50 @@
-// src/app/page.tsx
-import { getProducts } from "@/lib/supabase";
-import { fallbackProducts } from "@/lib/products";
-import ProductCard from "@/components/ProductCard";
+"use client";
 
-type UiProduct = {
-  id: string;
-  name: string;
-  price: number;
-  image: string | null;
-};
+import { useEffect, useState } from "react";
+import { getProducts, Product } from "@/lib/supabase";
 
-export default async function Page() {
-  // getProducts() returns { data: Product[], error: string | null }
-  const { data, error } = await getProducts();
+export default function Page() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchProducts() {
+      const { data, error } = await getProducts();
+      if (error) {
+        setError(error);
+      } else {
+        setProducts(data || []);
+      }
+    }
+    fetchProducts();
+  }, []);
 
   if (error) {
-    return (
-      <main className="flex items-center justify-center min-h-screen px-6">
-        <div className="max-w-xl w-full text-center">
-          <h1 className="text-2xl font-semibold text-red-600 mb-4">
-            Failed to load products
-          </h1>
-          <p className="text-gray-600">{error}</p>
-        </div>
-      </main>
-    );
+    return <p className="text-red-500">Error: {error}</p>;
   }
 
-  // Normalize Supabase rows into a UI-friendly shape,
-  // and fall back to nice dummy data if no rows are returned.
-  const productsFromDb = (data ?? []).map((p) => ({
-    id: String((p as any).id),
-    name: (p as any).name ?? (p as any).title ?? "Unnamed Product",
-    price: Number((p as any).price ?? 0),
-    image: (p as any).image_url ?? (p as any).image ?? null,
-  })) as UiProduct[];
-
-  const fallback = fallbackProducts.map((f) => ({
-    id: String(f.id),
-    name: f.title,
-    price: f.price,
-    image: f.image,
-  })) as UiProduct[];
-
-  const productsToShow = productsFromDb.length > 0 ? productsFromDb : fallback;
+  if (products.length === 0) {
+    return <p>No products found.</p>;
+  }
 
   return (
-    <main className="px-6 py-12 max-w-7xl mx-auto">
-      {/* Hero */}
-      <section className="text-center mb-12">
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4">
-          ShopSphere
-        </h1>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Discover curated products — clean design, great prices.
-        </p>
-        <div className="mt-8">
-          <a
-            href="#products"
-            className="inline-block bg-indigo-600 text-white px-6 py-3 rounded-md font-medium shadow hover:bg-indigo-700 transition"
-          >
-            Browse Featured
-          </a>
-        </div>
-      </section>
-
-      {/* Featured products */}
-      <section id="products" aria-labelledby="featured-heading">
-        <h2
-          id="featured-heading"
-          className="text-2xl font-semibold text-gray-900 mb-6 text-center"
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-6">
+      {products.map((product) => (
+        <div
+          key={product.id}
+          className="bg-white rounded-lg shadow-md overflow-hidden"
         >
-          Featured Products
-        </h2>
-
-        <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {productsToShow.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+          <img
+            src={product.image_url}
+            alt={product.title}
+            className="w-full h-48 object-cover"
+          />
+          <div className="p-4">
+            <h2 className="text-lg font-semibold">{product.title}</h2>
+            <p className="text-gray-600">${product.price}</p>
+          </div>
         </div>
-      </section>
-    </main>
+      ))}
+    </div>
   );
 }
