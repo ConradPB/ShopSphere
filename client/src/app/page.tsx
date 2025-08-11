@@ -1,56 +1,47 @@
-"use client";
+import { getProducts } from "@/lib/supabase";
 
-import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
+export default async function Page() {
+  const { data: products, error } = await getProducts();
 
-type Product = {
-  id: string;
-  name: string;
-  price: number;
-  image_url: string;
-};
-
-export default function Page() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchProducts() {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from("products")
-        .select("*")
-        .order("name");
-
-      if (error) {
-        console.error("Error fetching products:", error.message);
-      } else {
-        setProducts(data || []);
-      }
-      setLoading(false);
-    }
-
-    fetchProducts();
-  }, []);
-
-  if (loading) return <p>Loading...</p>;
-  if (products.length === 0) return <p>No products found.</p>;
+  if (error) {
+    return (
+      <main className="flex items-center justify-center h-screen text-red-500 text-lg">
+        Failed to load products: {error}
+      </main>
+    );
+  }
 
   return (
-    <main style={{ padding: "2rem" }}>
-      <h1>Products</h1>
-      <ul>
-        {products.map((p) => (
-          <li key={p.id}>
-            <img
-              src={p.image_url}
-              alt={p.name}
-              style={{ width: "100px", marginRight: "10px" }}
-            />
-            {p.name} — ${p.price}
-          </li>
-        ))}
-      </ul>
+    <main className="px-6 py-12 max-w-7xl mx-auto">
+      <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">
+        Featured Products
+      </h1>
+      {products && products.length > 0 ? (
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {products.map((product) => (
+            <div
+              key={product.id}
+              className="bg-white border border-gray-200 rounded-lg shadow hover:shadow-lg transition-shadow duration-300"
+            >
+              <img
+                src={product.image_url || "/placeholder.png"}
+                alt={product.title}
+                className="w-full h-48 object-cover rounded-t-lg"
+              />
+              <div className="p-4">
+                <h2 className="text-lg font-semibold text-gray-900 truncate">
+                  {product.title}
+                </h2>
+                <p className="text-indigo-600 font-bold mt-2">
+                  ${product.price}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p className="text-center text-gray-500">No products available.</p>
+      )}
     </main>
   );
 }
