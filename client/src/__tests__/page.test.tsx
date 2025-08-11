@@ -1,36 +1,23 @@
-import { render, screen } from "@testing-library/react";
-import Page from "@/app/page";
-import { supabase } from "@/lib/supabase";
+import { render, screen, waitFor } from "@testing-library/react";
+import Page from "../app/page";
+import { getProducts } from "../lib/supabase";
 
-// Mock Supabase
-jest.mock("@/lib/supabase", () => ({
-  supabase: {
-    from: jest.fn().mockReturnThis(),
-    select: jest.fn().mockReturnThis(),
-    order: jest.fn().mockResolvedValue({
-      data: [
-        {
-          id: "1",
-          name: "Laptop",
-          price: 999.99,
-          image_url: "https://placehold.co/400x300",
-        },
-        {
-          id: "2",
-          name: "Headphones",
-          price: 99.99,
-          image_url: "https://placehold.co/400x300",
-        },
-      ],
-      error: null,
-    }),
-  },
+jest.mock("../lib/supabase", () => ({
+  getProducts: jest.fn(),
 }));
 
-describe("Page component", () => {
-  it("renders products from mock data", async () => {
+describe("Page", () => {
+  it("renders products from getProducts", async () => {
+    (getProducts as jest.Mock).mockResolvedValue([
+      { id: "1", name: "Product 1", image_url: "", price: 10 },
+      { id: "2", name: "Product 2", image_url: "", price: 20 },
+    ]);
+
     render(await Page());
-    expect(await screen.findByText(/Laptop/i)).toBeInTheDocument();
-    expect(await screen.findByText(/Headphones/i)).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(screen.getByText("Product 1")).toBeInTheDocument();
+      expect(screen.getByText("Product 2")).toBeInTheDocument();
+    });
   });
 });
