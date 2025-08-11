@@ -38,7 +38,7 @@ export default function Page() {
     <main className="px-6 py-12 max-w-7xl mx-auto">
       {/* Hero */}
       <section className="text-center mb-12">
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4">
+        <h1 className="text-4xl sm:text-5xl font-extrabold bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent mb-4">
           ShopSphere
         </h1>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -50,27 +50,27 @@ export default function Page() {
       <section id="products" aria-labelledby="featured-heading">
         <h2
           id="featured-heading"
-          className="text-2xl font-semibold text-gray-900 mb-6 text-center"
+          className="text-2xl font-semibold text-gray-900 mb-8 text-center"
         >
           Featured Products
         </h2>
 
-        <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {products.map((product) => (
             <article
               key={product.id}
-              className="bg-white border border-gray-100 rounded-lg shadow-sm hover:shadow-md transform transition hover:-translate-y-1 overflow-hidden"
+              className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 ease-in-out transform hover:-translate-y-1 border border-gray-100"
             >
-              <div className="overflow-hidden rounded-t-lg">
+              <div className="relative overflow-hidden rounded-t-xl">
                 <img
                   src={product.image ?? "/fallback-image.jpg"}
                   alt={product.title}
-                  className="w-full h-48 object-cover transition-transform duration-300 ease-in-out hover:scale-105"
+                  className="w-full h-52 object-cover transition-transform duration-300 ease-in-out hover:scale-105"
                   loading="lazy"
                 />
               </div>
 
-              <div className="p-4">
+              <div className="p-5 flex flex-col justify-between">
                 <h3 className="text-lg font-semibold text-gray-900 truncate">
                   {product.title}
                 </h3>
