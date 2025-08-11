@@ -1,18 +1,22 @@
-// src/__tests__/page.test.tsx
 import { render, screen, waitFor } from "@testing-library/react";
-import Page from "../app/page";
-import { getProducts } from "../lib/supabase";
+import Page from "@/app/page";
+import { getProducts } from "@/lib/supabase";
 
-jest.mock("../lib/supabase", () => ({
+jest.mock("@/lib/supabase", () => ({
   getProducts: jest.fn(),
 }));
 
+const mockProducts = [
+  { id: 1, title: "Product 1", price: 10, image_url: null },
+  { id: 2, title: "Product 2", price: 20, image_url: null },
+];
+
 describe("Page", () => {
   it("renders products from getProducts", async () => {
-    (getProducts as jest.Mock).mockResolvedValue([
-      { id: "1", name: "Product 1", image_url: "/test1.jpg", price: 10 },
-      { id: "2", name: "Product 2", image_url: "/test2.jpg", price: 20 },
-    ]);
+    (getProducts as jest.Mock).mockResolvedValue({
+      data: mockProducts,
+      error: null,
+    });
 
     render(await Page());
 
