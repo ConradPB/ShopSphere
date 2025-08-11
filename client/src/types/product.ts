@@ -1,4 +1,3 @@
-// src/types/product.ts
 export type Product = {
   id: string;
   title: string;
