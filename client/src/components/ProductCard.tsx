@@ -13,7 +13,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const imageSrc =
     product.image_url && product.image_url.trim() !== ""
       ? product.image_url
-      : "https://placehold.co/600x400?text=No+Image";
+      : "/fallback-image.jpg";
 
   const displayName =
     product.name && product.name.trim() !== ""
