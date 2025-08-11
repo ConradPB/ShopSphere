@@ -7,6 +7,7 @@ import { createClient } from "@supabase/supabase-js";
 export type Product = {
   id: number;
   name: string;
+  title: string;
   price: number;
   image_url: string | null;
   created_at?: string;
