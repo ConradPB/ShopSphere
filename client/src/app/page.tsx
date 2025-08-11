@@ -1,4 +1,5 @@
 import { getProducts, type Product } from "@/lib/supabase";
+import { fallbackProducts } from "@/lib/products";
 
 export default async function Page() {
   const { data: products, error } = await getProducts();
