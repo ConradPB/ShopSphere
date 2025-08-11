@@ -1,55 +1,40 @@
-"use client";
+import { render, screen } from "@testing-library/react";
+import Home from "@/components/Home";
 
-import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
+const mockProducts = [
+  {
+    id: 1,
+    name: "Laptop",
+    price: 999.99,
+    image_url: "https://placehold.co/400x300",
+  },
+  {
+    id: 2,
+    name: "Headphones",
+    price: 99.99,
+    image_url: "https://placehold.co/400x300",
+  },
+];
 
-type Product = {
-  id: string;
-  name: string;
-  price: number;
-};
+describe("Home Page", () => {
+  it("renders product cards when products are available", () => {
+    render(<Home products={mockProducts} />);
 
-export default function Home() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
+    expect(screen.getByText("Featured Products")).toBeInTheDocument();
+    expect(screen.getByText("Laptop")).toBeInTheDocument();
+    expect(screen.getByText("Headphones")).toBeInTheDocument();
+    expect(screen.getAllByRole("img")).toHaveLength(2);
+  });
 
-  useEffect(() => {
-    async function fetchProducts() {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from("products")
-        .select("*")
-        .order("name");
+  it("displays error message when Supabase fails", () => {
+    render(<Home products={[]} error="DB error" />);
+    expect(
+      screen.getByText("Error loading products: DB error")
+    ).toBeInTheDocument();
+  });
 
-      if (error) {
-        console.error("Error fetching products:", error.message);
-      } else {
-        setProducts(data || []);
-      }
-      setLoading(false);
-    }
-
-    fetchProducts();
-  }, []);
-
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
-  if (products.length === 0) {
-    return <p>No products found.</p>;
-  }
-
-  return (
-    <main style={{ padding: "2rem" }}>
-      <h1>Products</h1>
-      <ul>
-        {products.map((p) => (
-          <li key={p.id}>
-            {p.name} — ${p.price}
-          </li>
-        ))}
-      </ul>
-    </main>
-  );
-}
+  it("displays no products message when no products are available", () => {
+    render(<Home products={[]} />);
+    expect(screen.getByText("No products available.")).toBeInTheDocument();
+  });
+});
