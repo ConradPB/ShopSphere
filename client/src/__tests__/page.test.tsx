@@ -18,7 +18,7 @@ describe("Page", () => {
       error: null,
     });
 
-    render(await Page());
+    render(<Page />);
 
     await waitFor(() => {
       expect(screen.getByText("Product 1")).toBeInTheDocument();
