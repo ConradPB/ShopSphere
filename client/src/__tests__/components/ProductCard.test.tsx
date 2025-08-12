@@ -1,34 +1,35 @@
 import { render, screen } from "@testing-library/react";
 import ProductCard from "@/components/ProductCard";
-import type { Product } from "@/types/product";
+import { CartProvider } from "@/context/CartContext";
 
-const mockProduct: Product = {
-  id: "1",
-  title: "Test Product",
-  image: "/test.jpg",
-  price: 100,
-};
+const renderWithCart = (ui: React.ReactNode) =>
+  render(<CartProvider>{ui}</CartProvider>);
 
 describe("ProductCard", () => {
   it("renders correctly with given props", () => {
-    render(<ProductCard product={mockProduct} />);
-
-    expect(screen.getByText("Test Product")).toBeInTheDocument();
-    expect(screen.getByText("$100.00")).toBeInTheDocument();
-  });
-
-  it("renders fallback name when title is missing", () => {
-    const noNameProduct: Product = {
-      id: "2",
-      title: "",
-      image: "/test2.jpg",
+    const product = {
+      id: "1",
+      title: "Test Product",
+      image: "/test.jpg",
       price: 100,
     };
 
-    render(<ProductCard product={noNameProduct} />);
+    renderWithCart(<ProductCard product={product} />);
 
-    // Since ProductCard uses product.title directly, you might want to
-    // add a fallback in the component if title is empty/null.
-    expect(screen.getByText("$100.00")).toBeInTheDocument();
+    expect(screen.getByText("Test Product")).toBeInTheDocument();
+    expect(screen.getByText(/\$100(\.00)?/)).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "Test Product" })).toHaveAttribute(
+      "src",
+      "/test.jpg"
+    );
+  });
+
+  it("renders fallback name when title is missing", () => {
+    const product = { id: "2", title: "", image: "/test2.jpg", price: 100 };
+
+    renderWithCart(<ProductCard product={product} />);
+
+    expect(screen.getByText("Unnamed Product")).toBeInTheDocument();
+    expect(screen.getByText(/\$100(\.00)?/)).toBeInTheDocument();
   });
 });
