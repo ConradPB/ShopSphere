@@ -1,26 +1,55 @@
-// src/components/ProductCard.tsx
+"use client";
+
 import React from "react";
+import type { Product } from "@/types/product";
+import { useCart } from "@/context/CartContext";
 
-type Props = {
-  id: string;
-  name?: string;
-  image: string;
-  price: number;
-};
+interface Props {
+  product: Product;
+}
 
-const ProductCard: React.FC<Props> = ({
-  id,
-  name = "Unnamed Product",
-  image,
-  price,
-}) => {
+export default function ProductCard({ product }: Props) {
+  const { addToCart } = useCart();
+
+  function handleAdd() {
+    addToCart(product, 1);
+  }
+
   return (
-    <div className="p-4 border rounded-lg shadow-md">
-      <img src={image} alt={name} className="w-full h-48 object-cover" />
-      <h2 className="mt-2 text-lg font-semibold">{name}</h2>
-      <p className="text-gray-600">${price.toFixed(2)}</p>
-    </div>
-  );
-};
+    <article className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 overflow-hidden">
+      <div className="overflow-hidden rounded-t-xl">
+        <img
+          src={product.image ?? "/fallback-image.jpg"}
+          alt={product.title}
+          className="w-full h-48 object-cover transition-transform duration-300 ease-in-out hover:scale-105"
+          loading="lazy"
+        />
+      </div>
 
-export default ProductCard;
+      <div className="p-4">
+        <h3 className="text-lg font-semibold text-gray-900 truncate">
+          {product.title}
+        </h3>
+        <p className="text-indigo-600 font-bold mt-2">
+          ${Number(product.price).toFixed(2)}
+        </p>
+
+        <div className="mt-4 flex gap-2">
+          <button
+            onClick={handleAdd}
+            className="flex-1 bg-indigo-600 text-white px-3 py-2 rounded-md hover:bg-indigo-700 transition"
+            aria-label={`Add ${product.title} to cart`}
+          >
+            Add to cart
+          </button>
+          <a
+            href={`/product/${product.id}`}
+            className="px-3 py-2 border rounded-md text-sm text-gray-700 hover:bg-gray-50"
+          >
+            View
+          </a>
+        </div>
+      </div>
+    </article>
+  );
+}
