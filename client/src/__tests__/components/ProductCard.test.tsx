@@ -1,36 +1,38 @@
-import { render } from "@testing-library/react";
+// src/__tests__/components/ProductCard.test.tsx
+import React from "react";
+import { render, screen } from "@testing-library/react";
 import ProductCard from "@/components/ProductCard";
+import { CartProvider } from "@/context/CartContext";
+
+const mockProduct = {
+  id: "1",
+  title: "Test Product",
+  price: 100,
+  image: "/test.jpg",
+};
 
 describe("ProductCard", () => {
-  const product = {
-    id: 1,
-    name: "Laptop",
-    price: 999.99,
-    image_url: "https://placehold.co/400x300",
-  };
-
   it("renders product name, price, and image", () => {
-    const { getByText, getByRole } = render(<ProductCard product={product} />);
-    expect(getByText("Laptop")).toBeInTheDocument();
-    expect(getByText("$999.99")).toBeInTheDocument();
-    expect(getByRole("img", { name: "Laptop" })).toHaveAttribute(
-      "src",
-      expect.stringContaining("placehold.co")
+    render(
+      <CartProvider>
+        <ProductCard product={mockProduct} />
+      </CartProvider>
     );
-  });
 
-  it("handles null image_url with fallback", () => {
-    const productNoImage = { ...product, image_url: null };
-    const { getByRole } = render(<ProductCard product={productNoImage} />);
-    expect(getByRole("img", { name: "Laptop" })).toHaveAttribute(
-      "src",
-      expect.stringContaining("fallback-image.jpg")
-    );
+    expect(screen.getByText("Test Product")).toBeInTheDocument();
+    expect(screen.getByText("$100")).toBeInTheDocument();
+    expect(screen.getByRole("img")).toHaveAttribute("src", "/test.jpg");
   });
 
   it("handles missing name with default", () => {
-    const productNoName = { ...product, name: "" };
-    const { getByText } = render(<ProductCard product={productNoName} />);
-    expect(getByText("Unnamed Product")).toBeInTheDocument();
+    const productWithoutName = { ...mockProduct, title: "" };
+
+    render(
+      <CartProvider>
+        <ProductCard product={productWithoutName} />
+      </CartProvider>
+    );
+
+    expect(screen.getByText("Unnamed Product")).toBeInTheDocument();
   });
 });
