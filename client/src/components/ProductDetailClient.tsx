@@ -3,10 +3,10 @@
 import React, { useEffect, useState } from "react";
 import type { Product } from "@/types/product";
 import { useCart } from "@/context/CartContext";
+import { useRouter } from "next/navigation";
 
 type Props = {
   product: Product;
-  // server-side passed recommendations or undefined (we also allow fetching client-side)
   initialRecs?: Product[];
   fetchRecs?: (id: string) => Promise<Product[]>;
 };
@@ -16,9 +16,10 @@ export default function ProductDetailClient({
   initialRecs = [],
   fetchRecs,
 }: Props) {
-  const { state, dispatch } = useCart();
+  const { addToCart } = useCart();
   const [recs, setRecs] = useState<Product[]>(initialRecs ?? []);
   const [adding, setAdding] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if ((!initialRecs || initialRecs.length === 0) && fetchRecs) {
@@ -30,8 +31,14 @@ export default function ProductDetailClient({
 
   function handleAdd(qty = 1) {
     setAdding(true);
-    dispatch({ type: "ADD_ITEM", product, qty });
-    setTimeout(() => setAdding(false), 250); // small UX feedback
+    addToCart(product, qty);
+    // small UX feedback
+    setTimeout(() => setAdding(false), 250);
+  }
+
+  function handleBuyNow() {
+    addToCart(product, 1);
+    router.push("/cart");
   }
 
   return (
@@ -51,9 +58,7 @@ export default function ProductDetailClient({
             ${product.price.toFixed(2)}
           </p>
           <p className="text-gray-700 mb-6">
-            {/* placeholder description; replace with product.description if available */}
-            A high-quality product — description will go here. Update DB to
-            include `description`.
+            A high-quality product — description will go here.
           </p>
 
           <div className="flex items-center space-x-3">
@@ -64,11 +69,9 @@ export default function ProductDetailClient({
             >
               {adding ? "Adding..." : "Add to cart"}
             </button>
+
             <button
-              onClick={() => {
-                dispatch({ type: "ADD_ITEM", product, qty: 1 });
-                // navigate to cart — you can use next/navigation later
-              }}
+              onClick={handleBuyNow}
               className="border border-gray-300 px-4 py-2 rounded-md hover:bg-gray-50"
             >
               Buy now
@@ -78,6 +81,7 @@ export default function ProductDetailClient({
           {/* Recommendations */}
           <section className="mt-8">
             <h3 className="text-lg font-semibold mb-3">You might also like</h3>
+
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {recs && recs.length > 0 ? (
                 recs.map((r) => (
