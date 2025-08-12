@@ -69,3 +69,34 @@ export async function getProducts(): Promise<{
 
   return { data: mapped, error: null };
 }
+
+/**
+ * getProductById
+ * param id product id (string)
+ * returns { data: Product | null, error: string | null }
+ */
+export async function getProductById(
+  id: string
+): Promise<{ data: Product | null; error: string | null }> {
+  if (!id) return { data: null, error: "Missing id" };
+  const res = await supabase
+    .from("products")
+    .select("*")
+    .eq("id", id)
+    .limit(1)
+    .maybeSingle();
+
+  if (res.error) return { data: null, error: res.error.message };
+
+  const r = res.data as any;
+  if (!r) return { data: null, error: null };
+
+  const mapped: Product = {
+    id: String(r.id ?? ""),
+    title: r.title ?? r.name ?? "Unnamed Product",
+    price: Number(r.price ?? 0),
+    image: r.image ?? r.image_url ?? null,
+  };
+
+  return { data: mapped, error: null };
+}
