@@ -10,6 +10,8 @@ interface Props {
 
 export default function ProductCard({ product }: Props) {
   const { addToCart } = useCart();
+  const name = product.title || "Unnamed Product";
+  const imageSrc = product.image ?? "/fallback-image.jpg";
 
   function handleAdd() {
     addToCart(product, 1);
@@ -19,17 +21,15 @@ export default function ProductCard({ product }: Props) {
     <article className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 overflow-hidden">
       <div className="overflow-hidden rounded-t-xl">
         <img
-          src={product.image ?? "/fallback-image.jpg"}
-          alt={product.title}
+          src={imageSrc}
+          alt={name}
           className="w-full h-48 object-cover transition-transform duration-300 ease-in-out hover:scale-105"
           loading="lazy"
         />
       </div>
 
       <div className="p-4">
-        <h3 className="text-lg font-semibold text-gray-900 truncate">
-          {product.title}
-        </h3>
+        <h3 className="text-lg font-semibold text-gray-900 truncate">{name}</h3>
         <p className="text-indigo-600 font-bold mt-2">
           ${Number(product.price).toFixed(2)}
         </p>
@@ -38,7 +38,7 @@ export default function ProductCard({ product }: Props) {
           <button
             onClick={handleAdd}
             className="flex-1 bg-indigo-600 text-white px-3 py-2 rounded-md hover:bg-indigo-700 transition"
-            aria-label={`Add ${product.title} to cart`}
+            aria-label={`Add ${name} to cart`}
           >
             Add to cart
           </button>
