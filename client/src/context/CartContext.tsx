@@ -50,8 +50,7 @@ function reducer(state: State, action: Action): State {
   }
 }
 
-// Add helper function signatures
-interface CartContextType {
+export interface CartContextType {
   state: State;
   addToCart: (product: Product, qty?: number) => void;
   removeFromCart: (id: string) => void;
