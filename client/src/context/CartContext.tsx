@@ -50,15 +50,33 @@ function reducer(state: State, action: Action): State {
   }
 }
 
-const CartContext = createContext<{
+type CartContextType = {
   state: State;
-  dispatch: React.Dispatch<Action>;
-} | null>(null);
+  addToCart: (product: Product, qty?: number) => void;
+  removeFromCart: (id: string) => void;
+  updateQty: (id: string, qty: number) => void;
+  clearCart: () => void;
+};
+
+const CartContext = createContext<CartContextType | null>(null);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  const addToCart = (product: Product, qty = 1) =>
+    dispatch({ type: "ADD_ITEM", product, qty });
+
+  const removeFromCart = (id: string) => dispatch({ type: "REMOVE_ITEM", id });
+
+  const updateQty = (id: string, qty: number) =>
+    dispatch({ type: "UPDATE_QTY", id, qty });
+
+  const clearCart = () => dispatch({ type: "CLEAR_CART" });
+
   return (
-    <CartContext.Provider value={{ state, dispatch }}>
+    <CartContext.Provider
+      value={{ state, addToCart, removeFromCart, updateQty, clearCart }}
+    >
       {children}
     </CartContext.Provider>
   );
