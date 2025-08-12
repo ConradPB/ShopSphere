@@ -19,9 +19,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} bg-gray-50`}>
-        <Navbar /> {/* 👈 Add it here so it’s always visible */}
-        <main className="pt-16">{children}</main>{" "}
-        {/* 👈 Push content below navbar */}
+        <CartProvider>
+          {/* Navbar is always visible */}
+          {/* This ensures the navbar is fixed at the top */}
+          <Navbar /> {/* 👈 Add it here so it’s always visible */}
+          <main className="pt-16">{children}</main>{" "}
+          {/* 👈 Push content below navbar */}
+        </CartProvider>
       </body>
     </html>
   );
