@@ -50,20 +50,21 @@ function reducer(state: State, action: Action): State {
   }
 }
 
-type CartContextType = {
+// Add helper function signatures
+interface CartContextType {
   state: State;
   addToCart: (product: Product, qty?: number) => void;
   removeFromCart: (id: string) => void;
   updateQty: (id: string, qty: number) => void;
   clearCart: () => void;
-};
+}
 
 const CartContext = createContext<CartContextType | null>(null);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const addToCart = (product: Product, qty = 1) =>
+  const addToCart = (product: Product, qty: number = 1) =>
     dispatch({ type: "ADD_ITEM", product, qty });
 
   const removeFromCart = (id: string) => dispatch({ type: "REMOVE_ITEM", id });
