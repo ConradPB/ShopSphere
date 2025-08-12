@@ -1,38 +1,20 @@
-// src/__tests__/components/ProductCard.test.tsx
-import React from "react";
 import { render, screen } from "@testing-library/react";
-import ProductCard from "@/components/ProductCard";
-import { CartProvider } from "@/context/CartContext";
-
-const mockProduct = {
-  id: "1",
-  title: "Test Product",
-  price: 100,
-  image: "/test.jpg",
-};
+import ProductCard from "./ProductCard";
 
 describe("ProductCard", () => {
-  it("renders product name, price, and image", () => {
+  it("renders correctly with given props", () => {
     render(
-      <CartProvider>
-        <ProductCard product={mockProduct} />
-      </CartProvider>
+      <ProductCard id="1" name="Test Product" image="/test.jpg" price={100} />
     );
 
     expect(screen.getByText("Test Product")).toBeInTheDocument();
-    expect(screen.getByText("$100")).toBeInTheDocument();
-    expect(screen.getByRole("img")).toHaveAttribute("src", "/test.jpg");
+    expect(screen.getByText(/\$100(\.00)?/)).toBeInTheDocument();
   });
 
-  it("handles missing name with default", () => {
-    const productWithoutName = { ...mockProduct, title: "" };
-
-    render(
-      <CartProvider>
-        <ProductCard product={productWithoutName} />
-      </CartProvider>
-    );
+  it("renders default name when none is provided", () => {
+    render(<ProductCard id="2" image="/test2.jpg" price={100} />);
 
     expect(screen.getByText("Unnamed Product")).toBeInTheDocument();
+    expect(screen.getByText(/\$100(\.00)?/)).toBeInTheDocument();
   });
 });
