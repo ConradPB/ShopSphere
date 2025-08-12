@@ -1,32 +1,31 @@
-import React from "react";
+import { useCart } from "@/context/CartContext";
 
-interface ProductCardProps {
-  product: {
-    id: string;
-    name?: string;
-    image_url?: string;
-    price?: number;
-  };
-}
-
-const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const imageSrc =
-    product.image_url && product.image_url.trim() !== ""
-      ? product.image_url
-      : "/fallback-image.jpg";
-
-  const displayName =
-    product.name && product.name.trim() !== ""
-      ? product.name
-      : "Unnamed Product";
+export default function ProductCard({ product }: { product: any }) {
+  const { addToCart } = useCart();
 
   return (
-    <div className="product-card" data-testid="product-card">
-      <img src={imageSrc} alt={displayName} />
-      <h3>{displayName}</h3>
-      <p>${product.price ?? 0}</p>
+    <div className="p-4 border rounded-lg shadow-md">
+      <img
+        src={product.image}
+        alt={product.name}
+        className="w-full h-40 object-cover rounded"
+      />
+      <h2 className="text-lg font-bold">{product.name}</h2>
+      <p className="text-gray-700">${product.price}</p>
+      <button
+        onClick={() =>
+          addToCart({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            image: product.image,
+            quantity: 1,
+          })
+        }
+        className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+      >
+        Add to Cart
+      </button>
     </div>
   );
-};
-
-export default ProductCard;
+}
