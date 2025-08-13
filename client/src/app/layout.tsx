@@ -1,8 +1,11 @@
+"use client";
+
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Navbar from "@/components/Navbar";
-import { CartProvider } from "@/context/CartContext";
+import { Provider } from "react-redux";
+import { store } from "@/redux/store";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,13 +22,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} bg-gray-50`}>
-        <CartProvider>
+        <Provider store={store}>
           {/* Navbar is always visible */}
-          {/* This ensures the navbar is fixed at the top */}
-          <Navbar /> {/* 👈 Add it here so it’s always visible */}
-          <main className="pt-16">{children}</main>{" "}
-          {/* 👈 Push content below navbar */}
-        </CartProvider>
+          <Navbar />
+          <main className="pt-16">{children}</main>
+        </Provider>
       </body>
     </html>
   );
