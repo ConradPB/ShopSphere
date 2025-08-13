@@ -1,5 +1,3 @@
-"use client";
-
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -23,7 +21,6 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} bg-gray-50`}>
         <Provider store={store}>
-          {/* Navbar is always visible */}
           <Navbar />
           <main className="pt-16">{children}</main>
         </Provider>
