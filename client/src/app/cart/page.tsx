@@ -1,14 +1,17 @@
 "use client";
 
 import React from "react";
-import { useCart } from "@/context/CartContext";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { removeFromCart, updateQuantity, clearCart } from "@/redux/cartSlice";
 import type { Product } from "@/types/product";
 
 type CartItem = Product & { quantity: number };
 
 export default function CartPage() {
-  const { state, removeFromCart, updateQty, clearCart } = useCart();
-  const items: CartItem[] = state.items;
+  const dispatch = useDispatch();
+  const items: CartItem[] = useSelector((state: RootState) => state.cart.items);
+
   const total = items.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
@@ -46,7 +49,12 @@ export default function CartPage() {
                   <div className="flex items-center border rounded">
                     <button
                       onClick={() =>
-                        updateQty(item.id, Math.max(1, item.quantity - 1))
+                        dispatch(
+                          updateQuantity({
+                            id: item.id,
+                            quantity: Math.max(1, item.quantity - 1),
+                          })
+                        )
                       }
                       className="px-3 py-1"
                       aria-label={`Decrease quantity for ${item.title}`}
@@ -55,7 +63,14 @@ export default function CartPage() {
                     </button>
                     <div className="px-3">{item.quantity}</div>
                     <button
-                      onClick={() => updateQty(item.id, item.quantity + 1)}
+                      onClick={() =>
+                        dispatch(
+                          updateQuantity({
+                            id: item.id,
+                            quantity: item.quantity + 1,
+                          })
+                        )
+                      }
                       className="px-3 py-1"
                       aria-label={`Increase quantity for ${item.title}`}
                     >
@@ -64,7 +79,7 @@ export default function CartPage() {
                   </div>
 
                   <button
-                    onClick={() => removeFromCart(item.id)}
+                    onClick={() => dispatch(removeFromCart(item.id))}
                     className="text-red-500 hover:underline"
                   >
                     Remove
@@ -78,14 +93,13 @@ export default function CartPage() {
             <div className="text-lg font-bold">Total: ${total.toFixed(2)}</div>
             <div className="flex gap-3">
               <button
-                onClick={() => clearCart()}
+                onClick={() => dispatch(clearCart())}
                 className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
               >
                 Clear Cart
               </button>
               <button
                 onClick={() => {
-                  // simulate checkout — you can replace this with real checkout flow
                   alert(`Proceed to checkout — total: $${total.toFixed(2)}`);
                 }}
                 className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
