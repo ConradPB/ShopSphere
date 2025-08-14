@@ -40,4 +40,8 @@ export default function ProductDetailClient({
     dispatch(addToCart({ product, quantity: 1 }));
     router.push("/cart");
   }
+
+  return (
+    
+  );
 }
