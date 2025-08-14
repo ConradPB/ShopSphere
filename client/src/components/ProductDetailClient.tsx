@@ -51,6 +51,33 @@ export default function ProductDetailClient({
             className="w-full h-[420px] object-cover rounded-lg shadow"
           />
         </div>
+
+        <div>
+          <h1 className="text-2xl font-bold mb-2">{product.title}</h1>
+          <p className="text-indigo-600 text-xl font-semibold mb-4">
+            ${product.price.toFixed(2)}
+          </p>
+          <p className="text-gray-700 mb-6">
+            A high-quality product — description will go here.
+          </p>
+
+          <div className="flex items-center space-x-3">
+            <button
+              onClick={() => handleAdd(1)}
+              disabled={adding}
+              className="bg-indigo-600 text-white px-4 py-2 rounded-md shadow hover:bg-indigo-700 transition"
+            >
+              {adding ? "Adding..." : "Add to cart"}
+            </button>
+
+            <button
+              onClick={handleBuyNow}
+              className="border border-gray-300 px-4 py-2 rounded-md hover:bg-gray-50"
+            >
+              Buy now
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
