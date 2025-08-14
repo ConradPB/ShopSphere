@@ -41,26 +41,6 @@ export default function CartPage() {
               </li>
             ))}
           </ul>
-
-          <div className="mt-6 flex justify-between items-center">
-            <div className="text-lg font-bold">Total: ${total.toFixed(2)}</div>
-            <div className="flex gap-3">
-              <button
-                onClick={() => dispatch(clearCart())}
-                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
-              >
-                Clear Cart
-              </button>
-              <button
-                onClick={() => {
-                  alert(`Proceed to checkout — total: $${total.toFixed(2)}`);
-                }}
-                className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
-              >
-                Checkout
-              </button>
-            </div>
-          </div>
         </>
       )}
     </div>
