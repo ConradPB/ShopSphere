@@ -2,19 +2,20 @@
 
 import React from "react";
 import type { Product } from "@/types/product";
-import { useCart } from "@/context/CartContext";
+import { useAppDispatch } from "@/redux/store";
+import { addToCart } from "@/redux/cartSlice";
 
 interface Props {
   product: Product;
 }
 
 export default function ProductCard({ product }: Props) {
-  const { addToCart } = useCart();
+  const dispatch = useAppDispatch();
   const name = product.title || "Unnamed Product";
   const imageSrc = product.image ?? "/fallback-image.jpg";
 
   function handleAdd() {
-    addToCart(product, 1);
+    dispatch(addToCart({ ...product, quantity: 1 }));
   }
 
   return (
