@@ -10,4 +10,6 @@ export default function CartPage() {
   const items = useAppSelector((s) => s.cart.items) as CartItem[];
 
   const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
+
+  return <div className="max-w-3xl mx-auto p-6"></div>;
 }
