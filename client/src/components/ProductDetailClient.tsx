@@ -42,6 +42,16 @@ export default function ProductDetailClient({
   }
 
   return (
-    
+    <div className="max-w-5xl mx-auto px-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+        <div>
+          <img
+            src={product.image ?? "/fallback-image.jpg"}
+            alt={product.title}
+            className="w-full h-[420px] object-cover rounded-lg shadow"
+          />
+        </div>
+      </div>
+    </div>
   );
 }
