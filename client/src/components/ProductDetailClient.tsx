@@ -77,6 +77,39 @@ export default function ProductDetailClient({
               Buy now
             </button>
           </div>
+
+          <section className="mt-8">
+            <h3 className="text-lg font-semibold mb-3">You might also like</h3>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {recs && recs.length > 0 ? (
+                recs.map((r) => (
+                  <article
+                    key={r.id}
+                    className="bg-white rounded-md shadow-sm overflow-hidden"
+                  >
+                    <img
+                      src={r.image ?? "/fallback-image.jpg"}
+                      alt={r.title}
+                      className="w-full h-28 object-cover"
+                    />
+                    <div className="p-2">
+                      <h4 className="text-sm font-medium truncate">
+                        {r.title}
+                      </h4>
+                      <p className="text-xs text-indigo-600">
+                        ${r.price.toFixed(2)}
+                      </p>
+                    </div>
+                  </article>
+                ))
+              ) : (
+                <p className="text-sm text-gray-500">
+                  No recommendations available.
+                </p>
+              )}
+            </div>
+          </section>
         </div>
       </div>
     </div>
