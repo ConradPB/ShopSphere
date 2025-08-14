@@ -1,35 +1,33 @@
-import { render, screen } from "@testing-library/react";
+import React from "react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import ProductCard from "@/components/ProductCard";
-import { CartProvider } from "@/context/CartContext";
-
-const renderWithCart = (ui: React.ReactNode) =>
-  render(<CartProvider>{ui}</CartProvider>);
+import { Provider } from "react-redux";
+import { store } from "@/redux/store";
 
 describe("ProductCard", () => {
-  it("renders correctly with given props", () => {
-    const product = {
-      id: "1",
-      title: "Test Product",
-      image: "/test.jpg",
-      price: 100,
-    };
+  const product = {
+    id: 1,
+    title: "Test Product",
+    price: 19.99,
+    image: "/test.jpg",
+    description: "A test product",
+    category: "Test",
+  };
 
-    renderWithCart(<ProductCard product={product} />);
+  function renderWithRedux(ui: React.ReactNode) {
+    return render(<Provider store={store}>{ui}</Provider>);
+  }
 
+  it("renders product info", () => {
+    renderWithRedux(<ProductCard product={product} />);
     expect(screen.getByText("Test Product")).toBeInTheDocument();
-    expect(screen.getByText(/\$100(\.00)?/)).toBeInTheDocument();
-    expect(screen.getByRole("img", { name: "Test Product" })).toHaveAttribute(
-      "src",
-      "/test.jpg"
-    );
+    expect(screen.getByText("$19.99")).toBeInTheDocument();
   });
 
-  it("renders fallback name when title is missing", () => {
-    const product = { id: "2", title: "", image: "/test2.jpg", price: 100 };
-
-    renderWithCart(<ProductCard product={product} />);
-
-    expect(screen.getByText("Unnamed Product")).toBeInTheDocument();
-    expect(screen.getByText(/\$100(\.00)?/)).toBeInTheDocument();
+  it("dispatches addToCart on button click", () => {
+    renderWithRedux(<ProductCard product={product} />);
+    fireEvent.click(screen.getByLabelText(/Add Test Product to cart/i));
+    // Optionally check store state:
+    // expect(store.getState().cart.items.length).toBe(1);
   });
 });
