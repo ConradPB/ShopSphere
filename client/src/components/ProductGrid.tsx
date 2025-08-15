@@ -1,14 +1,9 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { supabase } from "@/lib/supabase";
-
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  image?: string; // optional to reflect DB
-}
+import { getProducts } from "@/lib/supabase";
+import { Product } from "@/types/product";
 
 export default function ProductGrid() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -16,9 +11,8 @@ export default function ProductGrid() {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const { data, error } = await supabase.from("products").select("*");
-      if (error) console.error("Error fetching products:", error);
-      else setProducts(data || []);
+      const fetchedProducts = await getProducts();
+      setProducts(fetchedProducts);
       setLoading(false);
     };
     fetchProducts();
@@ -43,16 +37,16 @@ export default function ProductGrid() {
           >
             <div className="relative h-48 w-full">
               <Image
-                src={product.image ?? "/placeholder.png"} // fallback
-                alt={product.name}
-                layout="fill"
-                objectFit="cover"
+                src={product.image || "/placeholder.png"}
+                alt={product.title}
+                fill
+                style={{ objectFit: "cover" }}
                 className="transition-transform duration-300 hover:scale-105"
               />
             </div>
             <div className="p-4">
               <h3 className="text-lg font-semibold text-gray-800">
-                {product.name}
+                {product.title}
               </h3>
               <p className="mt-1 text-gray-500">${product.price.toFixed(2)}</p>
               <button className="mt-3 w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white py-2 px-4 rounded-lg hover:opacity-90 transition">
