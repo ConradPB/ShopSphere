@@ -15,7 +15,7 @@ export default function ProductCard({ product }: Props) {
   const imageSrc = product.image ?? "/fallback-image.jpg";
 
   function handleAdd() {
-    dispatch(addToCart({ ...product, quantity: 1 }));
+    dispatch(addToCart({ product, quantity: 1 }));
   }
 
   return (
