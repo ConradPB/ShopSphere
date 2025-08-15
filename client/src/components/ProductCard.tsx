@@ -2,7 +2,7 @@
 
 import React from "react";
 import type { Product } from "@/types/product";
-import { useAppDispatch } from "@/redux/store";
+import { useAppDispatch } from "@/redux/hooks";
 import { addToCart } from "@/redux/cartSlice";
 
 interface Props {
@@ -15,6 +15,7 @@ export default function ProductCard({ product }: Props) {
   const imageSrc = product.image ?? "/fallback-image.jpg";
 
   function handleAdd() {
+    // ✅ Pass product in correct structure
     dispatch(addToCart({ product, quantity: 1 }));
   }
 
