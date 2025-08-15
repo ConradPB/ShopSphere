@@ -1,48 +1,40 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import type { Product } from "@/types/product";
+import { Product } from "@/types/product";
 
-export type CartItem = Product & { quantity: number };
+interface CartItem extends Product {
+  quantity: number;
+}
 
-type CartState = { items: CartItem[] };
+interface CartState {
+  items: CartItem[];
+}
 
-const initialState: CartState = { items: [] };
+const initialState: CartState = {
+  items: [],
+};
 
 const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    addToCart(
-      state,
-      action: PayloadAction<{ product: Product; quantity?: number }>
-    ) {
-      const { product, quantity = 1 } = action.payload;
-      const existing = state.items.find((i) => i.id === product.id);
-      if (existing) {
-        existing.quantity += quantity;
+    addToCart: (state, action: PayloadAction<CartItem>) => {
+      const existingItem = state.items.find(
+        (item) => item.id === action.payload.id
+      );
+      if (existingItem) {
+        existingItem.quantity += action.payload.quantity;
       } else {
-        state.items.push({ ...product, quantity });
+        state.items.push(action.payload);
       }
     },
-    removeFromCart(state, action: PayloadAction<string>) {
-      state.items = state.items.filter((i) => i.id !== action.payload);
+    removeFromCart: (state, action: PayloadAction<number>) => {
+      state.items = state.items.filter((item) => item.id !== action.payload);
     },
-    updateQuantity(
-      state,
-      action: PayloadAction<{ id: string; quantity: number }>
-    ) {
-      const { id, quantity } = action.payload;
-      const item = state.items.find((i) => i.id === id);
-      if (item) {
-        item.quantity = Math.max(1, quantity);
-      }
-    },
-    clearCart(state) {
+    clearCart: (state) => {
       state.items = [];
     },
   },
 });
 
-export const { addToCart, removeFromCart, updateQuantity, clearCart } =
-  cartSlice.actions;
-
+export const { addToCart, removeFromCart, clearCart } = cartSlice.actions;
 export default cartSlice.reducer;
