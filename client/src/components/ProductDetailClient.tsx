@@ -1,53 +1,53 @@
 "use client";
 
-import React, { useState } from "react";
-import type { Product } from "@/types/product";
-import { useAppDispatch } from "@/redux/hooks";
-import { addToCart } from "@/redux/cartSlice";
+import React from "react";
+import Image from "next/image";
+import { useDispatch } from "react-redux";
+import { addToCart } from "@/store/cartSlice";
+import { Product } from "@/types/product";
 
-interface Props {
+interface ProductDetailClientProps {
   product: Product;
 }
 
-export default function ProductDetailClient({ product }: Props) {
-  const dispatch = useAppDispatch();
-  const [quantity, setQuantity] = useState(1);
+export default function ProductDetailClient({
+  product,
+}: ProductDetailClientProps) {
+  const dispatch = useDispatch();
 
-  function handleAdd() {
-    // ✅ Pass product in correct structure
-    dispatch(addToCart({ product, quantity }));
-  }
+  const handleAddToCart = () => {
+    dispatch(addToCart({ ...product, quantity: 1 }));
+  };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
-      <img
-        src={product.image ?? "/fallback-image.jpg"}
-        alt={product.title}
-        className="w-full h-96 object-cover rounded-lg mb-6"
-      />
+    <div className="max-w-4xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Product Image */}
+        <div className="relative h-96 w-full">
+          <Image
+            src={product.image || "/placeholder.png"}
+            alt={product.title}
+            fill
+            style={{ objectFit: "cover" }}
+            className="rounded-lg shadow-md"
+          />
+        </div>
 
-      <h1 className="text-3xl font-bold">{product.title}</h1>
-      <p className="text-gray-500 text-lg mt-2">{product.category}</p>
-      <p className="text-indigo-600 text-2xl font-bold mt-4">
-        ${Number(product.price).toFixed(2)}
-      </p>
+        {/* Product Details */}
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">{product.title}</h1>
+          <p className="mt-4 text-gray-500">{product.description}</p>
+          <p className="mt-6 text-2xl font-semibold text-gray-900">
+            ${product.price.toFixed(2)}
+          </p>
 
-      <p className="mt-4 text-gray-700">{product.description}</p>
-
-      <div className="flex items-center gap-4 mt-6">
-        <input
-          type="number"
-          value={quantity}
-          min={1}
-          onChange={(e) => setQuantity(Number(e.target.value))}
-          className="w-16 border rounded-md text-center"
-        />
-        <button
-          onClick={handleAdd}
-          className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition"
-        >
-          Add to Cart
-        </button>
+          <button
+            onClick={handleAddToCart}
+            className="mt-6 w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white py-3 px-6 rounded-lg hover:opacity-90 transition"
+          >
+            Add to Cart
+          </button>
+        </div>
       </div>
     </div>
   );
