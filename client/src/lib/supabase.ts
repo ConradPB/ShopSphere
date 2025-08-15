@@ -1,102 +1,28 @@
 import { createClient } from "@supabase/supabase-js";
 import type { Product } from "@/types/product";
 
-/**
- * Minimal Database typing to help TS infer .from("products")
- * can expand as schema grows.
- */
-type DbProductRow = {
-  id?: number | string;
-  name?: string | null;
-  title?: string | null;
-  price?: number | string | null;
-  image?: string | null;
-  image_url?: string | null;
-  created_at?: string | null;
-};
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
-type Database = {
-  public: {
-    Tables: {
-      products: {
-        Row: DbProductRow;
-        Insert: Partial<DbProductRow>;
-        Update: Partial<DbProductRow>;
-      };
-    };
-    Views: Record<string, never>;
-    Functions: Record<string, never>;
-    Enums: Record<string, never>;
-  };
-};
+export async function getProducts(): Promise<Product[]> {
+  const { data, error } = await supabase.from("products").select("*");
 
-const url = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
-const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
-
-if (!url || !key) {
-  // warn but don't throw — CI/test envs may not set these
-  // eslint-disable-next-line no-console
-  console.warn(
-    "NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY not set."
-  );
-}
-
-export const supabase = createClient<Database>(url, key);
-
-/**
- * getProducts()
- * Returns { data: Product[], error: string | null }
- * It maps flexible DB rows (name/title, image/image_url) into the UI Product shape.
- */
-export async function getProducts(): Promise<{
-  data: Product[];
-  error: string | null;
-}> {
-  const res = await supabase.from("products").select("*");
-
-  if (res.error) {
-    return { data: [], error: res.error.message };
+  if (error) {
+    console.error(error);
+    return [];
   }
 
-  const rows = (res.data ?? []) as DbProductRow[];
-
-  const mapped: Product[] = rows.map((r) => ({
-    id: String(r.id ?? ""),
-    title: r.title ?? r.name ?? "Unnamed Product",
-    price: Number(r.price ?? 0),
-    image: r.image ?? r.image_url ?? null,
+  // ✅ Ensure all required Product fields are present
+  const mapped: Product[] = data.map((item) => ({
+    id: String(item.id),
+    title: item.title ?? "Untitled Product",
+    price: Number(item.price) ?? 0,
+    image: item.image ?? "/fallback-image.jpg",
+    description: item.description ?? "No description available.",
+    category: item.category ?? "Uncategorized",
   }));
 
-  return { data: mapped, error: null };
-}
-
-/**
- * getProductById
- * param id product id (string)
- * returns { data: Product | null, error: string | null }
- */
-export async function getProductById(
-  id: string
-): Promise<{ data: Product | null; error: string | null }> {
-  if (!id) return { data: null, error: "Missing id" };
-  const res = await supabase
-    .from("products")
-    .select("*")
-    .eq("id", id)
-    .limit(1)
-    .maybeSingle();
-
-  if (res.error) return { data: null, error: res.error.message };
-
-  const r = res.data as any;
-  if (!r) return { data: null, error: null };
-
-  const mapped: Product = {
-    id: String(r.id ?? ""),
-    title: r.title ?? r.name ?? "Unnamed Product",
-    price: Number(r.price ?? 0),
-    image: r.image ?? r.image_url ?? null,
-  };
-
-  return { data: mapped, error: null };
+  return mapped;
 }
