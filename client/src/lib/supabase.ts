@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import type { Product } from "@/types/product";
 
-const supabase = createClient(
+export const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
@@ -14,7 +14,6 @@ export async function getProducts(): Promise<Product[]> {
     return [];
   }
 
-  // ✅ Ensure all required Product fields are present
   const mapped: Product[] = data.map((item) => ({
     id: String(item.id),
     title: item.title ?? "Untitled Product",
