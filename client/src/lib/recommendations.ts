@@ -1,25 +1,30 @@
 import type { Product } from "@/types/product";
-import { fallbackProducts } from "@/lib/products"; // if you have lib/products fallback; otherwise inline
 
-/**
- * getRecommendationsMock
- * Returns an array of Product-like objects to show as "recommended".
- * In future this will call Mistral or a recommendations microservice.
- */
-export async function getRecommendationsMock(
-  productId: string,
-  limit = 4
-): Promise<Product[]> {
-  // naive: pick fallback items excluding the same id
-  // If you have a DB, you'd call a recommendation engine here.
-  const items = (fallbackProducts || [])
-    .filter((p) => String(p.id) !== String(productId))
-    .slice(0, limit);
-  // normalize shape to Product type
-  return items.map((p) => ({
-    id: String(p.id),
-    title: p.title,
-    price: p.price,
-    image: p.image,
-  }));
+export function getRecommendedProducts(): Product[] {
+  return [
+    {
+      id: "1",
+      title: "Stylish Leather Bag",
+      price: 89.99,
+      image: "/products/bag.jpg",
+      description: "A premium leather bag with elegant design.",
+      category: "Accessories",
+    },
+    {
+      id: "2",
+      title: "Noise Cancelling Headphones",
+      price: 199.99,
+      image: "/products/headphones.jpg",
+      description: "Experience crystal clear sound with noise cancellation.",
+      category: "Electronics",
+    },
+    {
+      id: "3",
+      title: "Sports Running Shoes",
+      price: 59.99,
+      image: "/products/shoes.jpg",
+      description: "Lightweight and comfortable running shoes.",
+      category: "Footwear",
+    },
+  ];
 }
