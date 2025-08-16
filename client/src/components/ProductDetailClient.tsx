@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import { useDispatch } from "react-redux";
-
+import { addToCart } from "@/store/cartSlice";
 import { Product } from "@/types/product";
 
 interface ProductDetailClientProps {
