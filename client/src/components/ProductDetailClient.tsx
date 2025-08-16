@@ -4,7 +4,6 @@ import React from "react";
 import Image from "next/image";
 import { useDispatch } from "react-redux";
 import { addToCart } from "@/redux/cartSlice";
-
 import { Product } from "@/types/product";
 
 interface ProductDetailClientProps {
