@@ -27,6 +27,7 @@ export default function ProductCard({ product }: Props) {
           alt={name}
           className="w-full h-48 object-cover transition-transform duration-300 ease-in-out hover:scale-105"
           loading="lazy"
+          height={200}
         />
       </div>
 
