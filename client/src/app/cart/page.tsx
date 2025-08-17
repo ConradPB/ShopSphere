@@ -8,7 +8,7 @@ import type { Product } from "@/types/product";
 
 type CartItem = Product & { quantity: number };
 
-export default function CartPage() {
+export default function CarctPage() {
   const dispatch = useDispatch();
   const items: CartItem[] = useSelector((state: RootState) => state.cart.items);
 
