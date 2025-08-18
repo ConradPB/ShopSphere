@@ -11,8 +11,15 @@ export default function ProductGrid() {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const fetchedProducts = await getProducts();
-      setProducts(fetchedProducts);
+      const { data, error } = await getProducts();
+
+      if (error) {
+        console.error("Error fetching products:", error);
+        setProducts([]);
+      } else {
+        setProducts(data ?? []);
+      }
+
       setLoading(false);
     };
     fetchProducts();
