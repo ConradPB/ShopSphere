@@ -12,7 +12,6 @@ export interface ProductDetailClientProps {
 export default function ProductDetailClient({
   product,
   initialRecs = [],
-  fetchRecs,
 }: ProductDetailClientProps) {
   return (
     <div className="space-y-6">
