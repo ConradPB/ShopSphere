@@ -1,33 +1,51 @@
 import { createClient } from "@supabase/supabase-js";
-import { Product } from "@/types/product";
-export const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+import type { Product } from "@/types/product";
 
-export async function getProducts(): Promise<Product[]> {
+const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+
+export const supabase = createClient(url, anon);
+
+// tolerant mapping from DB row to our Product type
+function mapRowToProduct(row: any): Product {
+  return {
+    id: String(row.id),
+    title: row.title ?? row.name ?? "Untitled",
+    price: Number(row.price ?? 0),
+    image: row.image ?? row.image_url ?? undefined,
+    description: row.description ?? "",
+    category: row.category ?? "General",
+  };
+}
+
+export async function getProducts(): Promise<{
+  data: Product[] | null;
+  error: string | null;
+}> {
   const { data, error } = await supabase.from("products").select("*");
 
   if (error) {
-    console.error("Error fetching products:", error);
-    return [];
+    return { data: null, error: error.message };
   }
 
-  // Ensure all required Product fields are present
-  const mapped: Product[] =
-    data?.map((item) => ({
-      id: String(item.id ?? ""), // ensure string
-      title: String(item.title ?? "Untitled Product"),
-      price: Number(item.price ?? 0),
-      image: item.image ?? "/placeholder.png",
-      description: String(item.description ?? "No description available"),
-      category: String(item.category ?? "Uncategorized"),
-    })) || [];
-
-  return mapped;
+  const mapped = (data ?? []).map(mapRowToProduct);
+  return { data: mapped, error: null };
 }
 
-export async function getProductById(id: string) {
-  const products = await getProducts();
-  return products.find((p) => p.id === id);
+export async function getProductById(id: string): Promise<{
+  data: Product | null;
+  error: string | null;
+}> {
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) {
+    return { data: null, error: error.message };
+  }
+  if (!data) return { data: null, error: "Not found" };
+
+  return { data: mapRowToProduct(data), error: null };
 }
