@@ -26,3 +26,8 @@ export async function getProducts(): Promise<Product[]> {
 
   return mapped;
 }
+
+export async function getProductById(id: string) {
+  const products = await getProducts();
+  return products.find((p) => p.id === id);
+}
