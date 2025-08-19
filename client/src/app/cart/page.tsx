@@ -1,18 +1,30 @@
 "use client";
 
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/redux/store";
+import {
+  increaseQuantity,
+  decreaseQuantity,
+  removeFromCart,
+} from "@/redux/cartSlice";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function CartPage() {
   const cartItems = useSelector((state: RootState) => state.cart.items);
+  const dispatch = useDispatch();
 
   if (cartItems.length === 0) {
     return (
       <p className="text-center py-10 text-gray-500">Your cart is empty.</p>
     );
   }
+
+  // Calculate total
+  const total = cartItems.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0
+  );
 
   return (
     <div className="py-12 px-4 sm:px-6 lg:px-8">
@@ -36,11 +48,38 @@ export default function CartPage() {
                 <p className="text-gray-500">${item.price.toFixed(2)}</p>
               </div>
             </div>
-            <div className="font-semibold">x{item.quantity}</div>
+
+            {/* Quantity controls */}
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => dispatch(decreaseQuantity(item.id))}
+                className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
+              >
+                –
+              </button>
+              <span className="font-semibold">{item.quantity}</span>
+              <button
+                onClick={() => dispatch(increaseQuantity(item.id))}
+                className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
+              >
+                +
+              </button>
+            </div>
+
+            {/* Remove button */}
+            <button
+              onClick={() => dispatch(removeFromCart(item.id))}
+              className="ml-4 text-red-500 hover:underline"
+            >
+              Remove
+            </button>
           </div>
         ))}
       </div>
-      <div className="mt-8 text-right">
+
+      {/* Total and checkout */}
+      <div className="mt-8 flex flex-col items-end">
+        <p className="text-xl font-bold mb-4">Total: ${total.toFixed(2)}</p>
         <Link
           href="/checkout"
           className="bg-gradient-to-r from-pink-500 to-purple-500 text-white py-3 px-6 rounded-lg hover:opacity-90 transition"
