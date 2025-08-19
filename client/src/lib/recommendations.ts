@@ -1,4 +1,5 @@
 import { Product } from "@/types/product";
+import { getProducts } from "@/lib/supabase";
 import { supabase } from "./supabase";
 
 export async function getRecommendations(
