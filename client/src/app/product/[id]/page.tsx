@@ -21,7 +21,12 @@ export default async function ProductPage({ params }: Props) {
   return (
     <div className="py-12">
       <ProductDetailClient
-        product={product}
+        product={{
+          id: String(product.id), // force string
+          title: product.title,
+          price: product.price,
+          image: product.image,
+        }}
         initialRecs={recs}
         fetchRecs={getRecommendations}
       />
