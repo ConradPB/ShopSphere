@@ -1,35 +1,38 @@
-import { notFound } from "next/navigation";
-import { getProductById } from "@/lib/supabase";
-import { getRecommendations } from "@/lib/recommendations";
+import { getProductById, getRecommendations } from "@/lib/supabase";
 import ProductDetailClient from "@/components/ProductDetailClient";
+import RecommendedProducts from "@/components/RecommendedProducts";
 
-type Props = { params: { id: string } };
+interface ProductPageProps {
+  params: { id: string };
+}
 
-export default async function ProductPage({ params }: Props) {
-  const id = params.id;
+export default async function ProductPage({ params }: ProductPageProps) {
+  const { id } = params;
+
+  // fetch main product
   const { data: product, error } = await getProductById(id);
 
-  if (error) {
-    console.error("getProductById error:", error);
-    return notFound();
+  if (error || !product) {
+    return <p className="text-center text-red-500">Product not found.</p>;
   }
-  if (!product) return notFound();
 
-  // Server-side fetch of recommendations
-  const recs = await getRecommendations(id);
+  // fetch recommended products
+  const { data: recommendations } = await getRecommendations(id);
 
   return (
-    <div className="py-12">
+    <div className="max-w-6xl mx-auto p-6">
       <ProductDetailClient
         product={{
-          id: String(product.id), // force string
+          id: String(product.id), // 🔹 force to string
           title: product.title,
           price: product.price,
-          image: product.image,
+          image: product.image ?? null, // 🔹 normalize undefined → null
         }}
-        initialRecs={recs}
-        fetchRecs={getRecommendations}
       />
+
+      {recommendations && recommendations.length > 0 && (
+        <RecommendedProducts products={recommendations} />
+      )}
     </div>
   );
 }
