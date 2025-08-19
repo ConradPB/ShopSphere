@@ -16,7 +16,7 @@ export default async function ProductPage({ params }: Props) {
   if (!product) return notFound();
 
   // Server-side fetch of recommendations
-  const recs = await getRecommendations(id, 6);
+  const recs = await getRecommendations(id);
 
   return (
     <div className="py-12">
