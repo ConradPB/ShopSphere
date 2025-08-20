@@ -25,7 +25,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           price: product.price,
           image: product.image ?? null,
         }}
-        recommendations={recommendations} // ✅ pass directly
+        recommendations={recommendations}
       />
     </div>
   );
