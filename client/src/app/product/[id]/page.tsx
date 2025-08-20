@@ -48,6 +48,8 @@ export default function ProductDetailClient({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product?.id, fetchRecs]);
 
+  const imgSrc = product?.image ?? "/fallback-image.jpg";
+
   function handleAdd(qty = 1) {
     setAdding(true);
     dispatch(
