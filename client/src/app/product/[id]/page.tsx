@@ -38,14 +38,15 @@ export default function ProductDetailClient({
   const [adding, setAdding] = useState(false);
 
   useEffect(() => {
-    // If we have no recs yet and a fetcher is provided, fetch on the client
-    if (recs.length === 0 && fetchRecs) {
+    if (!product || !fetchRecs) return;
+
+    if (recs.length === 0) {
       fetchRecs(product.id, 4)
         .then((r) => setRecs(r ?? []))
         .catch(() => setRecs([]));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [product.id, fetchRecs]);
+  }, [product?.id, fetchRecs]);
 
   const imgSrc = product.image ?? "/fallback-image.jpg";
 
