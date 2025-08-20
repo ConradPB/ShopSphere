@@ -5,6 +5,8 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
+const FALLBACK_IMAGE = "/fallback-image.jpg";
+
 export async function getProducts(): Promise<{
   data: Product[] | null;
   error: string | null;
@@ -15,8 +17,16 @@ export async function getProducts(): Promise<{
     return { data: null, error: error.message };
   }
 
-  return { data: data as Product[], error: null };
+  const normalized = (data ?? []).map((p) => ({
+    id: String(p.id),
+    title: p.title,
+    price: p.price,
+    image: p.image ?? FALLBACK_IMAGE, // ✅ enforce string
+  }));
+
+  return { data: normalized, error: null };
 }
+
 export async function getProductById(
   id: string
 ): Promise<{ data: Product | null; error: string | null }> {
@@ -26,9 +36,16 @@ export async function getProductById(
     .eq("id", id)
     .single();
 
-  if (error) {
-    return { data: null, error: error.message };
+  if (error || !data) {
+    return { data: null, error: error?.message ?? "Not found" };
   }
 
-  return { data: data as Product, error: null };
+  const normalized: Product = {
+    id: String(data.id),
+    title: data.title,
+    price: data.price,
+    image: data.image ?? FALLBACK_IMAGE, // ✅ enforce string
+  };
+
+  return { data: normalized, error: null };
 }
