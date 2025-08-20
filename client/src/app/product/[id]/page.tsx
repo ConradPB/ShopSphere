@@ -11,7 +11,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const { id } = params;
 
   const { data: product, error } = await getProductById(id);
-  const recommendations = await getRecommendations(id);
+  const recommendations = await getRecommendations(id, 4); // Fetch 3 recommendations
 
   if (error || !product) {
     return <p className="text-center text-red-500">Product not found.</p>;
