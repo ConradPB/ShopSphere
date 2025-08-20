@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useDispatch } from "react-redux";
 import { addToCart } from "@/redux/cartSlice";
+import { useState, useEffect } from "react";
 
 interface ProductDetailClientProps {
   product?: {
@@ -17,8 +18,31 @@ export default function ProductDetailClient({
   product,
 }: ProductDetailClientProps) {
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(true);
 
-  // ✅ If product is missing, render safe fallback
+  useEffect(() => {
+    if (product) {
+      setIsLoading(false);
+    }
+  }, [product]);
+
+  // ✅ Loading skeleton
+  if (isLoading) {
+    return (
+      <div className="max-w-3xl mx-auto p-6 animate-pulse">
+        <div className="flex flex-col md:flex-row items-center gap-6">
+          <div className="w-full md:w-1/2 bg-gray-300 h-80 rounded-lg"></div>
+          <div className="w-full md:w-1/2 space-y-4">
+            <div className="h-6 bg-gray-300 rounded w-3/4"></div>
+            <div className="h-6 bg-gray-300 rounded w-1/2"></div>
+            <div className="h-12 bg-gray-300 rounded w-1/3"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ✅ If product missing, fallback
   if (!product) {
     return (
       <div className="text-center text-red-500 py-10">Product not found.</div>
@@ -31,7 +55,7 @@ export default function ProductDetailClient({
         id: product.id,
         title: product.title,
         price: product.price,
-        image: product.image ?? "/fallback-image.jpg", // fallback for null images
+        image: product.image ?? "/fallback-image.jpg",
         quantity: 1,
       })
     );
