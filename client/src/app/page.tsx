@@ -19,7 +19,7 @@ export default async function HomePage() {
         >
           <Image
             src={product.image ?? "/fallback-image.jpg"}
-            alt={product.title}
+            alt={product.title || "Product image"}
             width={400}
             height={300}
             className="w-full h-48 object-cover rounded mb-3"
