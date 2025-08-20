@@ -1,17 +1,16 @@
 import { getProductById } from "@/lib/supabase";
-import { getRecommendations } from "@/lib/recommendations";
+import { getRecommendationsMock } from "@/lib/recommendations"; // ✅ mock for now
 import ProductDetailClient from "@/components/ProductDetailClient";
-import RecommendedProducts from "@/components/RecommendedProducts";
 
 interface ProductPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>; // ✅ params is async
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
-  const { id } = params;
+  const { id } = await params; // ✅ must await
 
   const { data: product, error } = await getProductById(id);
-  const recommendations = await getRecommendations(id, 4); // Fetch 3 recommendations
+  const recommendations = await getRecommendationsMock(id, 4); // ✅ force mock version
 
   if (error || !product) {
     return <p className="text-center text-red-500">Product not found.</p>;
@@ -26,10 +25,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
           price: product.price,
           image: product.image ?? null,
         }}
+        recommendations={recommendations} // ✅ pass directly
       />
-
-      {/* ✅ Recommended products */}
-      <RecommendedProducts products={recommendations} />
     </div>
   );
 }
