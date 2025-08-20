@@ -4,17 +4,21 @@ import { getRecommendationsMock } from "@/lib/recommendations";
 import ProductDetailClient from "@/components/ProductDetailClient";
 import type { Product } from "@/types/product";
 
-type Props = { params: { id: string } };
+type Props = {
+  params: {
+    id: string;
+  };
+};
 
 export default async function ProductPage({ params }: Props) {
-  const id = params.id;
+  const id = params.id; // ✅ guaranteed string
 
   const { data: product, error } = await getProductById(id);
   if (error || !product) {
     return notFound();
   }
 
-  // Force the mock recommender for now
+  // For now: use mock recommender
   const recommendations = await getRecommendationsMock(id, 4);
 
   return (
