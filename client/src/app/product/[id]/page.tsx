@@ -7,7 +7,7 @@ import { addToCart } from "@/redux/cartSlice";
 import type { Product } from "@/types/product";
 
 export type ProductDetailClientProps = {
-  product: {
+  product?: {
     id: string;
     title: string;
     price: number;
@@ -47,6 +47,13 @@ export default function ProductDetailClient({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product?.id, fetchRecs]);
+
+  // 🚨 Guard: no product yet
+  if (!product) {
+    return (
+      <div className="p-6 text-center text-gray-500">Loading product...</div>
+    );
+  }
 
   const imgSrc = product?.image ?? "/fallback-image.jpg";
 
