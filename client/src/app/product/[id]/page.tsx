@@ -11,7 +11,7 @@ type Props = {
 };
 
 export default async function ProductPage({ params }: Props) {
-  const id = params.id; // ✅ guaranteed string
+  const id = params.id;
 
   const { data: product, error } = await getProductById(id);
   if (error || !product) {
