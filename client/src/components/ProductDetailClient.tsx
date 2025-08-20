@@ -1,95 +1,141 @@
 "use client";
 
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "@/redux/hooks";
 import { addToCart } from "@/redux/cartSlice";
-import { useState, useEffect } from "react";
+import type { Product } from "@/types/product";
 
-interface ProductDetailClientProps {
-  product?: {
+export type ProductDetailClientProps = {
+  product: {
     id: string;
     title: string;
     price: number;
     image: string | null;
   };
-}
+  recommendations?: Product[];
+  initialRecs?: Product[];
+  fetchRecs?: (id: string, count?: number) => Promise<Product[]>;
+};
 
 export default function ProductDetailClient({
   product,
+  recommendations,
+  initialRecs,
+  fetchRecs,
 }: ProductDetailClientProps) {
-  const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(true);
+  const dispatch = useAppDispatch();
+
+  const seeded = useMemo(
+    () => recommendations ?? initialRecs ?? [],
+    [recommendations, initialRecs]
+  );
+  const [recs, setRecs] = useState<Product[]>(seeded);
+  const [adding, setAdding] = useState(false);
 
   useEffect(() => {
-    if (product) {
-      setIsLoading(false);
+    if (recs.length === 0 && fetchRecs) {
+      fetchRecs(product.id, 4)
+        .then((r) => setRecs(r ?? []))
+        .catch(() => setRecs([]));
     }
-  }, [product]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product.id, fetchRecs]);
 
-  // ✅ Loading skeleton
-  if (isLoading) {
-    return (
-      <div className="max-w-3xl mx-auto p-6 animate-pulse">
-        <div className="flex flex-col md:flex-row items-center gap-6">
-          <div className="w-full md:w-1/2 bg-gray-300 h-80 rounded-lg"></div>
-          <div className="w-full md:w-1/2 space-y-4">
-            <div className="h-6 bg-gray-300 rounded w-3/4"></div>
-            <div className="h-6 bg-gray-300 rounded w-1/2"></div>
-            <div className="h-12 bg-gray-300 rounded w-1/3"></div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const imgSrc = product.image ?? "/fallback-image.jpg";
 
-  // ✅ If product missing, fallback
-  if (!product) {
-    return (
-      <div className="text-center text-red-500 py-10">Product not found.</div>
-    );
-  }
-
-  const handleAddToCart = () => {
+  function handleAdd(qty = 1) {
+    setAdding(true);
     dispatch(
       addToCart({
         id: product.id,
         title: product.title,
         price: product.price,
-        image: product.image ?? "/fallback-image.jpg",
-        quantity: 1,
+        image: imgSrc,
+        quantity: qty,
       })
     );
-  };
-
-  const imgSrc = product.image ?? "/fallback-image.jpg";
+    setTimeout(() => setAdding(false), 250);
+  }
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
-      <div className="flex flex-col md:flex-row items-center gap-6">
-        {/* ✅ Product Image */}
-        <div className="w-full md:w-1/2">
-          <Image
-            src={imgSrc}
-            alt={product.title}
-            width={500}
-            height={500}
-            className="rounded-lg shadow-md object-cover"
-            priority
-          />
-        </div>
+    <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 p-6">
+      {/* Left: image */}
+      <div className="relative w-full h-[420px] rounded-lg overflow-hidden shadow">
+        <Image
+          src={imgSrc}
+          alt={product.title || "Product image"}
+          fill
+          style={{ objectFit: "cover" }}
+          priority
+        />
+      </div>
 
-        {/* ✅ Product Info */}
-        <div className="w-full md:w-1/2 space-y-4">
-          <h1 className="text-2xl font-bold">{product.title}</h1>
-          <p className="text-xl text-gray-800">${product.price.toFixed(2)}</p>
+      {/* Right: info */}
+      <div>
+        <h1 className="text-2xl font-bold">{product.title}</h1>
+        <p className="text-indigo-600 text-xl font-semibold mb-4">
+          ${product.price.toFixed(2)}
+        </p>
 
+        <p className="text-gray-700 mb-6">
+          A high-quality product — description to come later.
+        </p>
+
+        <div className="flex items-center gap-3">
           <button
-            onClick={handleAddToCart}
-            className="bg-gradient-to-r from-pink-500 to-purple-500 text-white py-3 px-6 rounded-lg hover:opacity-90 transition"
+            onClick={() => handleAdd(1)}
+            disabled={adding}
+            className="bg-indigo-600 text-white px-4 py-2 rounded-md shadow hover:bg-indigo-700 transition"
           >
-            Add to Cart
+            {adding ? "Adding..." : "Add to cart"}
           </button>
+
+          <a
+            href="/cart"
+            className="border border-gray-300 px-4 py-2 rounded-md hover:bg-gray-50"
+          >
+            Go to cart
+          </a>
         </div>
+
+        {/* Recommendations */}
+        <section className="mt-10">
+          <h3 className="text-lg font-semibold mb-3">You might also like</h3>
+          {recs.length === 0 ? (
+            <p className="text-sm text-gray-500">No recommendations yet.</p>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {recs.map((r) => {
+                const rImg = r.image ?? "/fallback-image.jpg";
+                return (
+                  <a
+                    key={String(r.id)}
+                    href={`/product/${r.id}`}
+                    className="bg-white rounded-md shadow-sm overflow-hidden hover:shadow transition block"
+                  >
+                    <div className="relative w-full h-28">
+                      <Image
+                        src={rImg}
+                        alt={r.title || "Recommended product"}
+                        fill
+                        style={{ objectFit: "cover" }}
+                      />
+                    </div>
+                    <div className="p-2">
+                      <h4 className="text-sm font-medium truncate">
+                        {r.title}
+                      </h4>
+                      <p className="text-xs text-indigo-600">
+                        ${r.price.toFixed(2)}
+                      </p>
+                    </div>
+                  </a>
+                );
+              })}
+            </div>
+          )}
+        </section>
       </div>
     </div>
   );
