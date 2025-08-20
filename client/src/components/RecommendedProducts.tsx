@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Product } from "@/types/product";
+import { shimmer, toBase64 } from "@/lib/blur";
 
 export default function RecommendedProducts({
   products,
@@ -28,7 +29,10 @@ export default function RecommendedProducts({
                 sizes="(max-width: 768px) 100vw,
                        (max-width: 1200px) 50vw,
                        33vw"
-                priority={false}
+                placeholder="blur"
+                blurDataURL={`data:image/svg+xml;base64,${toBase64(
+                  shimmer(700, 475)
+                )}`}
               />
             </div>
             <h3 className="font-semibold">{product.title}</h3>
