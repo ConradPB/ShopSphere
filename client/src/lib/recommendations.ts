@@ -3,16 +3,17 @@ import { getProducts } from "@/lib/supabase";
 import { supabase } from "./supabase";
 
 export async function getRecommendations(
-  productId: string
+  productId: string,
+  count: number = 3
 ): Promise<Product[]> {
-  // very simple mock: fetch 3 random products excluding current one
   const { data, error } = await supabase
     .from("products")
     .select("*")
     .neq("id", productId)
-    .limit(3);
+    .limit(count);
 
   if (error || !data) {
+    console.error("getRecommendations error:", error);
     return [];
   }
 
