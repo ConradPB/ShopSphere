@@ -17,13 +17,11 @@ const customJestConfig = {
   ],
   collectCoverage: true,
   collectCoverageFrom: [
-    "src/app/**/*.{ts,tsx}",
-    "src/lib/**/*.{ts,tsx}",
-    "src/redux/**/*.{ts,tsx}",
-    "!**/node_modules/**",
-    "!**/.next/**",
+    "src/**/*.{ts,tsx}",
+    "!src/**/*.d.ts",
+    "!src/**/index.ts",
   ],
-  coverageReporters: ["text", "lcov", "html"],
+  coverageReporters: ["text", "lcov", "json", "html"] as const,
 };
 
 export default createJestConfig(customJestConfig);
