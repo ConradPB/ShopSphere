@@ -52,5 +52,15 @@ describe("Product Page", () => {
       { id: "3", title: "Recommended 1", price: 5.99, image: null },
       { id: "4", title: "Recommended 2", price: 7.99, image: null },
     ]);
+
+    const ui = await ProductPage({ params: { id: "2" } });
+    render(<Provider store={store}>{ui}</Provider>);
+
+    // ✅ Main product
+    expect(await screen.findByText(/Main Product/i)).toBeInTheDocument();
+
+    // ✅ Recommendations
+    expect(await screen.findByText(/Recommended 1/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Recommended 2/i)).toBeInTheDocument();
   });
 });
