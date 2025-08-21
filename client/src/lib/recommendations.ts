@@ -1,38 +1,23 @@
-import { Product } from "@/types/product";
-import { getProducts } from "@/lib/supabase";
-import { supabase } from "./supabase";
+import type { Product } from "@/types/product";
 
-export async function getRecommendations(
-  productId: string,
-  count: number = 3
-): Promise<Product[]> {
-  const { data, error } = await supabase
-    .from("products")
-    .select("*")
-    .neq("id", productId)
-    .limit(count);
+const FALLBACK_IMAGE = "/fallback-image.jpg";
 
-  if (error || !data) {
-    console.error("getRecommendations error:", error);
-    return [];
-  }
-
-  return data as Product[];
-}
-
+// Mock recommendations until we wire in a real recommender
 export async function getRecommendationsMock(
   productId: string,
-  count: number = 4
+  limit = 4
 ): Promise<Product[]> {
-  const { data: products, error } = await getProducts();
+  // Just generate mock products based on productId
+  const recommendations: Product[] = Array.from({ length: limit }).map(
+    (_, idx) => ({
+      id: `${productId}-rec-${idx + 1}`,
+      title: `Recommended Product ${idx + 1}`,
+      price: Math.floor(Math.random() * 100) + 10,
+      image: FALLBACK_IMAGE,
+      description: "This is a recommended product.",
+      category: "Recommended",
+    })
+  );
 
-  if (error || !products) {
-    console.error("getProducts error:", error);
-    return [];
-  }
-
-  return products
-    .filter((p) => p.id.toString() !== productId.toString())
-    .sort(() => Math.random() - 0.5) // shuffle
-    .slice(0, count);
+  return recommendations;
 }
