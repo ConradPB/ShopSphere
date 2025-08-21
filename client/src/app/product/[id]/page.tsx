@@ -1,5 +1,4 @@
-import { getProductById, getRecommendations } from "@/lib/supabase";
-import { Product } from "@/types/product";
+import { getProductById } from "@/lib/supabase";
 import ProductDetailClient from "@/components/ProductDetailClient";
 import { notFound } from "next/navigation";
 
@@ -11,18 +10,21 @@ export default async function ProductPage({ params }: PageProps) {
   const { id } = params;
 
   const { data: product, error } = await getProductById(id);
-  if (error || !product) {
-    return notFound();
-  }
 
-  // Optional: fetch recommendations (or mock later in tests)
-  const { data: recommendations } = await getRecommendations(id);
+  if (error || !product) return notFound();
 
-  return (
-    <ProductDetailClient
-      initialRecs={recommendations}
-      product={product}
-      fetchRecs={() => {}}
-    />
-  );
+  // Map product to the exact shape ProductDetailClient expects
+  const clientProduct = {
+    id: String(product.id), // ensure string
+    title: product.title,
+    price: product.price,
+    image: product.image ?? null,
+  };
+
+  // Provide a stub fetchRecs that returns an empty array
+  const fetchRecs = async (_id: string, _count?: number) => {
+    return [];
+  };
+
+  return <ProductDetailClient product={clientProduct} fetchRecs={fetchRecs} />;
 }
