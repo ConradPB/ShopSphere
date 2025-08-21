@@ -44,7 +44,7 @@ export default function ProductGrid() {
           >
             <div className="relative h-48 w-full">
               <Image
-                src={}
+                src={product.image || "/fallback-image.jpg"}
                 alt={product.title}
                 fill
                 style={{ objectFit: "cover" }}
