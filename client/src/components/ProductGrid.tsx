@@ -49,6 +49,7 @@ export default function ProductGrid() {
                 fill
                 style={{ objectFit: "cover" }}
                 className="transition-transform duration-300 hover:scale-105"
+                unoptimized
               />
             </div>
             <div className="p-4">
