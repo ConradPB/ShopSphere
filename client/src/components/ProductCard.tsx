@@ -39,6 +39,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           sizes="(max-width: 768px) 100vw, 33vw"
           className="object-cover transition-transform duration-300 ease-in-out hover:scale-105"
           priority={false}
+          unoptimized
         />
       </div>
 
