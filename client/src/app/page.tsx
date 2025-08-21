@@ -23,6 +23,7 @@ export default async function HomePage() {
             width={400}
             height={300}
             className="w-full h-48 object-cover rounded mb-3"
+            unoptimized
           />
           <h2 className="font-semibold">{product.title}</h2>
           <p className="text-gray-600">${product.price.toFixed(2)}</p>
