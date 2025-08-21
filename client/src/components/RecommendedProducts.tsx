@@ -33,6 +33,7 @@ export default function RecommendedProducts({
                 blurDataURL={`data:image/svg+xml;base64,${toBase64(
                   shimmer(700, 475)
                 )}`}
+                unoptimized
               />
             </div>
             <h3 className="font-semibold">{product.title}</h3>
