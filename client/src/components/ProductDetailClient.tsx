@@ -121,6 +121,7 @@ export default function ProductDetailClient({
                         alt={r.title || "Recommended product"}
                         fill
                         style={{ objectFit: "cover" }}
+                        unoptimized
                       />
                     </div>
                     <div className="p-2">
