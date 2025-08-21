@@ -5,16 +5,16 @@ import { Provider } from "react-redux";
 import { store } from "@/redux/store";
 import * as supabaseLib from "@/lib/supabase";
 import { Product } from "@/types/product";
-import { notFound } from "next/navigation";
+import * as nextNavigation from "next/navigation";
 
 // Mock supabase getProductById
 jest.mock("@/lib/supabase");
 const mockGetProductById = supabaseLib.getProductById as jest.Mock;
 
-// Mock Next.js notFound
-jest.mock("next/navigation", () => ({
-  notFound: jest.fn(),
-}));
+// Spy on notFound
+jest.spyOn(nextNavigation, "notFound").mockImplementation(() => {
+  throw new Error("notFound called");
+});
 
 describe("Product Page", () => {
   const fakeProduct: Product = {
@@ -28,13 +28,14 @@ describe("Product Page", () => {
 
   beforeEach(() => {
     mockGetProductById.mockReset();
-    (notFound as jest.Mock).mockReset();
   });
 
   it("renders product details", async () => {
     mockGetProductById.mockResolvedValue({ data: fakeProduct, error: null });
 
-    const pageElement = await ProductPage({ params: { id: "1" } });
+    const pageElement: React.ReactNode = await ProductPage({
+      params: { id: "1" },
+    });
 
     render(<Provider store={store}>{pageElement}</Provider>);
 
@@ -47,8 +48,8 @@ describe("Product Page", () => {
   it("handles notFound case", async () => {
     mockGetProductById.mockResolvedValue({ data: null, error: "Not found" });
 
-    await ProductPage({ params: { id: "999" } });
-
-    expect(notFound).toHaveBeenCalled();
+    await expect(ProductPage({ params: { id: "999" } })).rejects.toThrow(
+      "notFound called"
+    );
   });
 });
