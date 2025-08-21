@@ -1,4 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient, PostgrestError } from "@supabase/supabase-js";
 import { Product } from "@/types/product";
 
 // Temporary Database type placeholder.
@@ -40,23 +40,13 @@ function normalizeRow(row: ProductRow): Product {
   };
 }
 
-export async function getProducts(): Promise<{
-  data: Product[] | null;
-  error: any;
-}> {
+export async function getProducts(): Promise<{ data: Product[] | null; error: PostgrestError | null }> {
   const { data, error } = await supabase.from("products").select("*");
   if (error || !data) return { data: null, error };
   return { data: data.map(normalizeRow), error: null };
 }
 
-export async function getProductById(
-  id: string
-): Promise<{ data: Product | null; error: any }> {
-  const { data, error } = await supabase
-    .from("products")
-    .select("*")
-    .eq("id", id)
-    .single();
+export async function getProductById(id: string): Promise<{ data: Product | null; error: PostgrestError | null }> {
+  const { data, error } = await supabase.from("products").select("*").eq("id", id).single();
   if (error || !data) return { data: null, error };
-  return { data: normalizeRow(data), error: null };
-}
+  return { data: normalizeRow(data),
