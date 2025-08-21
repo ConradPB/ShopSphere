@@ -3,10 +3,10 @@ import { render, screen } from "@testing-library/react";
 import { Provider } from "react-redux";
 import { store } from "@/redux/store";
 import ProductPage from "@/app/product/[id]/page";
-import { getProductById } from "@/lib/supabase";
 import ProductDetailClient from "@/components/ProductDetailClient";
+import { getProductById } from "@/lib/supabase";
 
-// Mock server calls
+// Mock supabase
 jest.mock("@/lib/supabase", () => ({
   getProductById: jest.fn(),
 }));
@@ -21,7 +21,14 @@ const mockProduct = {
 };
 
 const mockRecs = [
-  { id: "2", title: "Mouse", price: 49.99, image: "/mouse.jpg" },
+  {
+    id: "2",
+    title: "Mouse",
+    price: 49.99,
+    image: "/mouse.jpg",
+    description: "Wireless mouse",
+    category: "Electronics",
+  },
 ];
 
 describe("Product Page", () => {
@@ -43,6 +50,7 @@ describe("Product Page", () => {
       </Provider>
     );
 
+    // Check product title and price
     expect(await screen.findByText(mockProduct.title)).toBeInTheDocument();
     expect(
       screen.getByText(`$${mockProduct.price.toFixed(2)}`)
@@ -71,7 +79,7 @@ describe("Product Page", () => {
       error: "Not found",
     });
 
-    // We'll mock notFound to prevent test from throwing
+    // Mock notFound to prevent actual navigation error
     const notFoundMock = jest.fn();
     jest.mock("next/navigation", () => ({ notFound: notFoundMock }));
 
@@ -81,7 +89,6 @@ describe("Product Page", () => {
       </Provider>
     );
 
-    // Check that notFound was called
     expect(notFoundMock).toHaveBeenCalled();
   });
 });
