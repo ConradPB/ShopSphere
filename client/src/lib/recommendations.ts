@@ -1,6 +1,27 @@
 import { supabase } from "@/lib/supabase";
 import { Product } from "@/types/product";
-import { getProducts } from "@/lib/supabase";
+
+type ProductRow = {
+  id: string;
+  title?: string;
+  name?: string;
+  price: number;
+  image?: string;
+  image_url?: string;
+  description?: string;
+  category?: string;
+};
+
+function normalizeRow(row: ProductRow): Product {
+  return {
+    id: row.id,
+    title: row.title ?? row.name ?? "Untitled Product",
+    price: row.price,
+    image: row.image ?? row.image_url ?? "/fallback.png",
+    description: row.description ?? "No description available",
+    category: row.category ?? "Uncategorized",
+  };
+}
 
 export async function getRecommendations(
   productId: string,
@@ -17,12 +38,5 @@ export async function getRecommendations(
     return [];
   }
 
-  return data.map((row) => ({
-    id: row.id,
-    title: (row as any).title ?? (row as any).name ?? "Untitled Product",
-    price: row.price,
-    image: (row as any).image ?? (row as any).image_url ?? "/fallback.png",
-    description: (row as any).description ?? "No description available",
-    category: (row as any).category ?? "Uncategorized",
-  }));
+  return data.map(normalizeRow);
 }
