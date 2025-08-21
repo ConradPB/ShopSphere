@@ -1,65 +1,68 @@
+import React from "react";
 import { render, screen } from "@testing-library/react";
+import { Provider } from "react-redux";
+import { store } from "@/redux/store";
 import ProductPage from "@/app/product/[id]/page";
 import { getProductById } from "@/lib/supabase";
-import { getRecommendations } from "@/lib/recommendations";
+import ProductDetailClient from "@/components/ProductDetailClient";
 
-// Mock dependencies
+// Mock server calls
 jest.mock("@/lib/supabase", () => ({
   getProductById: jest.fn(),
 }));
 
-jest.mock("@/lib/recommendations", () => ({
-  getRecommendations: jest.fn(),
-}));
+const mockProduct = {
+  id: "1",
+  title: "Laptop",
+  price: 999.99,
+  image: "/laptop.jpg",
+  description: "High-end laptop",
+  category: "Electronics",
+};
+
+const mockRecs = [
+  { id: "2", title: "Mouse", price: 49.99, image: "/mouse.jpg" },
+];
 
 describe("Product Page", () => {
-  const mockProduct = {
-    id: "123",
-    title: "Test Product",
-    price: 99.99,
-    image: "https://example.com/test.jpg",
-  };
-
-  const mockRecommendations = [
-    { id: "456", title: "Reco 1", price: 49.99, image: null },
-    {
-      id: "789",
-      title: "Reco 2",
-      price: 79.99,
-      image: "https://example.com/reco.jpg",
-    },
-  ];
-
   beforeEach(() => {
-    jest.clearAllMocks();
+    (getProductById as jest.Mock).mockResolvedValue({
+      data: mockProduct,
+      error: null,
+    });
   });
 
   it("renders product details", async () => {
-    (getProductById as jest.Mock).mockResolvedValue({
-      data: mockProduct,
-      error: null,
-    });
-    (getRecommendations as jest.Mock).mockResolvedValue(mockRecommendations);
+    render(
+      <Provider store={store}>
+        <ProductDetailClient
+          product={mockProduct}
+          initialRecs={mockRecs}
+          fetchRecs={jest.fn()}
+        />
+      </Provider>
+    );
 
-    const params = Promise.resolve({ id: "123" });
-    render(await ProductPage({ params }));
-
-    expect(await screen.findByText("Test Product")).toBeInTheDocument();
-    expect(screen.getByText("$99.99")).toBeInTheDocument();
+    expect(await screen.findByText(mockProduct.title)).toBeInTheDocument();
+    expect(
+      screen.getByText(`$${mockProduct.price.toFixed(2)}`)
+    ).toBeInTheDocument();
   });
 
   it("renders recommendations", async () => {
-    (getProductById as jest.Mock).mockResolvedValue({
-      data: mockProduct,
-      error: null,
-    });
-    (getRecommendations as jest.Mock).mockResolvedValue(mockRecommendations);
+    render(
+      <Provider store={store}>
+        <ProductDetailClient
+          product={mockProduct}
+          initialRecs={mockRecs}
+          fetchRecs={jest.fn()}
+        />
+      </Provider>
+    );
 
-    const params = Promise.resolve({ id: "123" });
-    render(await ProductPage({ params }));
-
-    expect(await screen.findByText("Reco 1")).toBeInTheDocument();
-    expect(await screen.findByText("Reco 2")).toBeInTheDocument();
+    for (const rec of mockRecs) {
+      expect(await screen.findByText(rec.title)).toBeInTheDocument();
+    }
   });
 
   it("handles notFound case", async () => {
@@ -68,10 +71,17 @@ describe("Product Page", () => {
       error: "Not found",
     });
 
-    const params = Promise.resolve({ id: "does-not-exist" });
-    const result = await ProductPage({ params });
+    // We'll mock notFound to prevent test from throwing
+    const notFoundMock = jest.fn();
+    jest.mock("next/navigation", () => ({ notFound: notFoundMock }));
 
-    // since notFound() returns `never`, result should be undefined
-    expect(result).toBeUndefined();
+    render(
+      <Provider store={store}>
+        <ProductPage params={{ id: "non-existent" }} />
+      </Provider>
+    );
+
+    // Check that notFound was called
+    expect(notFoundMock).toHaveBeenCalled();
   });
 });
