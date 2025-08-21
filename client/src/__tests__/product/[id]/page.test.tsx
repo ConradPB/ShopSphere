@@ -42,4 +42,15 @@ describe("Product Page", () => {
 
     expect(await screen.findByText(/not found/i)).toBeInTheDocument();
   });
+
+  it("renders product recommendations", async () => {
+    mockGetProductById.mockResolvedValueOnce({
+      data: { id: "2", title: "Main Product", price: 19.99, image: null },
+      error: null,
+    });
+    mockGetRecommendations.mockResolvedValueOnce([
+      { id: "3", title: "Recommended 1", price: 5.99, image: null },
+      { id: "4", title: "Recommended 2", price: 7.99, image: null },
+    ]);
+  });
 });
