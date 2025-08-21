@@ -1,93 +1,77 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
+import ProductPage from "@/app/product/[id]/page";
 import { Provider } from "react-redux";
 import { store } from "@/redux/store";
-import ProductPage from "@/app/product/[id]/page";
-import ProductDetailClient from "@/components/ProductDetailClient";
-import { getProductById } from "@/lib/supabase";
+import * as supabaseLib from "@/lib/supabase";
+import { Product } from "@/types/product";
 
-// Mock supabase
-jest.mock("@/lib/supabase", () => ({
-  getProductById: jest.fn(),
-}));
+// Mock supabase functions
+jest.mock("@/lib/supabase");
 
-const mockProduct = {
-  id: "1",
-  title: "Laptop",
-  price: 999.99,
-  image: "/laptop.jpg",
-  description: "High-end laptop",
-  category: "Electronics",
-};
-
-const mockRecs = [
-  {
-    id: "2",
-    title: "Mouse",
-    price: 49.99,
-    image: "/mouse.jpg",
-    description: "Wireless mouse",
-    category: "Electronics",
-  },
-];
+const mockGetProductById = supabaseLib.getProductById as jest.Mock;
+const mockGetRecommendations = supabaseLib.getRecommendations as jest.Mock;
 
 describe("Product Page", () => {
+  const fakeProduct: Product = {
+    id: "1",
+    title: "Test Product",
+    price: 99.99,
+    image: "/test.png",
+    description: "Test description",
+    category: "Test Category",
+  };
+
+  const fakeRecs: Product[] = [
+    {
+      id: "2",
+      title: "Recommended 1",
+      price: 49.99,
+      image: "/rec1.png",
+      description: "Rec 1",
+      category: "Category 1",
+    },
+  ];
+
   beforeEach(() => {
-    (getProductById as jest.Mock).mockResolvedValue({
-      data: mockProduct,
-      error: null,
-    });
+    mockGetProductById.mockReset();
+    mockGetRecommendations.mockReset();
   });
 
   it("renders product details", async () => {
-    render(
-      <Provider store={store}>
-        <ProductDetailClient
-          product={mockProduct}
-          initialRecs={mockRecs}
-          fetchRecs={jest.fn()}
-        />
-      </Provider>
-    );
+    mockGetProductById.mockResolvedValue({ data: fakeProduct, error: null });
+    mockGetRecommendations.mockResolvedValue({ data: fakeRecs, error: null });
 
-    // Check product title and price
-    expect(await screen.findByText(mockProduct.title)).toBeInTheDocument();
+    // Await the async page component
+    const page = await ProductPage({ params: { id: fakeProduct.id } });
+
+    render(<Provider store={store}>{page}</Provider>);
+
+    expect(await screen.findByText(fakeProduct.title)).toBeInTheDocument();
     expect(
-      screen.getByText(`$${mockProduct.price.toFixed(2)}`)
+      screen.getByText(`$${fakeProduct.price.toFixed(2)}`)
     ).toBeInTheDocument();
+    expect(screen.getByAltText(fakeProduct.title)).toBeInTheDocument();
   });
 
   it("renders recommendations", async () => {
-    render(
-      <Provider store={store}>
-        <ProductDetailClient
-          product={mockProduct}
-          initialRecs={mockRecs}
-          fetchRecs={jest.fn()}
-        />
-      </Provider>
-    );
+    mockGetProductById.mockResolvedValue({ data: fakeProduct, error: null });
+    mockGetRecommendations.mockResolvedValue({ data: fakeRecs, error: null });
 
-    for (const rec of mockRecs) {
-      expect(await screen.findByText(rec.title)).toBeInTheDocument();
-    }
+    const page = await ProductPage({ params: { id: fakeProduct.id } });
+    render(<Provider store={store}>{page}</Provider>);
+
+    expect(await screen.findByText("Recommended 1")).toBeInTheDocument();
   });
 
   it("handles notFound case", async () => {
-    (getProductById as jest.Mock).mockResolvedValue({
-      data: null,
-      error: "Not found",
-    });
+    mockGetProductById.mockResolvedValue({ data: null, error: "Not found" });
 
-    // Mock notFound to prevent actual navigation error
     const notFoundMock = jest.fn();
     jest.mock("next/navigation", () => ({ notFound: notFoundMock }));
 
-    render(
-      <Provider store={store}>
-        <ProductPage params={{ id: "non-existent" }} />
-      </Provider>
-    );
+    const page = await ProductPage({ params: { id: "non-existent" } });
+    render(<Provider store={store}>{page}</Provider>);
 
     expect(notFoundMock).toHaveBeenCalled();
   });
