@@ -1,24 +1,35 @@
 import { createClient } from "@supabase/supabase-js";
-import { Database } from "@/types/supabase";
 import { Product } from "@/types/product";
+
+// Temporary Database type placeholder.
+// Replace with generated types when ready: `supabase gen types typescript --project-id <id>`
+type Database = {
+  public: {
+    Tables: {
+      products: {
+        Row: {
+          id: string;
+          title?: string;
+          name?: string;
+          price: number;
+          image?: string;
+          image_url?: string;
+          description?: string;
+          category?: string;
+        };
+      };
+    };
+  };
+};
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey);
 
-type DBRow = {
-  id: string;
-  title?: string; // optional
-  name?: string; // optional
-  price: number;
-  image?: string; // optional
-  image_url?: string; // optional
-  description?: string;
-  category?: string;
-};
+type ProductRow = Database["public"]["Tables"]["products"]["Row"];
 
-function normalizeRow(row: DBRow): Product {
+function normalizeRow(row: ProductRow): Product {
   return {
     id: row.id,
     title: row.title ?? row.name ?? "Untitled Product",
