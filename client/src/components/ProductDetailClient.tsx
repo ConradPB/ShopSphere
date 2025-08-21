@@ -68,6 +68,7 @@ export default function ProductDetailClient({
           fill
           style={{ objectFit: "cover" }}
           priority
+          unoptimized
         />
       </div>
 
