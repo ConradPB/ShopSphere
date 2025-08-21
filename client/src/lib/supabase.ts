@@ -1,59 +1,51 @@
 import { createClient } from "@supabase/supabase-js";
-import type { Product } from "@/types/product";
+import { Database } from "@/types/supabase";
+import { Product } from "@/types/product";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-export const supabase = createClient(supabaseUrl, supabaseKey);
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-const FALLBACK_IMAGE = "/fallback-image.jpg";
+export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey);
 
-// Shape we expect back from the DB (relaxed/optional)
 type DBRow = {
-  id: string | number;
-  title?: string | null;
-  price?: number | null;
-  image?: string | null;
-  description?: string | null;
-  category?: string | null;
+  id: string;
+  title?: string; // optional
+  name?: string; // optional
+  price: number;
+  image?: string; // optional
+  image_url?: string; // optional
+  description?: string;
+  category?: string;
 };
 
 function normalizeRow(row: DBRow): Product {
   return {
-    id: String(row.id),
-    title: row.title ?? "Untitled Product",
-    price: Number(row.price ?? 0),
-    image: row.image ?? FALLBACK_IMAGE, // always a string
-    description: row.description ?? "", // default empty
-    category: row.category ?? "General", // sensible default
+    id: row.id,
+    title: row.title ?? row.name ?? "Untitled Product",
+    price: row.price,
+    image: row.image ?? row.image_url ?? "/fallback.png",
+    description: row.description ?? "No description available",
+    category: row.category ?? "Uncategorized",
   };
 }
 
 export async function getProducts(): Promise<{
   data: Product[] | null;
-  error: string | null;
+  error: any;
 }> {
   const { data, error } = await supabase.from("products").select("*");
-
-  if (error) {
-    return { data: null, error: error.message };
-  }
-
-  const normalized = (data as DBRow[] | null)?.map(normalizeRow) ?? [];
-  return { data: normalized, error: null };
+  if (error || !data) return { data: null, error };
+  return { data: data.map(normalizeRow), error: null };
 }
 
 export async function getProductById(
   id: string
-): Promise<{ data: Product | null; error: string | null }> {
+): Promise<{ data: Product | null; error: any }> {
   const { data, error } = await supabase
     .from("products")
     .select("*")
     .eq("id", id)
     .single();
-
-  if (error || !data) {
-    return { data: null, error: error?.message ?? "Not found" };
-  }
-
-  return { data: normalizeRow(data as DBRow), error: null };
+  if (error || !data) return { data: null, error };
+  return { data: normalizeRow(data), error: null };
 }
