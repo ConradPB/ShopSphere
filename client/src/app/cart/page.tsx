@@ -37,7 +37,7 @@ export default function CartPage() {
           >
             <div className="flex items-center space-x-4">
               <Image
-                src={item.image || "/placeholder.png"}
+                src={item.image ?? "/fallback-image.jpg"}
                 alt={item.title}
                 width={64}
                 height={64}
