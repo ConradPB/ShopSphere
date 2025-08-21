@@ -1,28 +1,35 @@
-import { getProductById, getRecommendations } from "@/lib/supabase";
-import { Product } from "@/types/product";
-import ProductDetailClient from "@/components/ProductDetailClient";
 import { notFound } from "next/navigation";
+import { getProductById } from "@/lib/supabase";
+import { getRecommendations } from "@/lib/recommendations"; //
+import ProductDetailClient from "@/components/ProductDetailClient";
+import type { Product } from "@/types/product";
 
-interface PageProps {
-  params: { id: string };
-}
+type Props = {
+  params: Promise<{ id: string }>;
+};
 
-export default async function ProductPage({ params }: PageProps) {
-  const { id } = params;
+export default async function ProductPage({ params }: Props) {
+  const { id } = await params;
 
   const { data: product, error } = await getProductById(id);
   if (error || !product) {
     return notFound();
   }
 
-  // Optional: fetch recommendations (or mock later in tests)
-  const { data: recommendations } = await getRecommendations(id);
+  // ✅ use real DB-driven recommendations
+  const recommendations = await getRecommendations(id, 4);
 
   return (
-    <ProductDetailClient
-      initialRecs={recommendations}
-      product={product}
-      fetchRecs={() => {}}
-    />
+    <div className="max-w-6xl mx-auto p-6">
+      <ProductDetailClient
+        product={{
+          id: String(product.id),
+          title: product.title,
+          price: product.price,
+          image: product.image ?? null,
+        }}
+        recommendations={recommendations as Product[]}
+      />
+    </div>
   );
 }
