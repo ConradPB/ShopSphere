@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { getProductById } from "@/lib/supabase";
-import { getRecommendationsMock } from "@/lib/recommendations";
+import { getRecommendations } from "@/lib/recommendations"; // ✅ updated import
 import ProductDetailClient from "@/components/ProductDetailClient";
 import type { Product } from "@/types/product";
 
@@ -16,7 +16,8 @@ export default async function ProductPage({ params }: Props) {
     return notFound();
   }
 
-  const recommendations = await getRecommendationsMock(id, 4);
+  // ✅ use real DB-driven recommendations
+  const recommendations = await getRecommendations(id, 4);
 
   return (
     <div className="max-w-6xl mx-auto p-6">
@@ -26,6 +27,8 @@ export default async function ProductPage({ params }: Props) {
           title: product.title,
           price: product.price,
           image: product.image ?? null,
+          description: product.description ?? "No description available",
+          category: product.category ?? "Uncategorized",
         }}
         recommendations={recommendations as Product[]}
       />
