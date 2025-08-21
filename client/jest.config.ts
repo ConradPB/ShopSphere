@@ -18,7 +18,7 @@ const customJestConfig: Config = {
   ],
   collectCoverage: true,
   collectCoverageFrom: ["src/**/*.{ts,tsx}"],
-  coverageReporters: ["text", "lcov", "json", "html"], // ✅ mutable now
+  coverageReporters: ["text", "lcov", "json", "html"], // mutable now
 };
 
 export default createJestConfig(customJestConfig);
