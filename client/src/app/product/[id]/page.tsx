@@ -27,8 +27,6 @@ export default async function ProductPage({ params }: Props) {
           title: product.title,
           price: product.price,
           image: product.image ?? null,
-          description: product.description ?? "No description available",
-          category: product.category ?? "Uncategorized",
         }}
         recommendations={recommendations as Product[]}
       />
