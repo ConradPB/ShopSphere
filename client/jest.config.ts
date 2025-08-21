@@ -15,6 +15,15 @@ const customJestConfig = {
     "**/_tests_/**/*.test.[jt]s?(x)",
     "**/__tests__/**/*.test.[jt]s?(x)",
   ],
+  collectCoverage: true,
+  collectCoverageFrom: [
+    "src/app/**/*.{ts,tsx}",
+    "src/lib/**/*.{ts,tsx}",
+    "src/redux/**/*.{ts,tsx}",
+    "!**/node_modules/**",
+    "!**/.next/**",
+  ],
+  coverageReporters: ["text", "lcov", "html"],
 };
 
 export default createJestConfig(customJestConfig);
