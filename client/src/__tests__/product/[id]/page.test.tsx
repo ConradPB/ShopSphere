@@ -1,66 +1,77 @@
-import React from "react";
 import { render, screen } from "@testing-library/react";
 import ProductPage from "@/app/product/[id]/page";
-import { Provider } from "react-redux";
-import { store } from "@/redux/store";
+import { getProductById } from "@/lib/supabase";
+import { getRecommendations } from "@/lib/recommendations";
 
-// ✅ Mock Supabase + recommendations
-const mockGetProductById = jest.fn();
+// Mock dependencies
 jest.mock("@/lib/supabase", () => ({
-  getProductById: (...args: any[]) => mockGetProductById(...args),
+  getProductById: jest.fn(),
 }));
 
-const mockGetRecommendations = jest.fn();
 jest.mock("@/lib/recommendations", () => ({
-  getRecommendations: (...args: any[]) => mockGetRecommendations(...args),
+  getRecommendations: jest.fn(),
 }));
 
 describe("Product Page", () => {
-  it("renders product detail without crashing", async () => {
-    mockGetProductById.mockResolvedValueOnce({
-      data: { id: "1", title: "Test Product", price: 9.99, image: null },
-      error: null,
-    });
-    mockGetRecommendations.mockResolvedValueOnce([]);
+  const mockProduct = {
+    id: "123",
+    title: "Test Product",
+    price: 99.99,
+    image: "https://example.com/test.jpg",
+  };
 
-    const ui = await ProductPage({ params: { id: "1" } });
-    render(<Provider store={store}>{ui}</Provider>);
+  const mockRecommendations = [
+    { id: "456", title: "Reco 1", price: 49.99, image: null },
+    {
+      id: "789",
+      title: "Reco 2",
+      price: 79.99,
+      image: "https://example.com/reco.jpg",
+    },
+  ];
 
-    expect(await screen.findByText(/Test Product/i)).toBeInTheDocument();
-    expect(await screen.findByText(/\$9.99/)).toBeInTheDocument();
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
-  it("renders 404 page when product not found", async () => {
-    mockGetProductById.mockResolvedValueOnce({
+  it("renders product details", async () => {
+    (getProductById as jest.Mock).mockResolvedValue({
+      data: mockProduct,
+      error: null,
+    });
+    (getRecommendations as jest.Mock).mockResolvedValue(mockRecommendations);
+
+    const params = Promise.resolve({ id: "123" });
+    render(await ProductPage({ params }));
+
+    expect(await screen.findByText("Test Product")).toBeInTheDocument();
+    expect(screen.getByText("$99.99")).toBeInTheDocument();
+  });
+
+  it("renders recommendations", async () => {
+    (getProductById as jest.Mock).mockResolvedValue({
+      data: mockProduct,
+      error: null,
+    });
+    (getRecommendations as jest.Mock).mockResolvedValue(mockRecommendations);
+
+    const params = Promise.resolve({ id: "123" });
+    render(await ProductPage({ params }));
+
+    expect(await screen.findByText("Reco 1")).toBeInTheDocument();
+    expect(await screen.findByText("Reco 2")).toBeInTheDocument();
+  });
+
+  it("handles notFound case", async () => {
+    (getProductById as jest.Mock).mockResolvedValue({
       data: null,
       error: "Not found",
     });
-    mockGetRecommendations.mockResolvedValueOnce([]);
 
-    const ui = await ProductPage({ params: { id: "999" } });
-    render(<Provider store={store}>{ui}</Provider>);
+    const params = Promise.resolve({ id: "does-not-exist" });
+    const result = await ProductPage({ params });
 
-    expect(await screen.findByText(/not found/i)).toBeInTheDocument();
-  });
-
-  it("renders product recommendations", async () => {
-    mockGetProductById.mockResolvedValueOnce({
-      data: { id: "2", title: "Main Product", price: 19.99, image: null },
-      error: null,
-    });
-    mockGetRecommendations.mockResolvedValueOnce([
-      { id: "3", title: "Recommended 1", price: 5.99, image: null },
-      { id: "4", title: "Recommended 2", price: 7.99, image: null },
-    ]);
-
-    const ui = await ProductPage({ params: { id: "2" } });
-    render(<Provider store={store}>{ui}</Provider>);
-
-    // ✅ Main product
-    expect(await screen.findByText(/Main Product/i)).toBeInTheDocument();
-
-    // ✅ Recommendations
-    expect(await screen.findByText(/Recommended 1/i)).toBeInTheDocument();
-    expect(await screen.findByText(/Recommended 2/i)).toBeInTheDocument();
+    // since notFound() returns `never`, result should be undefined
+    expect(result).toBeUndefined();
   });
 });
