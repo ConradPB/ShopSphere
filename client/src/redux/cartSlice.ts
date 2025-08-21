@@ -43,7 +43,7 @@ const cartSlice = createSlice({
       }
     },
 
-    // 👇 New reducers for +/- buttons
+    // New reducers for +/- buttons
     increaseQuantity: (state, action: PayloadAction<string>) => {
       const item = state.items.find((i) => i.id === action.payload);
       if (item) {
