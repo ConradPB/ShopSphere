@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { getProductById } from "@/lib/supabase";
-import { getRecommendations } from "@/lib/recommendations"; // ✅ updated import
+import { getRecommendations } from "@/lib/recommendations"; //
 import ProductDetailClient from "@/components/ProductDetailClient";
 import type { Product } from "@/types/product";
 
