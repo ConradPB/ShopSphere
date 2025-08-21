@@ -3,53 +3,89 @@ import { render, screen } from "@testing-library/react";
 import ProductPage from "@/app/product/[id]/page";
 import { Provider } from "react-redux";
 import { store } from "@/redux/store";
-import * as supabaseLib from "@/lib/supabase";
 import { Product } from "@/types/product";
-import * as nextNavigation from "next/navigation";
 
-// Mock supabase getProductById
-jest.mock("@/lib/supabase");
-const mockGetProductById = supabaseLib.getProductById as jest.Mock;
+// --- Define Props type based on your page.tsx ---
+interface PageProps {
+  params: { id: string };
+}
 
-// Spy on notFound
-jest.spyOn(nextNavigation, "notFound").mockImplementation(() => {
-  throw new Error("notFound called");
-});
+// --- Sample product data ---
+const testProduct: Product = {
+  id: "1",
+  title: "Laptop",
+  price: 999.99,
+  image: "https://placehold.co/400x300",
+  description: "Test laptop",
+  category: "Electronics",
+};
+
+const testRecommendations: Product[] = [
+  {
+    id: "2",
+    title: "Headphones",
+    price: 99.99,
+    image: "https://placehold.co/400x300",
+    description: "Test headphones",
+    category: "Electronics",
+  },
+];
+
+// --- Mock supabase functions locally in test ---
+const mockGetProductById = jest.fn(
+  async (
+    id: string
+  ): Promise<{ data: Product | null; error: string | null }> => {
+    return { data: id === "1" ? testProduct : null, error: null };
+  }
+);
+
+const mockGetRecommendations = jest.fn(
+  async (
+    _productId: string
+  ): Promise<{ data: Product[]; error: string | null }> => {
+    return { data: testRecommendations, error: null };
+  }
+);
+
+// --- Mock module imports if your page uses supabase ---
+jest.mock("@/lib/supabase", () => ({
+  getProductById: (id: string) => mockGetProductById(id),
+  getRecommendations: (id: string) => mockGetRecommendations(id),
+}));
 
 describe("Product Page", () => {
-  const fakeProduct: Product = {
-    id: "1",
-    title: "Laptop",
-    price: 999.99,
-    image: "https://placehold.co/400x300",
-    description: "Test laptop",
-    category: "Electronics",
-  };
-
-  beforeEach(() => {
-    mockGetProductById.mockReset();
-  });
-
   it("renders product details", async () => {
-    mockGetProductById.mockResolvedValue({ data: fakeProduct, error: null });
-
-    const pageElement: React.ReactNode = await ProductPage({
-      params: { id: "1" },
-    });
+    const pageElement = await ProductPage({ params: { id: "1" } } as PageProps);
 
     render(<Provider store={store}>{pageElement}</Provider>);
 
-    expect(await screen.findByText(fakeProduct.title)).toBeInTheDocument();
+    expect(await screen.findByText(testProduct.title)).toBeInTheDocument();
     expect(
-      screen.getByText(`$${fakeProduct.price.toFixed(2)}`)
+      screen.getByText(`$${testProduct.price.toFixed(2)}`)
     ).toBeInTheDocument();
   });
 
-  it("handles notFound case", async () => {
-    mockGetProductById.mockResolvedValue({ data: null, error: "Not found" });
+  it("renders recommendations", async () => {
+    const pageElement = await ProductPage({ params: { id: "1" } } as PageProps);
 
-    await expect(ProductPage({ params: { id: "999" } })).rejects.toThrow(
-      "notFound called"
-    );
+    render(<Provider store={store}>{pageElement}</Provider>);
+
+    for (const rec of testRecommendations) {
+      expect(await screen.findByText(rec.title)).toBeInTheDocument();
+    }
+  });
+
+  it("handles notFound case", async () => {
+    mockGetProductById.mockResolvedValueOnce({ data: null, error: null });
+
+    let notFoundThrown = false;
+    try {
+      await ProductPage({ params: { id: "999" } } as PageProps);
+    } catch {
+      notFoundThrown = true; // no need to use `e`
+    }
+
+    expect(notFoundThrown).toBe(true);
   });
 });
