@@ -40,13 +40,23 @@ function normalizeRow(row: ProductRow): Product {
   };
 }
 
-export async function getProducts(): Promise<{ data: Product[] | null; error: PostgrestError | null }> {
+export async function getProducts(): Promise<{
+  data: Product[] | null;
+  error: PostgrestError | null;
+}> {
   const { data, error } = await supabase.from("products").select("*");
   if (error || !data) return { data: null, error };
   return { data: data.map(normalizeRow), error: null };
 }
 
-export async function getProductById(id: string): Promise<{ data: Product | null; error: PostgrestError | null }> {
-  const { data, error } = await supabase.from("products").select("*").eq("id", id).single();
+export async function getProductById(
+  id: string
+): Promise<{ data: Product | null; error: PostgrestError | null }> {
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("id", id)
+    .single();
   if (error || !data) return { data: null, error };
-  return { data: normalizeRow(data),
+  return { data: normalizeRow(data), error: null };
+}
