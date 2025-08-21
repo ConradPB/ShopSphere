@@ -42,6 +42,7 @@ export default function CartPage() {
                 width={64}
                 height={64}
                 className="rounded-md"
+                unoptimized
               />
               <div>
                 <h2 className="font-semibold">{item.title}</h2>
