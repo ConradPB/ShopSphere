@@ -1,3 +1,4 @@
+// src/components/ProductDetailClient.tsx
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
@@ -30,11 +31,17 @@ export default function ProductDetailClient({
 
   useEffect(() => {
     if (recs.length === 0 && fetchRecs) {
-      fetchRecs(product.id, 4)
-        .then((r) => setRecs(r ?? []))
-        .catch(() => setRecs([]));
+      (async () => {
+        try {
+          const fetched = await fetchRecs(product.id, 4);
+          setRecs(fetched ?? []);
+        } catch {
+          setRecs([]);
+        }
+      })();
     }
-  }, [product.id, fetchRecs, recs.length]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product.id, fetchRecs]);
 
   const imgSrc = product.image ?? "/fallback-image.jpg";
 
@@ -74,7 +81,8 @@ export default function ProductDetailClient({
         </p>
 
         <p className="text-gray-700 mb-6">
-          A high-quality product — description to come later.
+          {product.description ??
+            "A high-quality product — description to come later."}
         </p>
 
         <div className="flex items-center gap-3">
