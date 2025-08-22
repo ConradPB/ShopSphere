@@ -7,12 +7,7 @@ import { addToCart } from "@/redux/cartSlice";
 import type { Product } from "@/types/product";
 
 export type ProductDetailClientProps = {
-  product: {
-    id: string;
-    title: string;
-    price: number;
-    image: string | null;
-  };
+  product: Product;
   recommendations?: Product[];
   initialRecs?: Product[];
   fetchRecs?: (id: string, count?: number) => Promise<Product[]>;
@@ -39,8 +34,7 @@ export default function ProductDetailClient({
         .then((r) => setRecs(r ?? []))
         .catch(() => setRecs([]));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [product.id, fetchRecs]);
+  }, [product.id, fetchRecs, recs.length]);
 
   const imgSrc = product.image ?? "/fallback-image.jpg";
 
@@ -111,7 +105,7 @@ export default function ProductDetailClient({
                 const rImg = r.image ?? "/fallback-image.jpg";
                 return (
                   <a
-                    key={String(r.id)}
+                    key={r.id}
                     href={`/product/${r.id}`}
                     className="bg-white rounded-md shadow-sm overflow-hidden hover:shadow transition block"
                   >
