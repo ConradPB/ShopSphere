@@ -31,11 +31,7 @@ export async function getProducts(): Promise<{
   error: string | null;
 }> {
   const { data, error } = await supabase.from("products").select("*");
-
-  if (error) {
-    return { data: null, error: error.message };
-  }
-
+  if (error) return { data: null, error: error.message };
   const normalized = (data as DBRow[] | null)?.map(normalizeRow) ?? [];
   return { data: normalized, error: null };
 }
@@ -48,11 +44,8 @@ export async function getProductById(
     .select("*")
     .eq("id", id)
     .single();
-
-  if (error || !data) {
+  if (error || !data)
     return { data: null, error: error?.message ?? "Not found" };
-  }
-
   return { data: normalizeRow(data as DBRow), error: null };
 }
 
@@ -60,17 +53,13 @@ export async function getRecommendations(
   productId: string,
   count = 4
 ): Promise<{ data: Product[] | null; error: string | null }> {
-  // simple DB-driven recommender: other products (non-ML)
   const { data, error } = await supabase
     .from("products")
     .select("*")
     .neq("id", productId)
     .limit(count);
 
-  if (error) {
-    return { data: null, error: error.message };
-  }
-
+  if (error) return { data: null, error: error.message };
   const normalized = (data as DBRow[] | null)?.map(normalizeRow) ?? [];
   return { data: normalized, error: null };
 }
