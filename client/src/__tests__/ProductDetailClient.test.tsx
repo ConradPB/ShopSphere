@@ -22,4 +22,9 @@ describe("ProductGrid", () => {
     },
   ];
 
-  
+  it("renders a list of products", () => {
+    render(<ProductGrid products={mockProducts} />);
+    expect(screen.getByText("Product One")).toBeInTheDocument();
+    expect(screen.getByText("Product Two")).toBeInTheDocument();
+  });
+});
