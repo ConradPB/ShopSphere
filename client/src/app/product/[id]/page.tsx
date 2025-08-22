@@ -1,39 +1,30 @@
-import { getProductById, getRecommendations } from "@/lib/supabase";
+import { getProduct, getRecommendations } from "@/lib/supabase";
 import ProductDetailClient from "@/components/ProductDetailClient";
 import type { Product } from "@/types/product";
 
 interface PageProps {
-  params: Promise<{ id: string }>; // ✅ Next.js 15+ params are async
+  params: { id: string }; // ✅ Next.js gives plain object, not Promise
 }
 
 export default async function ProductPage({ params }: PageProps) {
-  // ✅ await params to avoid type errors
-  const { id } = await params;
+  const product = await getProduct(params.id);
 
-  // ✅ fetch product from supabase
-  const { data: product, error } = await getProductById(id);
-
-  if (error || !product) {
+  if (!product) {
     return <div>Product not found</div>;
   }
 
-  // ✅ Ensure product matches our unified Product type
+  // ✅ Already returns the correct shape from supabase
   const typedProduct: Product = {
-    id: product.id,
+    id: String(product.id),
     title: product.title,
     price: product.price,
     image: product.image,
-    description: product.description ?? undefined,
-    category: product.category ?? undefined,
   };
 
   return (
     <ProductDetailClient
       product={typedProduct}
-      fetchRecs={async (id: string, count?: number) => {
-        "use server"; // ✅ marks as server action
-        return getRecommendations(id, count);
-      }}
+      fetchRecs={getRecommendations}
     />
   );
 }
