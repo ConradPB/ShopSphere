@@ -6,7 +6,7 @@ interface PageProps {
   params: { id: string } | Promise<{ id: string }>;
 }
 
-/*
+/**
  * Type guard that tells us whether `p` is a Promise resolving to { id: string }.
  * Uses `unknown` and checks for a callable `then` property without using `any`.
  */
