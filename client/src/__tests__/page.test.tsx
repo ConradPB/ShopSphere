@@ -1,14 +1,16 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import HomePage from "@/app/page";
+import * as supabaseLib from "@/lib/supabase";
 import { Provider } from "react-redux";
 import { store } from "@/redux/store";
-import * as supabaseLib from "@/lib/supabase";
-import { Product } from "@/types/product";
+import type { Product } from "@/types/product";
 
-// Mock supabase getProducts
 jest.mock("@/lib/supabase");
-const mockGetProducts = supabaseLib.getProducts as jest.Mock;
+
+const mockGetProducts = supabaseLib.getProducts as jest.MockedFunction<
+  () => Promise<{ data: Product[] | null; error: string | null }>
+>;
 
 describe("Home Page", () => {
   const fakeProducts: Product[] = [
@@ -17,16 +19,12 @@ describe("Home Page", () => {
       title: "Laptop",
       price: 999.99,
       image: "https://placehold.co/400x300",
-      description: "Test laptop",
-      category: "Electronics",
     },
     {
       id: "2",
       title: "Headphones",
       price: 99.99,
       image: "https://placehold.co/400x300",
-      description: "Test headphones",
-      category: "Electronics",
     },
   ];
 
@@ -37,9 +35,7 @@ describe("Home Page", () => {
   it("renders product cards without crashing", async () => {
     mockGetProducts.mockResolvedValue({ data: fakeProducts, error: null });
 
-    // Await async page
     const page = await HomePage();
-
     render(<Provider store={store}>{page}</Provider>);
 
     for (const product of fakeProducts) {
