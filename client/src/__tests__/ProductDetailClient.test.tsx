@@ -1,48 +1,56 @@
-// __tests__/ProductGrid.test.tsx
-import { render, screen } from "@testing-library/react";
-import ProductGrid from "@/components/ProductGrid";
+import React from "react";
+import { render, screen, fireEvent } from "@testing-library/react";
+import ProductDetailClient from "@/components/ProductDetailClient";
+import { Provider } from "react-redux";
+import { store } from "@/redux/store";
 
-describe("ProductGrid", () => {
-  const mockProducts = [
-    {
-      id: "1",
-      title: "Product One",
-      description: "Description One",
-      price: 19.99,
-      image: "https://via.placeholder.com/150",
-      category: "Category A",
-    },
-    {
-      id: "2",
-      title: "Product Two",
-      description: "Description Two",
-      price: 29.99,
-      image: "https://via.placeholder.com/150",
-      category: "Category B",
-    },
-  ];
+describe("ProductDetailClient", () => {
+  const mockProduct = {
+    id: "1",
+    title: "Test Product",
+    description: "This is a test product",
+    price: 49.99,
+    image: "https://placehold.co/400x300",
+    category: "Test",
+  };
 
-  it("renders a list of products", () => {
-    render(<ProductGrid products={mockProducts} />);
-    expect(screen.getByText("Product One")).toBeInTheDocument();
-    expect(screen.getByText("Product Two")).toBeInTheDocument();
+  function renderWithStore(ui: React.ReactNode) {
+    return render(<Provider store={store}>{ui}</Provider>);
+  }
+
+  it("renders product details correctly", () => {
+    renderWithStore(<ProductDetailClient product={mockProduct} />);
+
+    expect(screen.getByText("Test Product")).toBeInTheDocument();
+    expect(screen.getByText("This is a test product")).toBeInTheDocument();
+    expect(screen.getByText("$49.99")).toBeInTheDocument();
   });
 
-  it("renders product images with correct alt text", () => {
-    render(<ProductGrid products={mockProducts} />);
-    expect(screen.getByRole("img", { name: /Product One/i })).toHaveAttribute(
-      "src",
-      "https://via.placeholder.com/150"
-    );
-    expect(screen.getByRole("img", { name: /Product Two/i })).toHaveAttribute(
-      "src",
-      "https://via.placeholder.com/150"
-    );
+  it("dispatches addToCart when Add to cart is clicked", () => {
+    renderWithStore(<ProductDetailClient product={mockProduct} />);
+
+    const addButton = screen.getByRole("button", { name: /Add to cart/i });
+    fireEvent.click(addButton);
+
+    // We don't mock the store dispatch here; just ensure UI responded (button disabled state or text)
+    // You can also inspect store state if desired:
+    const items = store.getState().cart.items;
+    expect(items.length).toBeGreaterThanOrEqual(1);
+    const added = items.find((it) => it.id === mockProduct.id);
+    expect(added).toBeTruthy();
   });
 
-  it("renders product prices correctly", () => {
-    render(<ProductGrid products={mockProducts} />);
-    expect(screen.getByText(/\$19.99/)).toBeInTheDocument();
-    expect(screen.getByText(/\$29.99/)).toBeInTheDocument();
+  it("renders recommendations when initialRecs are provided", () => {
+    const recs = [
+      { id: "2", title: "Rec 1", price: 10, image: null },
+      { id: "3", title: "Rec 2", price: 20, image: null },
+    ];
+
+    renderWithStore(
+      <ProductDetailClient product={mockProduct} initialRecs={recs as any} />
+    );
+
+    expect(screen.getByText("Rec 1")).toBeInTheDocument();
+    expect(screen.getByText("Rec 2")).toBeInTheDocument();
   });
 });
