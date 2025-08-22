@@ -1,30 +1,39 @@
-import { getProductById } from "@/lib/supabase";
-import ProductDetailClient from "@/components/ProductDetailClient";
-import { notFound } from "next/navigation";
+import { getProductById, getRecommendations } from "@/lib/supabase";
+import ProductDetailClient from "./ProductDetailClient";
+import type { Product } from "@/types";
 
 interface PageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>; // ✅ Next.js 15+ params are async
 }
 
 export default async function ProductPage({ params }: PageProps) {
-  const { id } = params;
+  // ✅ await params to avoid type errors
+  const { id } = await params;
 
+  // ✅ fetch product from supabase
   const { data: product, error } = await getProductById(id);
 
-  if (error || !product) return notFound();
+  if (error || !product) {
+    return <div>Product not found</div>;
+  }
 
-  // Map product to the exact shape ProductDetailClient expects
-  const clientProduct = {
-    id: String(product.id), // ensure string
+  // ✅ Ensure product matches our unified Product type
+  const typedProduct: Product = {
+    id: product.id,
     title: product.title,
     price: product.price,
-    image: product.image ?? null,
+    image: product.image,
+    description: product.description ?? undefined,
+    category: product.category ?? undefined,
   };
 
-  // Provide a stub fetchRecs that returns an empty array
-  const fetchRecs = async (_id: string, _count?: number) => {
-    return [];
-  };
-
-  return <ProductDetailClient product={clientProduct} fetchRecs={fetchRecs} />;
+  return (
+    <ProductDetailClient
+      product={typedProduct}
+      fetchRecs={async (id: string, count?: number) => {
+        "use server"; // ✅ marks as server action
+        return getRecommendations(id, count);
+      }}
+    />
+  );
 }
