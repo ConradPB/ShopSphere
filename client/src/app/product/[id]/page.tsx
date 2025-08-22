@@ -3,30 +3,28 @@ import ProductDetailClient from "@/components/ProductDetailClient";
 import type { Product } from "@/types/product";
 
 interface PageProps {
-  params: { id: string };
+  params: { id: string } | Promise<{ id: string }>;
 }
 
 export default async function ProductPage({ params }: PageProps) {
-  const { id } = params; // Next.js provides plain object params here
+  // Next.js sometimes provides params as a promise in newer versions — support both:
+  const resolvedParams =
+    params && typeof (params as any).then === "function"
+      ? await (params as Promise<{ id: string }>)
+      : (params as { id: string });
 
-  const { data: product, error } = await getProductById(id);
+  const id = resolvedParams.id;
 
-  if (error || !product) {
+  const { data: product, error: productErr } = await getProductById(String(id));
+  if (productErr || !product) {
     return (
       <div className="p-6 text-center text-gray-500">Product not found</div>
     );
   }
 
-  // product already has the full shape from normalizeRow
-  // pass product straight through (ProductDetailClient expects Product)
-  return (
-    <ProductDetailClient
-      product={product}
-      // pass the server helper (client will call it via fetchRecs prop)
-      fetchRecs={async (productId: string, count?: number) => {
-        const { data, error } = await getRecommendations(productId, count);
-        return data ?? [];
-      }}
-    />
-  );
+  // Get recommendations server-side (so we don't pass functions to client)
+  const { data: recs, error: recErr } = await getRecommendations(String(id), 4);
+  const initialRecs: Product[] = recs ?? [];
+
+  return <ProductDetailClient product={product} initialRecs={initialRecs} />;
 }
