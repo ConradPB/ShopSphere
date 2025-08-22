@@ -6,7 +6,7 @@ import { store } from "@/redux/store";
 
 describe("ProductCard", () => {
   const product = {
-    id: 1,
+    id: "1", // ← string (was number before)
     title: "Test Product",
     price: 19.99,
     image: "/test.jpg",
