@@ -10,14 +10,13 @@ export type ProductDetailClientProps = {
   product: Product;
   recommendations?: Product[];
   initialRecs?: Product[];
-  fetchRecs?: (id: string, count?: number) => Promise<Product[]>;
+  // fetchRecs removed to avoid passing server functions to client components
 };
 
 export default function ProductDetailClient({
   product,
   recommendations,
   initialRecs,
-  fetchRecs,
 }: ProductDetailClientProps) {
   const dispatch = useAppDispatch();
 
@@ -29,18 +28,9 @@ export default function ProductDetailClient({
   const [adding, setAdding] = useState(false);
 
   useEffect(() => {
-    if (recs.length === 0 && fetchRecs) {
-      (async () => {
-        try {
-          const fetched = await fetchRecs(product.id, 4);
-          setRecs(fetched ?? []);
-        } catch {
-          setRecs([]);
-        }
-      })();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [product.id, fetchRecs]);
+    // seeded already covers initialRecs; do nothing else for now.
+    setRecs(seeded ?? []);
+  }, [seeded]);
 
   const imgSrc = product.image ?? "/fallback-image.jpg";
 
