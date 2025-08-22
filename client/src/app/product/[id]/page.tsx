@@ -1,4 +1,3 @@
-// src/app/product/[id]/page.tsx
 import { getProductById, getRecommendations } from "@/lib/supabase";
 import ProductDetailClient from "@/components/ProductDetailClient";
 import type { Product } from "@/types/product";
