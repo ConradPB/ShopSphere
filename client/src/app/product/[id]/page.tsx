@@ -1,6 +1,6 @@
 import { getProductById, getRecommendations } from "@/lib/supabase";
-import ProductDetailClient from "./ProductDetailClient";
-import type { Product } from "@/types";
+import ProductDetailClient from "@/components/ProductDetailClient";
+import type { Product } from "@/types/product";
 
 interface PageProps {
   params: Promise<{ id: string }>; // ✅ Next.js 15+ params are async
