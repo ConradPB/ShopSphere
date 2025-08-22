@@ -3,9 +3,10 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import ProductDetailClient from "@/components/ProductDetailClient";
 import { Provider } from "react-redux";
 import { store } from "@/redux/store";
+import type { Product } from "@/types/product";
 
 describe("ProductDetailClient", () => {
-  const mockProduct = {
+  const mockProduct: Product = {
     id: "1",
     title: "Test Product",
     description: "This is a test product",
@@ -27,13 +28,14 @@ describe("ProductDetailClient", () => {
   });
 
   it("dispatches addToCart when Add to cart is clicked", () => {
+    // Clear store before test to avoid interference from other tests
+    store.dispatch({ type: "cart/clearCart" });
+
     renderWithStore(<ProductDetailClient product={mockProduct} />);
 
     const addButton = screen.getByRole("button", { name: /Add to cart/i });
     fireEvent.click(addButton);
 
-    // We don't mock the store dispatch here; just ensure UI responded (button disabled state or text)
-    // You can also inspect store state if desired:
     const items = store.getState().cart.items;
     expect(items.length).toBeGreaterThanOrEqual(1);
     const added = items.find((it) => it.id === mockProduct.id);
@@ -41,13 +43,13 @@ describe("ProductDetailClient", () => {
   });
 
   it("renders recommendations when initialRecs are provided", () => {
-    const recs = [
+    const recs: Product[] = [
       { id: "2", title: "Rec 1", price: 10, image: null },
       { id: "3", title: "Rec 2", price: 20, image: null },
     ];
 
     renderWithStore(
-      <ProductDetailClient product={mockProduct} initialRecs={recs as any} />
+      <ProductDetailClient product={mockProduct} initialRecs={recs} />
     );
 
     expect(screen.getByText("Rec 1")).toBeInTheDocument();
