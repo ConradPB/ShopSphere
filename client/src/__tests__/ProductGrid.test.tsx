@@ -1,12 +1,18 @@
 import React from "react";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, act } from "@testing-library/react";
 import ProductGrid from "@/components/ProductGrid";
 import * as supabaseLib from "@/lib/supabase";
+import { Provider } from "react-redux";
+import { store } from "@/redux/store";
 
 // Mock getProducts
 jest.mock("@/lib/supabase", () => ({
   getProducts: jest.fn(),
 }));
+
+const renderWithProvider = (ui: React.ReactElement) => {
+  return render(<Provider store={store}>{ui}</Provider>);
+};
 
 describe("ProductGrid", () => {
   const mockProducts = [
@@ -28,13 +34,16 @@ describe("ProductGrid", () => {
     },
   ];
 
-  it("renders loading state initially", () => {
+  it("renders loading state initially", async () => {
     (supabaseLib.getProducts as jest.Mock).mockResolvedValueOnce({
       data: [],
       error: null,
     });
 
-    render(<ProductGrid />);
+    await act(async () => {
+      renderWithProvider(<ProductGrid />);
+    });
+
     expect(screen.getByText(/Loading products/i)).toBeInTheDocument();
   });
 
@@ -44,7 +53,9 @@ describe("ProductGrid", () => {
       error: null,
     });
 
-    render(<ProductGrid />);
+    await act(async () => {
+      renderWithProvider(<ProductGrid />);
+    });
 
     await waitFor(() => {
       expect(screen.getByText("Mock Product")).toBeInTheDocument();
@@ -58,7 +69,9 @@ describe("ProductGrid", () => {
       error: new Error("failed"),
     });
 
-    render(<ProductGrid />);
+    await act(async () => {
+      renderWithProvider(<ProductGrid />);
+    });
 
     await waitFor(() => {
       expect(screen.queryByText("Mock Product")).not.toBeInTheDocument();
