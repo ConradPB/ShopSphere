@@ -17,7 +17,7 @@ describe("cartSlice reducer", () => {
     title: "Sample Product",
     price: 100,
     image: "sample.jpg",
-    quantity: 1,
+    quantity: 
   };
 
   it("should return the initial state", () => {
