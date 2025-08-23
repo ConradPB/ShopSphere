@@ -1,3 +1,4 @@
+// src/redux/cartSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface CartItem {
@@ -8,7 +9,7 @@ export interface CartItem {
   quantity: number;
 }
 
-interface CartState {
+export interface CartState {
   items: CartItem[];
 }
 
@@ -43,7 +44,6 @@ const cartSlice = createSlice({
       }
     },
 
-    // New reducers for +/- buttons
     increaseQuantity: (state, action: PayloadAction<string>) => {
       const item = state.items.find((i) => i.id === action.payload);
       if (item) {
@@ -73,3 +73,6 @@ export const {
 } = cartSlice.actions;
 
 export default cartSlice.reducer;
+
+// Export types for use in tests and components
+export type { CartItem, CartState };
