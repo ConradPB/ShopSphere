@@ -73,5 +73,5 @@ export const {
 
 export default cartSlice.reducer;
 
-// Export types for use in tests and components
+// ✅ Proper way to re-export types
 export type { CartItem, CartState };
