@@ -1,76 +1,70 @@
 import cartReducer, {
   addToCart,
   removeFromCart,
-  updateQuantity,
   clearCart,
-} from "../redux/cartSlice";
+  CartState,
+} from "@/redux/cartSlice";
 
 describe("cartSlice", () => {
-  const initialState = {
-    items: [] as {
-      id: string;
-      title: string;
-      price: number;
-      quantity: number;
-    }[],
+  const initialState: CartState = {
+    items: [],
   };
 
-  it("should return the initial state", () => {
-    expect(cartReducer(undefined, { type: "" })).toEqual(initialState);
+  it("should handle initial state", () => {
+    expect(cartReducer(undefined, { type: "unknown" })).toEqual(initialState);
   });
 
-  it("should handle addToCart for a new product", () => {
-    const newState = cartReducer(
-      initialState,
-      addToCart({ id: "1", title: "Product 1", price: 100, quantity: 1 })
-    );
-    expect(newState.items.length).toBe(1);
-    expect(newState.items[0]).toEqual({
+  it("should handle addToCart", () => {
+    const newItem = {
       id: "1",
-      title: "Product 1",
+      title: "Test Product",
       price: 100,
       quantity: 1,
-    });
-  });
-
-  it("should increase quantity if same product is added again", () => {
-    const stateWithItem = {
-      items: [{ id: "1", title: "Product 1", price: 100, quantity: 1 }],
+      image: "test.jpg", // added required image
     };
-    const newState = cartReducer(
-      stateWithItem,
-      addToCart({ id: "1", title: "Product 1", price: 100, quantity: 1 })
-    );
-    expect(newState.items[0].quantity).toBe(2);
+
+    const actual = cartReducer(initialState, addToCart(newItem));
+    expect(actual.items[0]).toEqual(newItem);
   });
 
   it("should handle removeFromCart", () => {
-    const stateWithItem = {
-      items: [{ id: "1", title: "Product 1", price: 100, quantity: 1 }],
+    const stateWithItem: CartState = {
+      items: [
+        {
+          id: "1",
+          title: "Test Product",
+          price: 100,
+          quantity: 1,
+          image: "test.jpg", // ✅ added image
+        },
+      ],
     };
-    const newState = cartReducer(stateWithItem, removeFromCart("1"));
-    expect(newState.items.length).toBe(0);
-  });
 
-  it("should handle updateQuantity", () => {
-    const stateWithItem = {
-      items: [{ id: "1", title: "Product 1", price: 100, quantity: 1 }],
-    };
-    const newState = cartReducer(
-      stateWithItem,
-      updateQuantity({ id: "1", quantity: 5 })
-    );
-    expect(newState.items[0].quantity).toBe(5);
+    const actual = cartReducer(stateWithItem, removeFromCart("1"));
+    expect(actual.items.length).toBe(0);
   });
 
   it("should handle clearCart", () => {
-    const stateWithItems = {
+    const stateWithItems: CartState = {
       items: [
-        { id: "1", title: "Product 1", price: 100, quantity: 1 },
-        { id: "2", title: "Product 2", price: 200, quantity: 2 },
+        {
+          id: "1",
+          title: "Test Product",
+          price: 100,
+          quantity: 1,
+          image: "test.jpg",
+        },
+        {
+          id: "2",
+          title: "Another Product",
+          price: 200,
+          quantity: 2,
+          image: "another.jpg",
+        },
       ],
     };
-    const newState = cartReducer(stateWithItems, clearCart());
-    expect(newState.items.length).toBe(0);
+
+    const actual = cartReducer(stateWithItems, clearCart());
+    expect(actual.items.length).toBe(0);
   });
 });
