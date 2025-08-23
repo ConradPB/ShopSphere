@@ -3,7 +3,7 @@ import cartReducer, {
   removeFromCart,
   updateQuantity,
   clearCart,
-} from "../src/store/cartSlice";
+} from "../redux/cartSlice";
 
 describe("cartSlice", () => {
   const initialState = {
