@@ -14,7 +14,7 @@ describe("cartSlice reducer", () => {
 
   const sampleItem: CartItem = {
     id: "1",
-    title: "Sample Product",
+    title: "Sample Product"
     price: 100,
     image: "sample.jpg",
     quantity: 1,
