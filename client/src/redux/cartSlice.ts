@@ -72,6 +72,3 @@ export const {
 } = cartSlice.actions;
 
 export default cartSlice.reducer;
-
-// ✅ Proper way to re-export types
-export type { CartItem, CartState };
