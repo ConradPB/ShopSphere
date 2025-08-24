@@ -39,4 +39,28 @@ describe("ProductGrid", () => {
   beforeEach(() => {
     mockGetProducts.mockReset();
   });
+
+  it("renders static title while loading", async () => {
+    mockGetProducts.mockResolvedValueOnce({ data: [], error: null });
+
+    await act(async () => {
+      renderWithProvider(<ProductGrid />);
+    });
+
+    // static heading should be visible immediately
+    expect(screen.getByText(/Featured Products/i)).toBeInTheDocument();
+  });
+
+  it("renders products after fetching", async () => {
+    mockGetProducts.mockResolvedValueOnce({ data: mockProducts, error: null });
+
+    await act(async () => {
+      renderWithProvider(<ProductGrid />);
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText("Mock Product")).toBeInTheDocument();
+      expect(screen.getByText("Another Product")).toBeInTheDocument();
+    });
+  });
 });
