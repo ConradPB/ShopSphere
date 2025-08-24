@@ -63,4 +63,23 @@ describe("ProductGrid", () => {
       expect(screen.getByText("Another Product")).toBeInTheDocument();
     });
   });
+
+  it("renders empty grid if fetch fails", async () => {
+    const spy = jest.spyOn(console, "error").mockImplementation(() => {});
+
+    mockGetProducts.mockResolvedValueOnce({
+      data: null,
+      error: "failed" as any,
+    });
+
+    await act(async () => {
+      renderWithProvider(<ProductGrid />);
+    });
+
+    await waitFor(() => {
+      expect(screen.queryByText("Mock Product")).not.toBeInTheDocument();
+    });
+
+    spy.mockRestore();
+  });
 });
