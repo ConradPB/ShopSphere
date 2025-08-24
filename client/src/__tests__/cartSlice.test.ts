@@ -44,4 +44,27 @@ describe("cartSlice reducer", () => {
     const nextState = cartReducer(stateWithItem, removeFromCart("1"));
     expect(nextState.items).toHaveLength(0);
   });
+
+  it("should handle updateQuantity", () => {
+    const stateWithItem: CartState = { items: [sampleItem] };
+    const nextState = cartReducer(
+      stateWithItem,
+      updateQuantity({ id: "1", quantity: 5 })
+    );
+    expect(nextState.items[0].quantity).toBe(5);
+  });
+
+  it("should handle increaseQuantity", () => {
+    const stateWithItem: CartState = { items: [sampleItem] };
+    const nextState = cartReducer(stateWithItem, increaseQuantity("1"));
+    expect(nextState.items[0].quantity).toBe(2);
+  });
+
+  it("should handle decreaseQuantity (when quantity > 1)", () => {
+    const stateWithItem: CartState = {
+      items: [{ ...sampleItem, quantity: 3 }],
+    };
+    const nextState = cartReducer(stateWithItem, decreaseQuantity("1"));
+    expect(nextState.items[0].quantity).toBe(2);
+  });
 });
