@@ -18,3 +18,45 @@ const mockGetRecommendations =
   supabaseLib.getRecommendations as jest.MockedFunction<
     typeof supabaseLib.getRecommendations
   >;
+
+describe("Product Page", () => {
+  const product: Product = {
+    id: "17",
+    title: "Laptop",
+    price: 999.99,
+    image: "https://placehold.co/400x300",
+    description: "A nice laptop",
+    category: "Electronics",
+  };
+
+  beforeEach(() => {
+    mockGetProductById.mockReset();
+    mockGetRecommendations.mockReset();
+  });
+
+  it("renders product details", async () => {
+    // both functions return { data, error } as your supabase helpers do
+    mockGetProductById.mockResolvedValue({ data: product, error: null });
+    mockGetRecommendations.mockResolvedValue([
+      {
+        id: "18",
+        title: "Accessory",
+        price: 49.99,
+        image: "/fallback-image.jpg",
+        description: "",
+        category: "Electronics",
+      },
+    ]);
+
+    // ProductPage expects { params: Promise<{ id: string }> } per your code, so pass a Promise
+    const tree = await ProductPage({
+      params: Promise.resolve({ id: product.id }),
+    });
+    render(<Provider store={store}>{tree}</Provider>);
+
+    expect(await screen.findByText(product.title)).toBeInTheDocument();
+    expect(
+      screen.getByText(`$${product.price.toFixed(2)}`)
+    ).toBeInTheDocument();
+  });
+});
