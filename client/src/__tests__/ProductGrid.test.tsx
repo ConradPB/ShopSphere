@@ -8,16 +8,17 @@ import ProductGrid from "@/components/ProductGrid";
 import * as supabaseLib from "@/lib/supabase";
 import { Provider } from "react-redux";
 import { store } from "@/redux/store";
+import type { Product } from "@/types/product";
 
 const mockGetProducts = supabaseLib.getProducts as jest.MockedFunction<
-  typeof supabaseLib.getProducts
+  () => Promise<{ data: Product[] | null; error: string | null }>
 >;
 
 const renderWithProvider = (ui: React.ReactElement) =>
   render(<Provider store={store}>{ui}</Provider>);
 
 describe("ProductGrid", () => {
-  const mockProducts = [
+  const mockProducts: Product[] = [
     {
       id: "1",
       title: "Mock Product",
@@ -47,7 +48,6 @@ describe("ProductGrid", () => {
       renderWithProvider(<ProductGrid />);
     });
 
-    // static heading should be visible immediately
     expect(screen.getByText(/Featured Products/i)).toBeInTheDocument();
   });
 
@@ -65,12 +65,10 @@ describe("ProductGrid", () => {
   });
 
   it("renders empty grid if fetch fails", async () => {
+    // silence console.error for this test
     const spy = jest.spyOn(console, "error").mockImplementation(() => {});
 
-    mockGetProducts.mockResolvedValueOnce({
-      data: null,
-      error: "failed" as any,
-    });
+    mockGetProducts.mockResolvedValueOnce({ data: null, error: "failed" });
 
     await act(async () => {
       renderWithProvider(<ProductGrid />);
