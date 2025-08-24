@@ -59,4 +59,14 @@ describe("Product Page", () => {
       screen.getByText(`$${product.price.toFixed(2)}`)
     ).toBeInTheDocument();
   });
+
+  it("handles not found", async () => {
+    mockGetProductById.mockResolvedValue({ data: null, error: "Not found" });
+
+    const tree = await ProductPage({ params: Promise.resolve({ id: "999" }) });
+    render(<Provider store={store}>{tree}</Provider>);
+
+    // your page returns a "Product not found" div when missing
+    expect(await screen.findByText(/Product not found/i)).toBeInTheDocument();
+  });
 });
