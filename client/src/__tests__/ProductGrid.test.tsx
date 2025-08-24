@@ -1,4 +1,3 @@
-// __tests__/ProductGrid.test.tsx
 import React from "react";
 import { render, screen, waitFor, act } from "@testing-library/react";
 import ProductGrid from "@/components/ProductGrid";
