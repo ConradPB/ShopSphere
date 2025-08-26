@@ -6,7 +6,7 @@ const SAMPLE_PRODUCTS: Product[] = [
     title: "Mock Product",
     description: "A mock product",
     price: 9.99,
-    image: "/fallba-image.jpg",
+    image: "/fallback-image.jpg",
     category: "Mocks",
   },
   {
