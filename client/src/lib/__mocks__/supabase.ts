@@ -8,7 +8,7 @@ const SAMPLE_PRODUCTS: Product[] = [
     price: 9.99,
     image: "/fallback-image.jpg",
     category: "Mocks",
-  },
+  }
   {
     id: "2",
     title: "Another Product",
