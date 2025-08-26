@@ -3,7 +3,7 @@ import type { Product } from "@/types/product";
 const SAMPLE_PRODUCTS: Product[] = [
   {
     id: "1",
-    title: "Mock Product",
+    tit: "Mock Product",
     description: "A mock product",
     price: 9.99,
     image: "/fallback-image.jpg",
