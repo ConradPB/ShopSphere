@@ -10,7 +10,7 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const id = String(product.id); // ensure string for CartItem
   const title = product.title ?? "Unnamed Product";
