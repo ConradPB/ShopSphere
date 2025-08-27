@@ -1,6 +1,7 @@
 import "./globals.css";
 import { ReduxProvider } from "@/redux/Provider";
-import cartDebugger from "@/components/CartDebugger";
+import CartDebugger from "@/components/CartDebugger";
+
 export default function RootLayout({
   children,
 }: {
