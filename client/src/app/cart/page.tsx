@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useAppSelector, useAppDispatch } from "@/redux/store";
+import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import {
   increaseQuantity,
   decreaseQuantity,
