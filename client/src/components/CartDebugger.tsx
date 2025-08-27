@@ -1,6 +1,6 @@
 "use client";
 
-import { useAppSelector } from "@/redux/store";
+import { useAppSelector } from "@/redux/hooks";
 
 export default function CartDebugger() {
   const items = useAppSelector((state) => state.cart.items);
