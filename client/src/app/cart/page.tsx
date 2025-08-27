@@ -1,18 +1,17 @@
 "use client";
 
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "@/redux/store";
+import Image from "next/image";
+import Link from "next/link";
+import { useAppSelector, useAppDispatch } from "@/redux/store";
 import {
   increaseQuantity,
   decreaseQuantity,
   removeFromCart,
 } from "@/redux/cartSlice";
-import Image from "next/image";
-import Link from "next/link";
 
 export default function CartPage() {
-  const cartItems = useSelector((state: RootState) => state.cart.items);
-  const dispatch = useDispatch();
+  const cartItems = useAppSelector((state) => state.cart.items);
+  const dispatch = useAppDispatch();
 
   if (cartItems.length === 0) {
     return (
@@ -20,7 +19,6 @@ export default function CartPage() {
     );
   }
 
-  // Calculate total
   const total = cartItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0
@@ -50,7 +48,6 @@ export default function CartPage() {
               </div>
             </div>
 
-            {/* Quantity controls */}
             <div className="flex items-center space-x-2">
               <button
                 onClick={() => dispatch(decreaseQuantity(item.id))}
@@ -67,7 +64,6 @@ export default function CartPage() {
               </button>
             </div>
 
-            {/* Remove button */}
             <button
               onClick={() => dispatch(removeFromCart(item.id))}
               className="ml-4 text-red-500 hover:underline"
@@ -78,7 +74,6 @@ export default function CartPage() {
         ))}
       </div>
 
-      {/* Total and checkout */}
       <div className="mt-8 flex flex-col items-end">
         <p className="text-xl font-bold mb-4">Total: ${total.toFixed(2)}</p>
         <Link
