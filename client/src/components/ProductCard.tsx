@@ -45,18 +45,12 @@ export default function ProductCard({ product }: ProductCardProps) {
             Add to cart
           </button>
 
--         <a
--           href={`/product/${id}`}
--           className="px-3 py-2 border rounded-md text-sm text-gray-700 hover:bg-gray-50"
--         >
--           View
--         </a>
-+         <Link
-+           href={`/product/${id}`}
-+           className="px-3 py-2 border rounded-md text-sm text-gray-700 hover:bg-gray-50"
-+         >
-+           View
-+         </Link>
+         <Link
+         href={`/product/${id}`}
+          className="px-3 py-2 border rounded-md text-sm text-gray-700 hover:bg-gray-50"
+        >
+         View
+       </Link>
         </div>
       </div>
     </article>
