@@ -1,9 +1,8 @@
 "use client";
 
 import Image from "next/image";
-- import { useDispatch } from "react-redux";
-+ import Link from "next/link";
-+ import { useAppDispatch } from "@/redux/hooks"; // use typed hook
+import Link from "next/link";
+import { useAppDispatch } from "@/redux/hooks"; // use typed hook
 import { addToCart } from "@/redux/cartSlice";
 import type { Product } from "@/types/product";
 
@@ -12,8 +11,8 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
--  const dispatch = useDispatch();
-+  const dispatch = useAppDispatch();
+
+  const dispatch = useAppDispatch();
 
   const id = String(product.id);
   const title = product.title ?? "Unnamed Product";
