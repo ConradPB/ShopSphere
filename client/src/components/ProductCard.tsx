@@ -11,7 +11,6 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
-
   const dispatch = useAppDispatch();
 
   const id = String(product.id);
@@ -38,19 +37,14 @@ export default function ProductCard({ product }: ProductCardProps) {
       <div className="p-4">
         ...
         <div className="mt-4 flex gap-2">
-          <button
-            onClick={handleAddToCart}
-            ...
-          >
-            Add to cart
-          </button>
+          <button onClick={handleAddToCart}>Add to cart</button>
 
-         <Link
-         href={`/product/${id}`}
-          className="px-3 py-2 border rounded-md text-sm text-gray-700 hover:bg-gray-50"
-        >
-         View
-       </Link>
+          <Link
+            href={`/product/${id}`}
+            className="px-3 py-2 border rounded-md text-sm text-gray-700 hover:bg-gray-50"
+          >
+            View
+          </Link>
         </div>
       </div>
     </article>
