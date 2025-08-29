@@ -1,4 +1,3 @@
-// src/redux/store.ts
 import { configureStore } from "@reduxjs/toolkit";
 import cartReducer, { CartState } from "./cartSlice";
 
@@ -17,7 +16,7 @@ function loadPreloadedState():
     const items = JSON.parse(raw) as CartState["items"];
     if (!Array.isArray(items)) return undefined;
     return { cart: { items } };
-  } catch (e) {
+  } catch {
     // ignore parse errors and return undefined
     return undefined;
   }
@@ -51,6 +50,6 @@ if (typeof window !== "undefined") {
   });
 }
 
-// Types & hooks (exported here)
+// Types & exports
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
