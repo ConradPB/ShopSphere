@@ -6,7 +6,7 @@ import React from "react";
 // client-only CartDebugger (never SSR)
 const CartDebugger =
   process.env.NEXT_PUBLIC_ENABLE_CART_DEBUG === "true"
-    ? dynamic(() => import("@/components/CartDebugger"), { ssr: true })
+    ? dynamic(() => import("@/components/CartDebugger"), { ssr: false })
     : null;
 
 export default function RootLayout({
