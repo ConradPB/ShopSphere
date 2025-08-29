@@ -1,62 +1,56 @@
-import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import cartReducer from "./cartSlice";
-import type { CartState } from "./cartSlice";
+// src/redux/store.ts
+import { configureStore } from "@reduxjs/toolkit";
+import cartReducer, { CartState } from "./cartSlice";
 
-/**
- * Root reducer and typed RootState
- */
-const rootReducer = combineReducers({
-  cart: cartReducer,
-});
+const LOCAL_STORAGE_KEY = "shop_sphere_cart_items";
 
-/**
- * Persist/load helpers (client-only)
- */
-const STORAGE_KEY = "shop-sphere:state";
-
-function loadState(): { cart: CartState } | undefined {
+/** load saved cart items from localStorage (client only) */
+function loadPreloadedState():
+  | {
+      cart: CartState;
+    }
+  | undefined {
+  if (typeof window === "undefined") return undefined;
   try {
-    if (typeof window === "undefined") return undefined;
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (!raw) return undefined;
-    return JSON.parse(raw) as { cart: CartState };
+    const items = JSON.parse(raw) as CartState["items"];
+    if (!Array.isArray(items)) return undefined;
+    return { cart: { items } };
   } catch (e) {
-    // don't crash on invalid JSON or security errors
-    console.warn("Could not load persisted state", e);
+    // ignore parse errors and return undefined
     return undefined;
   }
 }
 
+/** save just the cart items array */
 function saveState(state: { cart: CartState }) {
+  if (typeof window === "undefined") return;
   try {
-    if (typeof window === "undefined") return;
-    // save only the cart slice to keep things small
-    const toSave = { cart: state.cart };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
-  } catch (e) {
-    console.warn("Could not save state", e);
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state.cart.items));
+  } catch {
+    // ignore quota / serialization errors
   }
 }
 
-/**
- * Create store with optional preloadedState (from localStorage on client)
- */
 export const store = configureStore({
-  reducer: rootReducer,
-  preloadedState: typeof window !== "undefined" ? loadState() : undefined,
+  reducer: {
+    cart: cartReducer,
+  },
+  preloadedState: loadPreloadedState(),
 });
 
-/**
- * Persist on changes (client only)
- */
+// subscribe to persist cart changes (client-only)
 if (typeof window !== "undefined") {
   store.subscribe(() => {
-    saveState(store.getState() as { cart: CartState });
+    try {
+      saveState(store.getState());
+    } catch {
+      // ignore
+    }
   });
 }
 
-/**
- * Types & hooks exports
- */
-export type RootState = ReturnType<typeof rootReducer>;
+// Types & hooks (exported here)
+export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
