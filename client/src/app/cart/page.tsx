@@ -1,9 +1,10 @@
+// src/app/cart/page.tsx
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useAppSelector, useAppDispatch } from "@/redux/hooks";
+import { useAppSelector, useAppDispatch } from "@/redux/hooks"; // your typed hooks
 import {
   increaseQuantity,
   decreaseQuantity,
@@ -11,7 +12,10 @@ import {
 } from "@/redux/cartSlice";
 
 export default function CartPage() {
+  // delay rendering the client-driven list until after mount
   const [mounted, setMounted] = useState(false);
+
+  // read from redux (client)
   const cartItems = useAppSelector((state) => state.cart.items);
   const dispatch = useAppDispatch();
 
@@ -19,15 +23,16 @@ export default function CartPage() {
     setMounted(true);
   }, []);
 
-  // While not mounted, render exactly the same HTML the server produced
-  if (!mounted && (!cartItems || cartItems.length === 0)) {
+  // server will render this (and initial client render until mounted),
+  // so the HTML matches and hydration won't fail.
+  if (!mounted) {
     return (
       <p className="text-center py-10 text-gray-500">Your cart is empty.</p>
     );
   }
 
-  // After mount, render the real cart (may still be empty)
-  if (!cartItems || cartItems.length === 0) {
+  // after mount, show real cart
+  if (cartItems.length === 0) {
     return (
       <p className="text-center py-10 text-gray-500">Your cart is empty.</p>
     );
