@@ -21,36 +21,46 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     addToCart: (state, action: PayloadAction<CartItem>) => {
-      const existing = state.items.find(
-        (item) => item.id === action.payload.id
-      );
+      // Coerce id to string to avoid number/string mismatch issues
+      const payload: CartItem = {
+        ...action.payload,
+        id: String(action.payload.id),
+      };
+
+      const existing = state.items.find((item) => item.id === payload.id);
       if (existing) {
-        existing.quantity += action.payload.quantity;
+        existing.quantity += payload.quantity;
       } else {
-        state.items.push(action.payload);
+        state.items.push(payload);
       }
     },
+
     removeFromCart: (state, action: PayloadAction<string>) => {
       state.items = state.items.filter((item) => item.id !== action.payload);
     },
+
     updateQuantity: (
       state,
       action: PayloadAction<{ id: string; quantity: number }>
     ) => {
-      const item = state.items.find((i) => i.id === action.payload.id);
+      const id = String(action.payload.id);
+      const item = state.items.find((i) => i.id === id);
       if (item) {
         item.quantity = action.payload.quantity;
       }
     },
 
     increaseQuantity: (state, action: PayloadAction<string>) => {
-      const item = state.items.find((i) => i.id === action.payload);
+      const id = String(action.payload);
+      const item = state.items.find((i) => i.id === id);
       if (item) {
         item.quantity += 1;
       }
     },
+
     decreaseQuantity: (state, action: PayloadAction<string>) => {
-      const item = state.items.find((i) => i.id === action.payload);
+      const id = String(action.payload);
+      const item = state.items.find((i) => i.id === id);
       if (item && item.quantity > 1) {
         item.quantity -= 1;
       }
