@@ -82,6 +82,13 @@ export default function ProductDetailClient({
           >
             {adding ? "Adding..." : "Add to cart"}
           </button>
+
+          <Link
+            href="/cart"
+            className="border border-gray-300 px-4 py-2 rounded-md hover:bg-gray-50"
+          >
+            Go to cart
+          </Link>
         </div>
 
         {/* Recommendations */}
