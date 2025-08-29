@@ -22,7 +22,6 @@ function loadState(): { cart: CartState } | undefined {
     return JSON.parse(raw) as { cart: CartState };
   } catch (e) {
     // don't crash on invalid JSON or security errors
-    // eslint-disable-next-line no-console
     console.warn("Could not load persisted state", e);
     return undefined;
   }
