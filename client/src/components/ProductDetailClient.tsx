@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useAppDispatch } from "@/redux/hooks";
 import { addToCart } from "@/redux/cartSlice";
 import type { Product } from "@/types/product";
+import Link from "next/link";
 
 export type ProductDetailClientProps = {
   product: Product;
