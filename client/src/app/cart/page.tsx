@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
@@ -10,10 +11,23 @@ import {
 } from "@/redux/cartSlice";
 
 export default function CartPage() {
+  const [mounted, setMounted] = useState(false);
   const cartItems = useAppSelector((state) => state.cart.items);
   const dispatch = useAppDispatch();
 
-  if (cartItems.length === 0) {
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // While not mounted, render exactly the same HTML the server produced
+  if (!mounted && (!cartItems || cartItems.length === 0)) {
+    return (
+      <p className="text-center py-10 text-gray-500">Your cart is empty.</p>
+    );
+  }
+
+  // After mount, render the real cart (may still be empty)
+  if (!cartItems || cartItems.length === 0) {
     return (
       <p className="text-center py-10 text-gray-500">Your cart is empty.</p>
     );
