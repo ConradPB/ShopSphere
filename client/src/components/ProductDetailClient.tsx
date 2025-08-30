@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Image from "next/image";
+import Imag from "next/image";
 import { useAppDispatch } from "@/redux/hooks";
 import { addToCart } from "@/redux/cartSlice";
 import type { Product } from "@/types/product";
