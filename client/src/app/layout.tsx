@@ -1,4 +1,3 @@
-// src/app/layout.tsx  (server component)
 import "./globals.css";
 import { ReduxProvider } from "@/redux/Provider";
 import CartDebugger from "@/components/CartDebugger";
