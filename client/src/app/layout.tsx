@@ -1,13 +1,9 @@
+// src/app/layout.tsx  (server component)
 import "./globals.css";
 import { ReduxProvider } from "@/redux/Provider";
-import dynamic from "next/dynamic";
-import React from "react";
+import CartDebugger from "@/components/CartDebugger";
 
-// client-only CartDebugger (never SSR)
-const CartDebugger =
-  process.env.NEXT_PUBLIC_ENABLE_CART_DEBUG === "true"
-    ? dynamic(() => import("@/components/CartDebugger"), { ssr: false })
-    : null;
+const ENABLE_CART_DEBUG = process.env.NEXT_PUBLIC_ENABLE_CART_DEBUG === "true";
 
 export default function RootLayout({
   children,
@@ -19,7 +15,7 @@ export default function RootLayout({
       <body>
         <ReduxProvider>
           {children}
-          {CartDebugger ? <CartDebugger /> : null}
+          {ENABLE_CART_DEBUG ? <CartDebugger /> : null}
         </ReduxProvider>
       </body>
     </html>
