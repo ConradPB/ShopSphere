@@ -6,7 +6,7 @@ import { Product } from "@/types/product";
 import ProductCard from "./ProductCard";
 
 export default function ProductGrid() {
-  const [products, setProducts] = useState<Prduct[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
