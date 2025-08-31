@@ -1,26 +1,42 @@
 "use client";
 
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "@/redux/store";
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { useAppSelector, useAppDispatch } from "@/redux/hooks"; // your typed hooks
 import {
   increaseQuantity,
   decreaseQuantity,
   removeFromCart,
 } from "@/redux/cartSlice";
-import Image from "next/image";
-import Link from "next/link";
 
 export default function CartPage() {
-  const cartItems = useSelector((state: RootState) => state.cart.items);
-  const dispatch = useDispatch();
+  // delay rendering the client-driven list until after mount
+  const [mounted, setMounted] = useState(false);
 
+  // read from redux (client)
+  const cartItems = useAppSelector((state) => state.cart.items);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // server will render this (and initial client render until mounted),
+  // so the HTML matches and hydration won't fail.
+  if (!mounted) {
+    return (
+      <p className="text-center py-10 text-gray-500">Your cart is empty.</p>
+    );
+  }
+
+  // after mount, show real cart
   if (cartItems.length === 0) {
     return (
       <p className="text-center py-10 text-gray-500">Your cart is empty.</p>
     );
   }
 
-  // Calculate total
   const total = cartItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0
@@ -50,7 +66,6 @@ export default function CartPage() {
               </div>
             </div>
 
-            {/* Quantity controls */}
             <div className="flex items-center space-x-2">
               <button
                 onClick={() => dispatch(decreaseQuantity(item.id))}
@@ -67,7 +82,6 @@ export default function CartPage() {
               </button>
             </div>
 
-            {/* Remove button */}
             <button
               onClick={() => dispatch(removeFromCart(item.id))}
               className="ml-4 text-red-500 hover:underline"
@@ -78,7 +92,6 @@ export default function CartPage() {
         ))}
       </div>
 
-      {/* Total and checkout */}
       <div className="mt-8 flex flex-col items-end">
         <p className="text-xl font-bold mb-4">Total: ${total.toFixed(2)}</p>
         <Link

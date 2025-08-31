@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useAppDispatch } from "@/redux/hooks";
 import { addToCart } from "@/redux/cartSlice";
 import type { Product } from "@/types/product";
+import Link from "next/link";
 
 export type ProductDetailClientProps = {
   product: Product;
@@ -83,12 +84,12 @@ export default function ProductDetailClient({
             {adding ? "Adding..." : "Add to cart"}
           </button>
 
-          <a
+          <Link
             href="/cart"
             className="border border-gray-300 px-4 py-2 rounded-md hover:bg-gray-50"
           >
             Go to cart
-          </a>
+          </Link>
         </div>
 
         {/* Recommendations */}

@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useDispatch } from "react-redux";
+import Link from "next/link";
+import { useAppDispatch } from "@/redux/hooks";
 import { addToCart } from "@/redux/cartSlice";
 import type { Product } from "@/types/product";
 
@@ -10,12 +11,12 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const id = String(product.id); // ensure string for CartItem
+  const id = String(product.id);
   const title = product.title ?? "Unnamed Product";
   const price = Number(product.price ?? 0);
-  const imageSrc: string = product.image ?? "/fallback-image.jpg"; // ensure string
+  const imageSrc: string = product.image ?? "/fallback-image.jpg";
 
   const handleAddToCart = () => {
     dispatch(
@@ -23,7 +24,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         id,
         title,
         price,
-        image: imageSrc, // must be string (not undefined)
+        image: imageSrc,
         quantity: 1,
       })
     );
@@ -57,12 +58,13 @@ export default function ProductCard({ product }: ProductCardProps) {
           >
             Add to cart
           </button>
-          <a
+
+          <Link
             href={`/product/${id}`}
             className="px-3 py-2 border rounded-md text-sm text-gray-700 hover:bg-gray-50"
           >
             View
-          </a>
+          </Link>
         </div>
       </div>
     </article>
