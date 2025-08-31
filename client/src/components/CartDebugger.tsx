@@ -1,10 +1,21 @@
+// src/components/CartDebugger.tsx
 "use client";
 
-import React from "react";
-import { useAppSelector } from "@/redux/hooks";
+import { useEffect, useState } from "react";
+import { useAppSelector } from "@/redux/hooks"; // typed selector hook
+import type { CartItem } from "@/redux/cartSlice";
 
 export default function CartDebugger() {
-  const items = useAppSelector((s) => s.cart.items);
+  // typed selector — avoids 'any'
+  const items: CartItem[] = useAppSelector((state) => state.cart.items);
+
+  // prevent render on server / before client mount to avoid hydration mismatch
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
 
   return (
     <div className="fixed bottom-4 right-4 bg-white border p-4 shadow-lg rounded max-w-xs z-50">
