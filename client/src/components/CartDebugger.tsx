@@ -22,7 +22,7 @@ export default function CartDebugger() {
       <h2 className="font-bold mb-2">Cart Debugger</h2>
       <pre className="text-xs overflow-auto max-h-40">
         {JSON.stringify(items, null, 2)}
-      </pre
+      </pre>
     </div>
   );
 }
