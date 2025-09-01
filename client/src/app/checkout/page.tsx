@@ -1,191 +1,175 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  CheckoutFormSchema,
+  OrderRequestSchema,
+  OrderRequest,
+} from "@/lib/checkout";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import { clearCart } from "@/redux/cartSlice";
-import Link from "next/link";
+import { z } from "zod";
 
-type CheckoutForm = {
-  name: string;
-  email: string;
-  address: string;
-  city: string;
-  postal: string;
-  country: string;
-};
+type FormShape = z.infer<typeof CheckoutFormSchema>;
 
 export default function CheckoutPage() {
-  const cartItems = useAppSelector((state) => state.cart.items);
+  const cartItems = useAppSelector((s) => s.cart.items);
   const dispatch = useAppDispatch();
 
-  const [form, setForm] = useState<CheckoutForm>({
-    name: "",
-    email: "",
-    address: "",
-    city: "",
-    postal: "",
-    country: "",
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<FormShape>({
+    resolver: zodResolver(CheckoutFormSchema),
   });
-
-  const [submitting, setSubmitting] = useState(false);
-  const [orderPlaced, setOrderPlaced] = useState(false);
 
   const total = cartItems.reduce((acc, it) => acc + it.price * it.quantity, 0);
 
-  function handleChange(
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  }
+  async function onSubmit(values: FormShape) {
+    if (cartItems.length === 0) return alert("Your cart is empty.");
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (cartItems.length === 0) return;
+    const payload: OrderRequest = {
+      form: values,
+      items: cartItems.map((i) => ({
+        id: String(i.id),
+        title: i.title,
+        price: Number(i.price),
+        quantity: Number(i.quantity),
+      })),
+    };
 
-    setSubmitting(true);
+    // Client-side validate final payload against schema (optional but safe)
+    const res = OrderRequestSchema.safeParse(payload);
+    if (!res.success) {
+      console.error("Payload validation failed", res.error.format());
+      return alert("Invalid order data. Please try again.");
+    }
+
     try {
-      // Simulate async order processing (replace with real API call later).
-      await new Promise((resolve) => setTimeout(resolve, 800));
+      const r = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-      // After successful "order", clear cart and show confirmation:
+      const data = await r.json();
+      if (!r.ok) {
+        console.error("Checkout error", data);
+        alert("Checkout failed. Try again later.");
+        return;
+      }
+
+      // success — server will return orderId (or similar)
       dispatch(clearCart());
-      setOrderPlaced(true);
+      // show success state — simple alert here; replace with nicer UI
+      alert(`Order placed! ID: ${data.orderId ?? "(none)"}`);
+      // optionally redirect: router.push(`/order/${data.orderId}`)
     } catch (err) {
-      // handle or show error to user in a real implementation
-      console.error("Checkout failed", err);
-    } finally {
-      setSubmitting(false);
+      console.error(err);
+      alert("Network error during checkout.");
     }
   }
 
-  if (orderPlaced) {
-    return (
-      <div className="max-w-3xl mx-auto p-6 text-center">
-        <h2 className="text-2xl font-bold mb-4">Thank you — order placed!</h2>
-        <p className="mb-4">
-          We emailed a receipt to {form.email || "your address"}.
-        </p>
-        <Link
-          href="/"
-          className="inline-block bg-indigo-600 text-white px-5 py-2 rounded hover:bg-indigo-700"
-        >
-          Continue shopping
-        </Link>
-      </div>
-    );
-  }
-
   return (
-    <div className="max-w-4xl mx-auto p-6 grid gap-8 md:grid-cols-2">
-      <div>
-        <h1 className="text-2xl font-bold mb-4">Checkout</h1>
+    <div className="max-w-4xl mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-4">Checkout</h1>
 
-        {cartItems.length === 0 ? (
-          <div>
-            <p className="text-gray-500 mb-4">Your cart is empty.</p>
-            <Link href="/" className="text-indigo-600 hover:underline">
-              Back to shop
-            </Link>
-          </div>
-        ) : (
-          <>
-            <form onSubmit={handleSubmit} className="space-y-4">
+      {cartItems.length === 0 ? (
+        <p className="text-gray-600">
+          Your cart is empty.{" "}
+          <a href="/" className="text-indigo-600">
+            Back to shop
+          </a>
+        </p>
+      ) : (
+        <div className="grid md:grid-cols-2 gap-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <div>
+              <label className="block text-sm">Name</label>
+              <input
+                {...register("name")}
+                className="mt-1 block w-full rounded border px-3 py-2"
+              />
+              {errors.name && (
+                <p className="text-xs text-red-600">{errors.name.message}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm">Email</label>
+              <input
+                {...register("email")}
+                className="mt-1 block w-full rounded border px-3 py-2"
+              />
+              {errors.email && (
+                <p className="text-xs text-red-600">{errors.email.message}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm">Address</label>
+              <textarea
+                {...register("address")}
+                className="mt-1 block w-full rounded border px-3 py-2"
+              />
+              {errors.address && (
+                <p className="text-xs text-red-600">{errors.address.message}</p>
+              )}
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-sm font-medium">Name</label>
+                <label className="block text-sm">City</label>
                 <input
-                  name="name"
-                  value={form.name}
-                  onChange={handleChange}
-                  className="mt-1 block w-full border rounded px-3 py-2"
-                  required
+                  {...register("city")}
+                  className="mt-1 block w-full rounded border px-3 py-2"
                 />
+                {errors.city && (
+                  <p className="text-xs text-red-600">{errors.city.message}</p>
+                )}
               </div>
-
               <div>
-                <label className="block text-sm font-medium">Email</label>
+                <label className="block text-sm">Postal</label>
                 <input
-                  name="email"
-                  type="email"
-                  value={form.email}
-                  onChange={handleChange}
-                  className="mt-1 block w-full border rounded px-3 py-2"
-                  required
+                  {...register("postal")}
+                  className="mt-1 block w-full rounded border px-3 py-2"
                 />
+                {errors.postal && (
+                  <p className="text-xs text-red-600">
+                    {errors.postal.message}
+                  </p>
+                )}
               </div>
+            </div>
 
-              <div>
-                <label className="block text-sm font-medium">Address</label>
-                <textarea
-                  name="address"
-                  value={form.address}
-                  onChange={handleChange}
-                  className="mt-1 block w-full border rounded px-3 py-2"
-                  rows={3}
-                  required
-                />
-              </div>
+            <div>
+              <label className="block text-sm">Country</label>
+              <input
+                {...register("country")}
+                className="mt-1 block w-full rounded border px-3 py-2"
+              />
+              {errors.country && (
+                <p className="text-xs text-red-600">{errors.country.message}</p>
+              )}
+            </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-sm font-medium">City</label>
-                  <input
-                    name="city"
-                    value={form.city}
-                    onChange={handleChange}
-                    className="mt-1 block w-full border rounded px-3 py-2"
-                    required
-                  />
-                </div>
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 disabled:opacity-60"
+            >
+              {isSubmitting
+                ? "Placing order…"
+                : `Place order — $${total.toFixed(2)}`}
+            </button>
+          </form>
 
-                <div>
-                  <label className="block text-sm font-medium">
-                    Postal Code
-                  </label>
-                  <input
-                    name="postal"
-                    value={form.postal}
-                    onChange={handleChange}
-                    className="mt-1 block w-full border rounded px-3 py-2"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium">Country</label>
-                <input
-                  name="country"
-                  value={form.country}
-                  onChange={handleChange}
-                  className="mt-1 block w-full border rounded px-3 py-2"
-                  required
-                />
-              </div>
-
-              <div className="pt-4">
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 disabled:opacity-60"
-                >
-                  {submitting
-                    ? "Placing order…"
-                    : `Place order — $${total.toFixed(2)}`}
-                </button>
-              </div>
-            </form>
-          </>
-        )}
-      </div>
-
-      <aside>
-        <h2 className="text-lg font-semibold mb-3">Order summary</h2>
-        <div className="bg-white p-4 rounded shadow">
-          {cartItems.length === 0 ? (
-            <p className="text-gray-500">No items</p>
-          ) : (
-            <ul className="space-y-3">
+          <aside className="bg-white p-4 rounded shadow">
+            <h2 className="font-semibold mb-3">Order summary</h2>
+            <ul className="space-y-2">
               {cartItems.map((it) => (
                 <li key={it.id} className="flex justify-between">
                   <span>
@@ -195,14 +179,13 @@ export default function CheckoutPage() {
                 </li>
               ))}
             </ul>
-          )}
-
-          <div className="mt-4 border-t pt-4 flex justify-between font-bold">
-            <span>Total</span>
-            <span>${total.toFixed(2)}</span>
-          </div>
+            <div className="mt-4 border-t pt-3 flex justify-between font-bold">
+              <span>Total</span>
+              <span>${total.toFixed(2)}</span>
+            </div>
+          </aside>
         </div>
-      </aside>
+      )}
     </div>
   );
 }
