@@ -1,8 +1,9 @@
 "use client";
 
-import React from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
 import {
   CheckoutFormSchema,
   OrderRequestSchema,
@@ -10,7 +11,7 @@ import {
 } from "@/lib/checkout";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import { clearCart } from "@/redux/cartSlice";
-import { z } from "zod";
+import type { z } from "zod";
 
 type FormShape = z.infer<typeof CheckoutFormSchema>;
 
@@ -29,7 +30,10 @@ export default function CheckoutPage() {
   const total = cartItems.reduce((acc, it) => acc + it.price * it.quantity, 0);
 
   async function onSubmit(values: FormShape) {
-    if (cartItems.length === 0) return alert("Your cart is empty.");
+    if (cartItems.length === 0) {
+      alert("Your cart is empty.");
+      return;
+    }
 
     const payload: OrderRequest = {
       form: values,
@@ -41,34 +45,33 @@ export default function CheckoutPage() {
       })),
     };
 
-    // Client-side validate final payload against schema (optional but safe)
-    const res = OrderRequestSchema.safeParse(payload);
-    if (!res.success) {
-      console.error("Payload validation failed", res.error.format());
-      return alert("Invalid order data. Please try again.");
+    // final client-side schema check
+    const parsed = OrderRequestSchema.safeParse(payload);
+    if (!parsed.success) {
+      console.error("Invalid order payload:", parsed.error.format());
+      alert("Invalid order data. Please review and try again.");
+      return;
     }
 
     try {
-      const r = await fetch("/api/checkout", {
+      const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
-      const data = await r.json();
-      if (!r.ok) {
-        console.error("Checkout error", data);
+      const data = await res.json();
+      if (!res.ok) {
+        console.error("Checkout failed", data);
         alert("Checkout failed. Try again later.");
         return;
       }
 
-      // success — server will return orderId (or similar)
+      // success: clear cart and show confirmation
       dispatch(clearCart());
-      // show success state — simple alert here; replace with nicer UI
       alert(`Order placed! ID: ${data.orderId ?? "(none)"}`);
-      // optionally redirect: router.push(`/order/${data.orderId}`)
     } catch (err) {
-      console.error(err);
+      console.error("Network error during checkout", err);
       alert("Network error during checkout.");
     }
   }
@@ -80,9 +83,9 @@ export default function CheckoutPage() {
       {cartItems.length === 0 ? (
         <p className="text-gray-600">
           Your cart is empty.{" "}
-          <a href="/" className="text-indigo-600">
+          <Link href="/" className="text-indigo-600">
             Back to shop
-          </a>
+          </Link>
         </p>
       ) : (
         <div className="grid md:grid-cols-2 gap-6">
