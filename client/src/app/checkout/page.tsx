@@ -1,4 +1,26 @@
+"use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { calculateCartTotal } from "@/types/cart"; // <-- import helper
+
+export default function CheckoutPage() {
+  const router = useRouter();
+  const cart = useSelector((state: RootState) => state.cart.items);
+
+  // ✅ calculate subtotal here instead of reading state.cart.total
+  const subtotal = calculateCartTotal(cart);
+  const shipping = 5; // placeholder flat rate
+  const total = subtotal + shipping;
+
+  const [paymentMethod, setPaymentMethod] = useState("card");
+
+  const handlePlaceOrder = () => {
+    // For now just redirect to confirmation
+    router.push("/order-confirmation");
+  };
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-8">
