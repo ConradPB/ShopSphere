@@ -41,6 +41,13 @@ export default function SearchAndFilterClient({ initialProducts }: Props) {
     return results;
   }, [search, category, sort, initialProducts]);
 
+  // Reset everything
+  function clearFilters() {
+    setSearch("");
+    setCategory("all");
+    setSort("default");
+  }
+
   return (
     <div className="max-w-6xl mx-auto p-6">
       {/* Controls */}
@@ -74,6 +81,13 @@ export default function SearchAndFilterClient({ initialProducts }: Props) {
           <option value="low-to-high">Price: Low → High</option>
           <option value="high-to-low">Price: High → Low</option>
         </select>
+
+        <button
+          onClick={clearFilters}
+          className="border px-4 py-2 rounded bg-gray-100 hover:bg-gray-200"
+        >
+          Clear Filters
+        </button>
       </div>
 
       {/* Products grid */}
