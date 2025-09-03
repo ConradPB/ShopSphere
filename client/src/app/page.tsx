@@ -1,6 +1,7 @@
 import { getProducts } from "@/lib/supabase";
 import Link from "next/link";
 import Image from "next/image";
+import SearchAndFilterClient from "@/components/SearchAndFilterClient";
 
 export default async function HomePage() {
   const { data: products, error } = await getProducts();
