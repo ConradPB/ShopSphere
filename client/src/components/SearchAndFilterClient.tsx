@@ -13,6 +13,8 @@ export default function SearchAndFilterClient({ initialProducts }: Props) {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
   const [sort, setSort] = useState("default");
+  const [page, setPage] = useState(1);
+  const pageSize = 9; // products per page
 
   // Extract categories dynamically
   const categories = useMemo(() => {
@@ -41,11 +43,16 @@ export default function SearchAndFilterClient({ initialProducts }: Props) {
     return results;
   }, [search, category, sort, initialProducts]);
 
+  // Pagination logic
+  const totalPages = Math.ceil(filtered.length / pageSize);
+  const paginated = filtered.slice((page - 1) * pageSize, page * pageSize);
+
   // Reset everything
   function clearFilters() {
     setSearch("");
     setCategory("all");
     setSort("default");
+    setPage(1);
   }
 
   return (
@@ -56,13 +63,19 @@ export default function SearchAndFilterClient({ initialProducts }: Props) {
           type="text"
           placeholder="Search products..."
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setPage(1);
+          }}
           className="flex-1 border rounded px-3 py-2"
         />
 
         <select
           value={category}
-          onChange={(e) => setCategory(e.target.value)}
+          onChange={(e) => {
+            setCategory(e.target.value);
+            setPage(1);
+          }}
           className="border rounded px-3 py-2"
         >
           {categories.map((c) => (
@@ -74,7 +87,10 @@ export default function SearchAndFilterClient({ initialProducts }: Props) {
 
         <select
           value={sort}
-          onChange={(e) => setSort(e.target.value)}
+          onChange={(e) => {
+            setSort(e.target.value);
+            setPage(1);
+          }}
           className="border rounded px-3 py-2"
         >
           <option value="default">Sort by</option>
@@ -91,29 +107,54 @@ export default function SearchAndFilterClient({ initialProducts }: Props) {
       </div>
 
       {/* Products grid */}
-      {filtered.length === 0 ? (
+      {paginated.length === 0 ? (
         <p className="text-center text-gray-500">No products found.</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {filtered.map((product) => (
-            <Link
-              key={product.id}
-              href={`/product/${product.id}`}
-              className="border rounded-lg p-4 hover:shadow"
-            >
-              <Image
-                src={product.image ?? "/fallback-image.jpg"}
-                alt={product.title || "Product image"}
-                width={400}
-                height={300}
-                className="w-full h-48 object-cover rounded mb-3"
-                unoptimized
-              />
-              <h2 className="font-semibold">{product.title}</h2>
-              <p className="text-gray-600">${product.price.toFixed(2)}</p>
-            </Link>
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {paginated.map((product) => (
+              <Link
+                key={product.id}
+                href={`/product/${product.id}`}
+                className="border rounded-lg p-4 hover:shadow"
+              >
+                <Image
+                  src={product.image ?? "/fallback-image.jpg"}
+                  alt={product.title || "Product image"}
+                  width={400}
+                  height={300}
+                  className="w-full h-48 object-cover rounded mb-3"
+                  unoptimized
+                />
+                <h2 className="font-semibold">{product.title}</h2>
+                <p className="text-gray-600">${product.price.toFixed(2)}</p>
+              </Link>
+            ))}
+          </div>
+
+          {/* Pagination controls */}
+          {totalPages > 1 && (
+            <div className="flex justify-center items-center gap-4 mt-8">
+              <button
+                onClick={() => setPage((p) => Math.max(p - 1, 1))}
+                disabled={page === 1}
+                className="px-4 py-2 border rounded disabled:opacity-50"
+              >
+                Previous
+              </button>
+              <span>
+                Page {page} of {totalPages}
+              </span>
+              <button
+                onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
+                disabled={page === totalPages}
+                className="px-4 py-2 border rounded disabled:opacity-50"
+              >
+                Next
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
