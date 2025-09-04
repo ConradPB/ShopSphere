@@ -2,15 +2,30 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X, ShoppingCart, Heart } from "lucide-react";
 import { useAppSelector } from "@/redux/hooks";
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+
   const cartCount = useAppSelector((state) =>
     state.cart.items.reduce((sum, item) => sum + item.quantity, 0)
   );
   const wishlistCount = useAppSelector((state) => state.wishlist.items.length);
+
+  const navLinks = [
+    { href: "/", label: "Home" },
+    { href: "/products", label: "Products" },
+    { href: "/about", label: "About" },
+    { href: "/contact", label: "Contact" },
+  ];
+
+  const linkClass = (href: string) =>
+    `hover:text-yellow-300 transition ${
+      pathname === href ? "font-bold underline underline-offset-4" : ""
+    }`;
 
   return (
     <nav className="fixed top-0 left-0 w-full z-50 bg-gradient-to-r from-purple-700 via-pink-600 to-red-500 shadow-lg">
@@ -23,18 +38,11 @@ const Navbar: React.FC = () => {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex space-x-8 text-white font-medium items-center">
-            <Link href="/" className="hover:text-yellow-300 transition">
-              Home
-            </Link>
-            <Link href="/products" className="hover:text-yellow-300 transition">
-              Products
-            </Link>
-            <Link href="/about" className="hover:text-yellow-300 transition">
-              About
-            </Link>
-            <Link href="/contact" className="hover:text-yellow-300 transition">
-              Contact
-            </Link>
+            {navLinks.map(({ href, label }) => (
+              <Link key={href} href={href} className={linkClass(href)}>
+                {label}
+              </Link>
+            ))}
 
             {/* Wishlist */}
             <Link href="/wishlist" className="relative flex items-center">
@@ -72,22 +80,16 @@ const Navbar: React.FC = () => {
       {/* Mobile Dropdown Menu */}
       {isOpen && (
         <div className="md:hidden bg-gradient-to-r from-purple-700 via-pink-600 to-red-500 px-4 pt-2 pb-3 space-y-2 text-white font-medium">
-          <Link href="/" className="block hover:text-yellow-300">
-            Home
-          </Link>
-          <Link href="/products" className="block hover:text-yellow-300">
-            Products
-          </Link>
-          <Link href="/about" className="block hover:text-yellow-300">
-            About
-          </Link>
-          <Link href="/contact" className="block hover:text-yellow-300">
-            Contact
-          </Link>
-          <Link href="/wishlist" className="block hover:text-yellow-300">
+          {navLinks.map(({ href, label }) => (
+            <Link key={href} href={href} className={linkClass(href)}>
+              {label}
+            </Link>
+          ))}
+
+          <Link href="/wishlist" className={linkClass("/wishlist")}>
             Wishlist ({wishlistCount})
           </Link>
-          <Link href="/checkout" className="block hover:text-yellow-300">
+          <Link href="/checkout" className={linkClass("/checkout")}>
             Cart ({cartCount})
           </Link>
         </div>
