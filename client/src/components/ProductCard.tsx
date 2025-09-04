@@ -6,7 +6,6 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { addToCart } from "@/redux/cartSlice";
 import { addToWishlist, removeFromWishlist } from "@/redux/wishlistSlice";
 import type { Product } from "@/types/product";
-import { Heart } from "lucide-react";
 
 interface ProductCardProps {
   product: Product;
@@ -14,13 +13,13 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const dispatch = useAppDispatch();
-  const wishlistItems = useAppSelector((state) => state.wishlist.items);
 
   const id = String(product.id);
   const title = product.title ?? "Unnamed Product";
   const price = Number(product.price ?? 0);
   const imageSrc: string = product.image ?? "/fallback-image.jpg";
 
+  const wishlistItems = useAppSelector((state) => state.wishlist.items);
   const isInWishlist = wishlistItems.some((item) => item.id === id);
 
   const handleAddToCart = () => {
@@ -35,7 +34,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     );
   };
 
-  const handleToggleWishlist = () => {
+  const toggleWishlist = () => {
     if (isInWishlist) {
       dispatch(removeFromWishlist(id));
     } else {
@@ -51,20 +50,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <article className="relative bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 overflow-hidden">
-      {/* Wishlist button (top-right corner) */}
-      <button
-        onClick={handleToggleWishlist}
-        className={`absolute top-3 right-3 p-2 rounded-full shadow transition ${
-          isInWishlist
-            ? "bg-red-500 text-white hover:bg-red-600"
-            : "bg-gray-200 text-gray-600 hover:bg-gray-300"
-        }`}
-        aria-label={isInWishlist ? "Remove from wishlist" : "Add to wishlist"}
-      >
-        <Heart size={18} className={isInWishlist ? "fill-current" : ""} />
-      </button>
-
+    <article className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 overflow-hidden">
       <div className="relative w-full h-48">
         <Image
           src={imageSrc}
@@ -90,6 +76,18 @@ export default function ProductCard({ product }: ProductCardProps) {
             aria-label={`Add ${title} to cart`}
           >
             Add to cart
+          </button>
+
+          <button
+            onClick={toggleWishlist}
+            className={`px-3 py-2 border rounded-md text-sm transition ${
+              isInWishlist
+                ? "bg-red-100 text-red-600 border-red-300 hover:bg-red-200"
+                : "text-gray-700 hover:bg-gray-50"
+            }`}
+            aria-label={`${isInWishlist ? "Remove from" : "Add to"} wishlist`}
+          >
+            {isInWishlist ? "♥ Wishlisted" : "♡ Wishlist"}
           </button>
 
           <Link
