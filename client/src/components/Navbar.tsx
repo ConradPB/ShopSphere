@@ -2,19 +2,15 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
+import { Menu, X, ShoppingCart, Heart } from "lucide-react";
+import { useAppSelector } from "@/redux/hooks";
 
-const Navbar = () => {
+const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-
-  const cartCount = useSelector((state: RootState) =>
+  const cartCount = useAppSelector((state) =>
     state.cart.items.reduce((sum, item) => sum + item.quantity, 0)
   );
-  const wishlistCount = useSelector(
-    (state: RootState) => state.wishlist.items.length
-  );
+  const wishlistCount = useAppSelector((state) => state.wishlist.items.length);
 
   return (
     <nav className="fixed top-0 left-0 w-full z-50 bg-gradient-to-r from-purple-700 via-pink-600 to-red-500 shadow-lg">
@@ -22,7 +18,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex-shrink-0 text-white text-2xl font-bold tracking-wide">
-            <Link href="/">ShopSphere</Link>
+            ShopSphere
           </div>
 
           {/* Desktop Menu */}
@@ -41,26 +37,20 @@ const Navbar = () => {
             </Link>
 
             {/* Wishlist */}
-            <Link
-              href="/wishlist"
-              className="relative hover:text-yellow-300 transition"
-            >
-              Wishlist
+            <Link href="/wishlist" className="relative flex items-center">
+              <Heart className="w-5 h-5" />
               {wishlistCount > 0 && (
-                <span className="absolute -top-2 -right-3 bg-red-500 text-white text-xs rounded-full px-2 py-0.5">
+                <span className="absolute -top-2 -right-2 bg-yellow-400 text-xs text-black font-bold px-1.5 py-0.5 rounded-full">
                   {wishlistCount}
                 </span>
               )}
             </Link>
 
             {/* Cart */}
-            <Link
-              href="/cart"
-              className="relative hover:text-yellow-300 transition"
-            >
-              Cart
+            <Link href="/checkout" className="relative flex items-center">
+              <ShoppingCart className="w-5 h-5" />
               {cartCount > 0 && (
-                <span className="absolute -top-2 -right-3 bg-yellow-400 text-black text-xs rounded-full px-2 py-0.5">
+                <span className="absolute -top-2 -right-2 bg-yellow-400 text-xs text-black font-bold px-1.5 py-0.5 rounded-full">
                   {cartCount}
                 </span>
               )}
@@ -94,24 +84,11 @@ const Navbar = () => {
           <Link href="/contact" className="block hover:text-yellow-300">
             Contact
           </Link>
-          <Link
-            href="/wishlist"
-            className="block hover:text-yellow-300 relative"
-          >
-            Wishlist
-            {wishlistCount > 0 && (
-              <span className="ml-2 bg-red-500 text-white text-xs rounded-full px-2 py-0.5">
-                {wishlistCount}
-              </span>
-            )}
+          <Link href="/wishlist" className="block hover:text-yellow-300">
+            Wishlist ({wishlistCount})
           </Link>
-          <Link href="/cart" className="block hover:text-yellow-300 relative">
-            Cart
-            {cartCount > 0 && (
-              <span className="ml-2 bg-yellow-400 text-black text-xs rounded-full px-2 py-0.5">
-                {cartCount}
-              </span>
-            )}
+          <Link href="/checkout" className="block hover:text-yellow-300">
+            Cart ({cartCount})
           </Link>
         </div>
       )}
