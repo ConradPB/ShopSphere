@@ -3,7 +3,7 @@ import ProductDetailClient from "@/components/ProductDetailClient";
 import type { Product } from "@/types/product";
 
 interface PageProps {
-  params: { id: string } | Promise<{ id: string }>;
+  params: Promise<{ id: string }>;
 }
 
 /**
