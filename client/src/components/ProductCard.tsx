@@ -2,8 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { addToCart } from "@/redux/cartSlice";
+import { addToWishlist, removeFromWishlist } from "@/redux/wishlistSlice";
 import type { Product } from "@/types/product";
 
 interface ProductCardProps {
@@ -18,6 +19,9 @@ export default function ProductCard({ product }: ProductCardProps) {
   const price = Number(product.price ?? 0);
   const imageSrc: string = product.image ?? "/fallback-image.jpg";
 
+  const wishlistItems = useAppSelector((state) => state.wishlist.items);
+  const isInWishlist = wishlistItems.some((item) => item.id === id);
+
   const handleAddToCart = () => {
     dispatch(
       addToCart({
@@ -28,6 +32,21 @@ export default function ProductCard({ product }: ProductCardProps) {
         quantity: 1,
       })
     );
+  };
+
+  const toggleWishlist = () => {
+    if (isInWishlist) {
+      dispatch(removeFromWishlist(id));
+    } else {
+      dispatch(
+        addToWishlist({
+          id,
+          title,
+          price,
+          image: imageSrc,
+        })
+      );
+    }
   };
 
   return (
@@ -57,6 +76,18 @@ export default function ProductCard({ product }: ProductCardProps) {
             aria-label={`Add ${title} to cart`}
           >
             Add to cart
+          </button>
+
+          <button
+            onClick={toggleWishlist}
+            className={`px-3 py-2 border rounded-md text-sm transition ${
+              isInWishlist
+                ? "bg-red-100 text-red-600 border-red-300 hover:bg-red-200"
+                : "text-gray-700 hover:bg-gray-50"
+            }`}
+            aria-label={`${isInWishlist ? "Remove from" : "Add to"} wishlist`}
+          >
+            {isInWishlist ? "♥ Wishlisted" : "♡ Wishlist"}
           </button>
 
           <Link
