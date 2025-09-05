@@ -3,21 +3,11 @@ import ProductDetailClient from "@/components/ProductDetailClient";
 import type { Product } from "@/types/product";
 
 interface PageProps {
-  params: Promise<{ id: string }>;
-}
-
-/**
- * Type guard that tells us whether `p` is a Promise resolving to { id: string }.
- * Uses `unknown` and checks for a callable `then` property without using `any`.
- */
-function isPromiseParams(p: unknown): p is Promise<{ id: string }> {
-  return !!p && typeof (p as { then?: unknown }).then === "function";
+  params: { id: string };
 }
 
 export default async function ProductPage({ params }: PageProps) {
-  // Resolve params whether it's a plain object or a Promise
-  const resolvedParams = isPromiseParams(params) ? await params : params;
-  const id = String(resolvedParams.id);
+  const { id } = params;
 
   const { data: product } = await getProductById(id);
   if (!product) {
@@ -26,7 +16,6 @@ export default async function ProductPage({ params }: PageProps) {
     );
   }
 
-  // Only keep data; we don't need the error variable here
   const { data: recs } = await getRecommendations(id, 4);
   const initialRecs: Product[] = recs ?? [];
 
