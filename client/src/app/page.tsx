@@ -1,12 +1,7 @@
-import { getProducts } from "@/lib/supabase";
-import SearchAndFilterClient from "@/components/SearchAndFilterClient";
-
-export default async function HomePage() {
-  const { data: products, error } = await getProducts();
-
-  if (error) {
-    return <p className="text-center text-red-500">Failed to load products.</p>;
-  }
-
-  return <SearchAndFilterClient initialProducts={products ?? []} />;
+export default function HomePage() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-700 via-pink-600 to-red-500 text-white text-5xl font-bold">
+      Tailwind Works!
+    </div>
+  );
 }
