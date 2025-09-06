@@ -23,18 +23,16 @@ const Navbar: React.FC = () => {
   ];
 
   const linkClass = (href: string) =>
-    `relative transition hover:scale-105 hover:text-secondary-light ${
-      pathname === href
-        ? "font-bold text-secondary underline underline-offset-4"
-        : ""
+    `hover:text-yellow-300 transition ${
+      pathname === href ? "font-bold underline underline-offset-4" : ""
     }`;
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 backdrop-blur-md bg-primary/90 shadow-lg">
+    <nav className="fixed top-0 left-0 w-full z-50 bg-gradient-to-r from-purple-700 via-pink-600 to-red-500 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex-shrink-0 text-white text-2xl font-display font-bold tracking-wide drop-shadow-md">
+          <div className="flex-shrink-0 text-white text-2xl font-bold tracking-wide">
             ShopSphere
           </div>
 
@@ -47,26 +45,20 @@ const Navbar: React.FC = () => {
             ))}
 
             {/* Wishlist */}
-            <Link
-              href="/wishlist"
-              className="relative flex items-center hover:scale-110 transition"
-            >
+            <Link href="/wishlist" className="relative flex items-center">
               <Heart className="w-5 h-5" />
               {wishlistCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-accent-purple text-xs text-white font-bold px-1.5 py-0.5 rounded-full shadow-card">
+                <span className="absolute -top-2 -right-2 bg-yellow-400 text-xs text-black font-bold px-1.5 py-0.5 rounded-full">
                   {wishlistCount}
                 </span>
               )}
             </Link>
 
             {/* Cart */}
-            <Link
-              href="/checkout"
-              className="relative flex items-center hover:scale-110 transition"
-            >
+            <Link href="/checkout" className="relative flex items-center">
               <ShoppingCart className="w-5 h-5" />
               {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-accent-green text-xs text-white font-bold px-1.5 py-0.5 rounded-full shadow-card">
+                <span className="absolute -top-2 -right-2 bg-yellow-400 text-xs text-black font-bold px-1.5 py-0.5 rounded-full">
                   {cartCount}
                 </span>
               )}
@@ -77,7 +69,7 @@ const Navbar: React.FC = () => {
           <div className="md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-white focus:outline-none hover:scale-110 transition"
+              className="text-white focus:outline-none"
             >
               {isOpen ? <X size={28} /> : <Menu size={28} />}
             </button>
@@ -87,30 +79,17 @@ const Navbar: React.FC = () => {
 
       {/* Mobile Dropdown Menu */}
       {isOpen && (
-        <div className="md:hidden backdrop-blur-lg bg-primary-dark/95 px-4 pt-2 pb-3 space-y-2 text-white font-medium">
+        <div className="md:hidden bg-gradient-to-r from-purple-700 via-pink-600 to-red-500 px-4 pt-2 pb-3 space-y-2 text-white font-medium">
           {navLinks.map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              className={linkClass(href)}
-              onClick={() => setIsOpen(false)}
-            >
+            <Link key={href} href={href} className={linkClass(href)}>
               {label}
             </Link>
           ))}
 
-          <Link
-            href="/wishlist"
-            className={linkClass("/wishlist")}
-            onClick={() => setIsOpen(false)}
-          >
+          <Link href="/wishlist" className={linkClass("/wishlist")}>
             Wishlist ({wishlistCount})
           </Link>
-          <Link
-            href="/checkout"
-            className={linkClass("/checkout")}
-            onClick={() => setIsOpen(false)}
-          >
+          <Link href="/checkout" className={linkClass("/checkout")}>
             Cart ({cartCount})
           </Link>
         </div>
