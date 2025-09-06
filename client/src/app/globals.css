@@ -1,26 +1,59 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+/* ==========================
+   Global App Styles
+   ========================== */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #f9fafb; /* neutral-50 */
+  --foreground: #111827; /* neutral-900 */
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  @apply bg-[var(--background)] text-[var(--foreground)] font-sans antialiased;
+}
+
+/* Headings - sharp, modern */
+h1, h2, h3, h4, h5, h6 {
+  @apply font-display text-gray-900 font-semibold tracking-tight;
+}
+
+/* Links - clean + animated */
+a {
+  @apply text-primary transition-colors duration-200 ease-out hover:text-primary-dark;
+}
+
+/* Buttons - consistent styling */
+.btn {
+  @apply inline-flex items-center px-4 py-2 rounded-xl font-medium 
+    bg-primary text-white shadow-smooth hover:bg-primary-dark 
+    transition-colors duration-200 ease-out;
+}
+
+.btn-secondary {
+  @apply bg-secondary text-white hover:bg-secondary-dark;
+}
+
+.btn-outline {
+  @apply border border-gray-300 bg-white text-gray-700 
+    hover:border-primary hover:text-primary;
+}
+
+/* Card container - products, etc. */
+.card {
+  @apply rounded-2xl shadow-card bg-white p-4 transition-transform 
+    duration-200 ease-out hover:scale-[1.02];
+}
+
+/* Input fields */
+input, select, textarea {
+  @apply border border-gray-300 rounded-lg px-3 py-2 text-gray-800 
+    focus:ring-2 focus:ring-primary focus:border-primary outline-none;
+}
+
+/* Dark mode support (optional toggle later) */
+.dark body {
+  --background: #111827;
+  --foreground: #f9fafb;
 }
