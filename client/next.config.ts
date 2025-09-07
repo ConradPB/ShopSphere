@@ -1,7 +1,14 @@
 import type { NextConfig } from "next";
 
-const devCSP =
-  "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src * blob: data:; connect-src *;";
+const dev = process.env.NODE_ENV !== "production";
+
+const csp = [
+  "default-src 'self'",
+  `script-src 'self' ${dev ? "'unsafe-eval'" : ""} 'unsafe-inline'`,
+  "style-src 'self' 'unsafe-inline'",
+  "img-src * blob: data:",
+  "connect-src *",
+].join("; ");
 
 const nextConfig: NextConfig = {
   images: {
@@ -19,7 +26,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Content-Security-Policy",
-            value: devCSP,
+            value: csp,
           },
         ],
       },
