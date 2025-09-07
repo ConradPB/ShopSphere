@@ -1,6 +1,6 @@
 export function shimmer(w: number, h: number) {
   return `
-    <svg width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg" version="1.1">
+    <svg wid="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg" version="1.1">
       <defs>
         <linearGradient id="g">
           <stop stop-color="#E0E0E0" offset="20%" />
