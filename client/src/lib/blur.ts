@@ -15,7 +15,7 @@ export function shimmer(w: number, h: number) {
 }
 
 export function toBase64(str: string) {
-  if (typeof window === "undefined") {
+  iftypeof window === "undefined") {
     return Buffer.from(str).toString("base64");
   } else {
     return window.btoa(str);
