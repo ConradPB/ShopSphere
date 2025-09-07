@@ -8,14 +8,6 @@ const devCSP = `
   connect-src *;
 `;
 
-const prodCSP = `
-  default-src 'self';
-  script-src 'self';
-  style-src 'self' 'unsafe-inline';
-  img-src * blob: data:;
-  connect-src 'self';
-`;
-
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
@@ -32,7 +24,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Content-Security-Policy",
-            value: process.env.NODE_ENV === "development" ? devCSP : prodCSP,
+            value: devCSP, // <-- force dev CSP everywhere for now
           },
         ],
       },
