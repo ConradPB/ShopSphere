@@ -1,13 +1,8 @@
-/* stylelint-disable at-rule-no-unknown */
- /* stylelint-disable */
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Add custom global styles in the right layers */
 
-/* Base layer → element resets, typography tweaks */
 @layer base {
   html, body {
     @apply bg-gray-50 text-gray-900 antialiased;
@@ -22,7 +17,6 @@
   }
 }
 
-/* Components layer → reusable UI elements */
 @layer components {
   .btn-primary {
     @apply px-4 py-2 rounded-xl bg-blue-600 text-white font-medium shadow transition;
@@ -39,11 +33,9 @@
   }
 }
 
-/* Utilities layer → custom one-offs */
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
 }
 
-/* stylelint-enable at-rule-no-unknown */
