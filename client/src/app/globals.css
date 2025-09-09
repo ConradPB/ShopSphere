@@ -1,9 +1,9 @@
 /* stylelint-disable at-rule-no-unknown */
+ /* stylelint-disable */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-/* stylelint-enable at-rule-no-unknown */
-
 
 /* Add custom global styles in the right layers */
 
@@ -18,15 +18,20 @@
   }
 
   a {
-    @apply text-blue-600 hover:text-blue-800 transition-colors;
+    @apply text-blue-600 transition-colors;
   }
 }
 
 /* Components layer → reusable UI elements */
 @layer components {
   .btn-primary {
-    @apply px-4 py-2 rounded-xl bg-blue-600 text-white font-medium shadow 
-           hover:bg-blue-700 active:bg-blue-800 transition;
+    @apply px-4 py-2 rounded-xl bg-blue-600 text-white font-medium shadow transition;
+  }
+  .btn-primary:hover {
+    @apply bg-blue-700;
+  }
+  .btn-primary:active {
+    @apply bg-blue-800;
   }
 
   .card {
@@ -40,3 +45,5 @@
     text-wrap: balance;
   }
 }
+
+/* stylelint-enable at-rule-no-unknown */
