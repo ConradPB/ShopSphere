@@ -1,6 +1,13 @@
 @import "tailwindcss";
 
-
 body {
-  @apply bg-gray-100 text-gray-900;
+  @apply bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white font-bold;
+}
+
+h1 {
+  @apply text-5xl text-center mt-10 drop-shadow-lg;
+}
+
+button {
+  @apply px-6 py-3 bg-black/70 rounded-2xl hover:bg-black transition text-lg shadow-md;
 }
