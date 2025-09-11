@@ -2,35 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Base layer → element resets, typography tweaks */
-@layer base {
-  html, body {
-    @apply bg-gray-50 text-gray-900 antialiased;
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-semibold text-gray-900;
-  }
-
-  a {
-    @apply text-blue-600 transition-colors;
-  }
-}
-
-/* Components layer → reusable UI elements */
-@layer components {
-  .btn-primary {
-    @apply px-4 py-2 rounded-xl bg-blue-600 text-white font-medium shadow transition;
-  }
-  .btn-primary:hover { @apply bg-blue-700; }
-  .btn-primary:active { @apply bg-blue-800; }
-
-  .card {
-    @apply bg-white rounded-2xl shadow-md p-6 border border-gray-100;
-  }
-}
-
-/* Utilities layer → custom one-offs */
-@layer utilities {
-  .text-balance { text-wrap: balance; }
+body {
+  @apply bg-gray-100 text-gray-900;
 }
