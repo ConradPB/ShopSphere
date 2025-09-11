@@ -1,3 +1,4 @@
+// src/app/layout.tsx
 import "./globals.css";
 import { ReduxProvider } from "@/redux/Provider";
 import CartDebugger from "@/components/CartDebugger";
@@ -11,7 +12,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      {/* TEMPORARY: add a known Tailwind utility to test if styles are loaded */}
+      <body className="min-h-screen bg-blue-50 text-gray-900">
         <ReduxProvider>
           {children}
           {ENABLE_CART_DEBUG ? <CartDebugger /> : null}
