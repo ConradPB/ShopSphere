@@ -10,7 +10,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // primary token used in your code (bg-primary). Adjust hexes to taste.
+        // primary token used in code (bg-primary). Adjust hexes to taste.
         primary: {
           DEFAULT: "#0ea5e9", // primary base
           50:  "#ecfeff",
@@ -26,7 +26,7 @@ module.exports = {
         }
       },
       fontFamily: {
-        // font-display referenced in your page; add a webfont or use system fallbacks
+        // font-display referenced in page; add a webfont or use system fallbacks
         display: ["Inter", "ui-sans-serif", "system-ui", "-apple-system", "Segoe UI", "Helvetica", "Arial", "sans-serif"],
         sans: ["ui-sans-serif", "system-ui", "-apple-system", "Segoe UI", "Helvetica", "Arial", "sans-serif"]
       }
