@@ -11,11 +11,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      {/* TEMPORARY: add a known Tailwind utility to test if styles are loaded */}
-      <body className="min-h-screen bg-blue-50 text-gray-900">
+      <body className="min-h-screen bg-blue-50 text-gray-900 flex items-center justify-center">
         <ReduxProvider>
-          {children}
-          {ENABLE_CART_DEBUG ? <CartDebugger /> : null}
+          <div className="w-full max-w-md p-6 bg-white shadow-xl rounded-xl">
+            {children}
+            {ENABLE_CART_DEBUG ? <CartDebugger /> : null}
+          </div>
         </ReduxProvider>
       </body>
     </html>
