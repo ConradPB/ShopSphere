@@ -71,12 +71,13 @@ export default function HomePage() {
             </div>
 
             {/* Hero Image */}
-            <div className="relative h-64 sm:h-80 lg:h-[400px] rounded-2xl overflow-hidden shadow-card">
+            <div className="relative w-full h-auto">
               <Image
                 src="/fallback-image.jpg"
                 alt="AI-powered tools"
-                fill
-                className="object-cover"
+                width={600} // set width
+                height={400} // set height
+                className="rounded-2xl shadow-card object-cover w-full h-auto"
                 priority
               />
             </div>
