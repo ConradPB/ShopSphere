@@ -11,6 +11,7 @@ export default function HomePage() {
       </button>
 
       <div className="p-6 rounded-2xl shadow-card bg-white max-w-sm">
+        <Image src="/logo.png" alt="Logo" width={120} height={120} priority />
         <h3 className="mt-4 font-semibold text-lg">Cool Product</h3>
         <p className="text-primary font-bold mt-2">$49.99</p>
       </div>
