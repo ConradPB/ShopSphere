@@ -42,6 +42,14 @@ const config: Config = {
         sans: ["var(--font-sans)", "ui-sans-serif", "system-ui"],
         display: ["var(--font-display)", "sans-serif"],
       },
+      fontSize: {
+        "heading-xl": ["2.5rem", { lineHeight: "1.2", fontWeight: "700" }], // ~40px
+        "heading-lg": ["2rem", { lineHeight: "1.3", fontWeight: "700" }], // ~32px
+        "heading-md": ["1.5rem", { lineHeight: "1.4", fontWeight: "600" }], // ~24px
+        "body-lg": ["1.125rem", { lineHeight: "1.6", fontWeight: "400" }], // ~18px
+        "body-base": ["1rem", { lineHeight: "1.6", fontWeight: "400" }], // ~16px
+        "body-sm": ["0.875rem", { lineHeight: "1.5", fontWeight: "400" }], // ~14px
+      },
       boxShadow: {
         card: "0 4px 14px rgba(0, 0, 0, 0.08)",
         smooth: "0 2px 6px rgba(0, 0, 0, 0.06)",
