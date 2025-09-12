@@ -11,11 +11,6 @@ export default function HomePage() {
       </button>
 
       <div className="p-6 rounded-2xl shadow-card bg-white max-w-sm">
-        <img
-          src="/product.jpg"
-          alt="Product"
-          className="w-full h-48 object-cover rounded-xl"
-        />
         <h3 className="mt-4 font-semibold text-lg">Cool Product</h3>
         <p className="text-primary font-bold mt-2">$49.99</p>
       </div>
