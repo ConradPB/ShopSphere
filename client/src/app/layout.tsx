@@ -9,5 +9,16 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <html lang="en"></html>;
+  return (
+    <html lang="en">
+      <body className="bg-neutral-50 text-neutral-900 font-sans antialiased">
+        <ReduxProvider>
+          <main className="min-h-screen max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {children}
+            {ENABLE_CART_DEBUG ? <CartDebugger /> : null}
+          </main>
+        </ReduxProvider>
+      </body>
+    </html>
+  );
 }
