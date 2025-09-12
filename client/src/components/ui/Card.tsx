@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 import Button from "./Button";
 
@@ -9,7 +10,7 @@ interface CardProps {
   imageSrc?: string;
   onAdd?: () => void;
   className?: string;
-  href?: string;
+  href?: string; // internal route, e.g. /products/123
 }
 
 export default function Card({
@@ -47,16 +48,17 @@ export default function Card({
           </Button>
 
           {href ? (
-            // render as anchor-style button when href provided
-            <Button asLink href={href} variant="ghost">
-              View
-            </Button>
+            // Use Next Link for client-side routing. legacyBehavior ensures Link expects an <a> child.
+            <Link href={href} legacyBehavior>
+              <Button asLink href={href} variant="ghost">
+                View
+              </Button>
+            </Link>
           ) : (
-            // otherwise render a normal button (could open modal / navigate programmatically)
             <Button
               variant="ghost"
               onClick={() => {
-                /* no-op or navigate */
+                /* optional: open modal or navigate */
               }}
             >
               View
