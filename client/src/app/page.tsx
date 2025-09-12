@@ -1,106 +1,107 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function HomePage() {
   return (
-    <div className="flex flex-col min-h-screen bg-neutral-50 text-neutral-900">
-      {/* NAVBAR */}
-      <header className="sticky top-0 z-50 bg-white shadow-smooth">
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            {/* Logo / Brand */}
-            <div className="text-heading-md font-display text-primary">
-              Baobab Digital
-            </div>
+    <div className="flex flex-col min-h-screen">
+      {/* NAV */}
+      <nav className="flex items-center justify-between px-8 py-4 bg-white shadow-sm">
+        <div className="text-2xl font-display font-bold text-primary">
+          Shopsphere
+        </div>
 
-            {/* Nav Links */}
-            <div className="hidden md:flex space-x-8 text-body-base">
-              <a href="#" className="hover:text-primary transition-colors">
-                Home
-              </a>
-              <a href="#" className="hover:text-primary transition-colors">
-                Features
-              </a>
-              <a href="#" className="hover:text-primary transition-colors">
-                About
-              </a>
-              <a href="#" className="hover:text-primary transition-colors">
-                Contact
-              </a>
-            </div>
+        <div className="flex space-x-6">
+          <Link href="/" className="hover:text-primary-dark transition-colors">
+            Home
+          </Link>
+          <Link
+            href="/shop"
+            className="hover:text-primary-dark transition-colors"
+          >
+            Shop
+          </Link>
+          <Link
+            href="/about"
+            className="hover:text-primary-dark transition-colors"
+          >
+            About
+          </Link>
+          <Link
+            href="/contact"
+            className="hover:text-primary-dark transition-colors"
+          >
+            Contact
+          </Link>
+        </div>
 
-            {/* CTA Button */}
-            <div>
-              <a
-                href="#"
-                className="bg-primary text-white px-4 py-2 rounded-xl shadow-card hover:bg-primary-dark transition-colors"
-              >
-                Get Started
-              </a>
-            </div>
-          </div>
-        </nav>
-      </header>
+        <div>
+          <Link
+            href="/start"
+            className="bg-primary text-white px-4 py-2 rounded-xl shadow-card hover:bg-primary-dark transition-colors"
+          >
+            Get Started
+          </Link>
+        </div>
+      </nav>
 
       {/* HERO */}
-      <main className="flex-1">
-        <section className="relative bg-primary-light text-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32 grid md:grid-cols-2 gap-12 items-center">
-            {/* Hero Text */}
-            <div>
-              <h1 className="mb-6">
-                Build Smarter <br /> with AI-Powered Tools
-              </h1>
-              <p className="mb-8 text-body-lg max-w-md">
-                We help businesses innovate faster with modern, scalable, and
-                intelligent solutions designed for the future.
-              </p>
-              <div className="flex space-x-4">
-                <a
-                  href="#"
-                  className="bg-secondary text-white px-5 py-3 rounded-xl shadow-card hover:bg-secondary-dark transition-colors"
-                >
-                  Get Started
-                </a>
-                <a
-                  href="#"
-                  className="bg-white text-primary px-5 py-3 rounded-xl shadow-card hover:bg-neutral-100 transition-colors"
-                >
-                  Learn More
-                </a>
-              </div>
-            </div>
+      <header className="flex flex-col md:flex-row items-center justify-between flex-grow px-8 py-16 bg-gradient-to-r from-primary-light to-primary text-white">
+        <div className="md:w-1/2 space-y-6">
+          <h1 className="text-heading-xl font-display font-bold">
+            Discover the Future of Shopping
+          </h1>
+          <p className="text-body-lg max-w-md">
+            Shopsphere brings you an AI-powered shopping experience — curated
+            recommendations, seamless browsing, and exclusive deals.
+          </p>
 
-            {/* Hero Image */}
-            <div className="relative w-full h-auto">
-              <Image
-                src="/fallback-image.jpg"
-                alt="AI-powered tools"
-                width={600} // set width
-                height={400} // set height
-                className="rounded-2xl shadow-card object-cover w-full h-auto"
-                priority
-              />
-            </div>
+          <div className="space-x-4">
+            <Link
+              href="/shop"
+              className="px-6 py-3 bg-white text-primary font-semibold rounded-xl shadow-md hover:bg-neutral-100 transition"
+            >
+              Start Shopping
+            </Link>
+            <Link
+              href="/learn"
+              className="px-6 py-3 border border-white rounded-xl font-semibold hover:bg-white hover:text-primary transition"
+            >
+              Learn More
+            </Link>
           </div>
-        </section>
-      </main>
+        </div>
+
+        <div className="md:w-1/2 mt-10 md:mt-0 flex justify-center">
+          <Image
+            src="/fallback-image.jpg"
+            alt="Shopping showcase"
+            width={500}
+            height={400}
+            className="rounded-2xl shadow-card object-cover w-full h-auto max-w-md"
+            priority
+          />
+        </div>
+      </header>
 
       {/* FOOTER */}
-      <footer className="bg-neutral-900 text-neutral-100 py-8 mt-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-body-sm">
-            © {new Date().getFullYear()} Baobab Digital. All rights reserved.
-          </p>
-          <div className="flex space-x-6 text-body-sm">
-            <a href="#" className="hover:text-primary-light transition-colors">
+      <footer className="px-8 py-6 bg-neutral-100 text-neutral-600 text-sm">
+        <div className="flex justify-between items-center">
+          <span>
+            © {new Date().getFullYear()} Shopsphere. All rights reserved.
+          </span>
+          <div className="space-x-4">
+            <Link
+              href="/privacy"
+              className="hover:text-primary transition-colors"
+            >
               Privacy
-            </a>
-            <a href="#" className="hover:text-primary-light transition-colors">
+            </Link>
+            <Link
+              href="/terms"
+              className="hover:text-primary transition-colors"
+            >
               Terms
-            </a>
-            <a href="#" className="hover:text-primary-light transition-colors">
-              Contact
-            </a>
+            </Link>
           </div>
         </div>
       </footer>
