@@ -19,3 +19,14 @@ h3 {
 p {
   @apply text-body-base;
 }
+
+/* UI utilities */
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-xl bg-primary text-white font-medium shadow-card hover:bg-primary-dark transition;
+  }
+
+  .card {
+    @apply bg-white rounded-2xl shadow-card border border-neutral-100 overflow-hidden;
+  }
+}
