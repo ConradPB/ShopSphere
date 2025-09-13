@@ -1,15 +1,12 @@
 import React from "react";
-import ProductGrid from "@/components/ProductGrid";
 import SearchAndFilterClient from "@/components/SearchAndFilterClient";
 import { getProducts } from "@/lib/supabase";
 import { Product } from "@/types/product";
 
 export default async function ShopPage() {
-  // server-side fetch
   const { data, error } = await getProducts();
   const products: Product[] = data ?? [];
 
-  // optionally handle error: log, show message, etc.
   if (error) {
     console.error("getProducts error:", error);
   }
@@ -26,16 +23,11 @@ export default async function ShopPage() {
           </div>
         </div>
 
-        {/* Pass the server-fetched products to the client filter component */}
+        {/* Search + Filter + Paginated Product Grid */}
         <div className="mt-6">
           <SearchAndFilterClient initialProducts={products} />
         </div>
       </div>
-
-      {/* ProductGrid will also render the same list (initialProducts) */}
-      <section className="bg-neutral-50">
-        <ProductGrid initialProducts={products} />
-      </section>
     </div>
   );
 }
