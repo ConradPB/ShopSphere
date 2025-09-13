@@ -6,17 +6,17 @@ import { Product } from "@/types/product";
 import ProductCard from "./ProductCard";
 
 type Props = {
-  initialProducts?: Product[]; // optional - if provided, use this instead of fetching
+  initialProducts?: Product[];
+  title?: string; // optional section title (e.g., "Featured Products")
 };
 
-export default function ProductGrid({ initialProducts }: Props) {
+export default function ProductGrid({ initialProducts, title }: Props) {
   const [products, setProducts] = useState<Product[] | null>(
     initialProducts ?? null
   );
   const [loading, setLoading] = useState(!initialProducts);
 
   useEffect(() => {
-    // If initialProducts not provided, fetch client-side (backwards-compatible)
     if (!initialProducts) {
       let mounted = true;
       const fetchProducts = async () => {
@@ -40,7 +40,9 @@ export default function ProductGrid({ initialProducts }: Props) {
 
   if (loading) {
     return (
-      <p className="text-center py-10 text-gray-500">Loading products...</p>
+      <p className="text-center py-10 text-gray-500 animate-pulse">
+        Loading products...
+      </p>
     );
   }
 
@@ -53,16 +55,18 @@ export default function ProductGrid({ initialProducts }: Props) {
   }
 
   return (
-    <div className="py-10 px-4 sm:px-6 lg:px-8">
-      <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-        Featured Products
-      </h2>
+    <section className="py-10 px-4 sm:px-6 lg:px-8">
+      {title && (
+        <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+          {title}
+        </h2>
+      )}
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {list.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </div>
-    </div>
+    </section>
   );
 }
