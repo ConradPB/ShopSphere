@@ -1,70 +1,48 @@
-import Image from "next/image";
-import Link from "next/link";
+import React from "react";
+import ProductGrid from "@/components/ProductGrid";
+import { getProducts } from "@/lib/supabase";
+import { Product } from "@/types/product";
 
-export default function HomePage() {
+export default async function HomePage() {
+  // Fetch products from Supabase
+  const { data, error } = await getProducts();
+  const products: Product[] = data ?? [];
+
+  if (error) {
+    console.error("getProducts error:", error);
+  }
+
+  // Limit to first 4-6 products for Featured section
+  const featuredProducts = products.slice(0, 6);
+
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* HERO */}
-      <header className="flex flex-col md:flex-row items-center justify-between flex-grow px-8 py-16 bg-gradient-to-r from-primary-light to-primary text-white">
-        <div className="md:w-1/2 space-y-6">
-          <h1 className="text-heading-xl font-display font-bold">
-            Discover the Future of Shopping
-          </h1>
-          <p className="text-body-lg max-w-md">
-            Shopsphere brings you an AI-powered shopping experience — curated
-            recommendations, seamless browsing, and exclusive deals.
+    <main className="min-h-screen bg-neutral-50">
+      {/* Temporary Hero */}
+      <section className="bg-neutral-900 text-white py-20 text-center">
+        <h1 className="text-4xl font-bold">Welcome to Our Store</h1>
+        <p className="mt-2 text-lg">Shop the best products, curated for you.</p>
+      </section>
+
+      {/* Featured Products Section */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <header className="mb-8">
+          <h2 className="font-display text-heading-md">Featured Products</h2>
+          <p className="text-body-base text-neutral-600 mt-2">
+            Handpicked items you’ll love.
           </p>
+        </header>
 
-          <div className="space-x-4">
-            <Link
-              href="/shop"
-              className="px-6 py-3 bg-white text-primary font-semibold rounded-xl shadow-md hover:bg-neutral-100 transition"
-            >
-              Start Shopping
-            </Link>
-            <Link
-              href="/learn"
-              className="px-6 py-3 border border-white rounded-xl font-semibold hover:bg-white hover:text-primary transition"
-            >
-              Learn More
-            </Link>
-          </div>
-        </div>
+        <ProductGrid products={featuredProducts} />
 
-        <div className="md:w-1/2 mt-10 md:mt-0 flex justify-center">
-          <Image
-            src="/fallback-image.jpg"
-            alt="Shopping showcase"
-            width={500}
-            height={400}
-            className="rounded-2xl shadow-card object-cover w-full h-auto max-w-md"
-            priority
-          />
+        <div className="mt-8 text-center">
+          <a
+            href="/shop"
+            className="inline-block rounded-2xl bg-neutral-900 text-white px-6 py-3 text-body-base font-medium hover:bg-neutral-700 transition"
+          >
+            View All Products
+          </a>
         </div>
-      </header>
-
-      {/* FOOTER */}
-      <footer className="px-8 py-6 bg-neutral-100 text-neutral-600 text-sm">
-        <div className="flex justify-between items-center">
-          <span>
-            © {new Date().getFullYear()} Shopsphere. All rights reserved.
-          </span>
-          <div className="space-x-4">
-            <Link
-              href="/privacy"
-              className="hover:text-primary transition-colors"
-            >
-              Privacy
-            </Link>
-            <Link
-              href="/terms"
-              className="hover:text-primary transition-colors"
-            >
-              Terms
-            </Link>
-          </div>
-        </div>
-      </footer>
-    </div>
+      </section>
+    </main>
   );
 }
