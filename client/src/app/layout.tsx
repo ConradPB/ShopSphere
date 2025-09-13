@@ -1,7 +1,6 @@
-// src/app/layout.tsx
 import "./globals.css";
 import { ReduxProvider } from "@/redux/Provider";
-import CartDebugger from "@/components/cartDebugger";
+import CartDebugger from "@/components/CartDebugger";
 import Navbar from "@/components/Navbar";
 
 const ENABLE_CART_DEBUG = process.env.NEXT_PUBLIC_ENABLE_CART_DEBUG === "true";
