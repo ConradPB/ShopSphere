@@ -1,4 +1,3 @@
-// src/app/page.tsx
 import { getProducts } from "@/lib/supabase";
 import ProductGrid from "@/components/ProductGrid";
 
