@@ -12,22 +12,19 @@ export default async function ShopPage() {
   }
 
   return (
-    <div className="min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="font-display text-heading-lg">Shop</h1>
-            <p className="text-body-base text-neutral-600 mt-1">
-              Browse all products — curated and recommended for you.
-            </p>
-          </div>
-        </div>
+    <main className="min-h-screen bg-neutral-50">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <header className="mb-8">
+          <h1 className="font-display text-heading-lg">Shop</h1>
+          <p className="text-body-base text-neutral-600 mt-2">
+            Browse our curated collection. Use search and filters to find
+            exactly what you’re looking for.
+          </p>
+        </header>
 
-        {/* Search + Filter + Paginated Product Grid */}
-        <div className="mt-6">
-          <SearchAndFilterClient initialProducts={products} />
-        </div>
-      </div>
-    </div>
+        {/* Single source of truth: Search + Filter + Grid + Pagination */}
+        <SearchAndFilterClient initialProducts={products} />
+      </section>
+    </main>
   );
 }
