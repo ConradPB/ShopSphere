@@ -25,7 +25,7 @@ export default function WishlistPage() {
         quantity: 1,
       })
     );
-    dispatch(removeFromWishlist(id)); // remove after adding to cart
+    dispatch(removeFromWishlist(id));
   };
 
   if (wishlistItems.length === 0) {
@@ -43,14 +43,14 @@ export default function WishlistPage() {
             key={item.id}
             className="bg-white rounded-xl shadow hover:shadow-lg transition border border-gray-100 overflow-hidden"
           >
-            <div className="relative w-full h-48">
+            {/* Constrained wrapper for image */}
+            <div className="relative w-full h-48 overflow-hidden bg-neutral-100">
               <Image
                 src={item.image ?? "/fallback-image.jpg"}
                 alt={item.title}
                 fill
-                sizes="(max-width: 768px) 100vw, 33vw"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 className="object-cover"
-                unoptimized
               />
             </div>
 
