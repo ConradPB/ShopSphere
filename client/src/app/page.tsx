@@ -3,7 +3,7 @@ import ProductGrid from "@/components/ProductGrid";
 
 export default async function HomePage() {
   // Fetch products server-side
-  cons { data: products, error } = await getProducts();
+  const { data: products, error } = await getProducts();
 
   if (error) {
     console.error("Error fetching products:", error);
