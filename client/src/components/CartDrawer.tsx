@@ -86,6 +86,15 @@ export default function CartDrawer({ open, onClose }: Props) {
             <ul className="space-y-4">
               {items.map((it) => (
                 <li key={it.id} className="flex items-center gap-3">
+                  <div className="w-20 h-20 relative rounded overflow-hidden bg-neutral-100">
+                    <Image
+                      src={it.image || "/fallback-image.jpg"}
+                      alt={it.title}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+
                   <div className="flex-1">
                     <div className="flex justify-between items-start">
                       <h4 className="font-medium text-sm">{it.title}</h4>
