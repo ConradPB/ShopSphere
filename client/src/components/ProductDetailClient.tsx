@@ -107,15 +107,17 @@ export default function ProductDetailClient({
                     href={`/product/${r.id}`}
                     className="bg-white rounded-md shadow-sm overflow-hidden hover:shadow transition block"
                   >
-                    <div className="relative w-full h-28">
+                    <div className="relative w-full aspect-square md:aspect-[4/3] rounded-lg overflow-hidden shadow">
                       <Image
-                        src={rImg}
-                        alt={r.title || "Recommended product"}
+                        src={imgSrc}
+                        alt={product.title || "Product image"}
                         fill
-                        style={{ objectFit: "cover" }}
+                        className="object-cover"
+                        priority
                         unoptimized
                       />
                     </div>
+
                     <div className="p-2">
                       <h4 className="text-sm font-medium truncate">
                         {r.title}
