@@ -52,16 +52,6 @@ export default function ProductDetailClient({
   return (
     <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 p-6">
       {/* Left: image */}
-      <div className="relative w-full h-[420px] rounded-lg overflow-hidden shadow">
-        <Image
-          src={imgSrc}
-          alt={product.title || "Product image"}
-          fill
-          style={{ objectFit: "cover" }}
-          priority
-          unoptimized
-        />
-      </div>
 
       {/* Right: info */}
       <div>
