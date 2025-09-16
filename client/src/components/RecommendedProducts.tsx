@@ -31,7 +31,7 @@ export default function RecommendedProducts({
                        33vw"
                 placeholder="blur"
                 blurDataURL={`data:image/svg+xml;base64,${toBase64(
-                  shimer(700, 475)
+                  shimmer(700, 475)
                 )}`}
                 unoptimized
               />
