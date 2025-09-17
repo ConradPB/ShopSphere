@@ -11,7 +11,6 @@ export type ProductDetailClientProps = {
   product: Product;
   recommendations?: Product[];
   initialRecs?: Product[];
-  // fetchRecs removed to avoid passing server functions to client components
 };
 
 export default function ProductDetailClient({
@@ -29,7 +28,6 @@ export default function ProductDetailClient({
   const [adding, setAdding] = useState(false);
 
   useEffect(() => {
-    // seeded already covers initialRecs; do nothing else for now.
     setRecs(seeded ?? []);
   }, [seeded]);
 
@@ -107,12 +105,12 @@ export default function ProductDetailClient({
                     href={`/product/${r.id}`}
                     className="bg-white rounded-md shadow-sm overflow-hidden hover:shadow transition block"
                   >
-                    <div className="relative w-full h-28">
+                    <div className="relative w-full aspect-square rounded overflow-hidden">
                       <Image
                         src={rImg}
                         alt={r.title || "Recommended product"}
                         fill
-                        style={{ objectFit: "cover" }}
+                        className="object-cover"
                         unoptimized
                       />
                     </div>
