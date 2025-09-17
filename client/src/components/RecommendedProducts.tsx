@@ -18,14 +18,14 @@ export default function RecommendedProducts({
           <Link
             key={product.id}
             href={`/product/${product.id}`}
-            className="border rounded-lg p-4 hover:shadow"
+            className="border rounded-lg p-4 hover:shadow block"
           >
-            <div className="relative w-full h-40 mb-3">
+            <div className="relative w-full aspect-square mb-3 rounded overflow-hidden">
               <Image
                 src={product.image ?? "/fallback-image.jpg"}
                 alt={product.title}
                 fill
-                className="object-cover rounded"
+                className="object-cover"
                 sizes="(max-width: 768px) 100vw,
                        (max-width: 1200px) 50vw,
                        33vw"
@@ -36,7 +36,7 @@ export default function RecommendedProducts({
                 unoptimized
               />
             </div>
-            <h3 className="font-semibold">{product.title}</h3>
+            <h3 className="font-semibold truncate">{product.title}</h3>
             <p className="text-gray-600">${product.price.toFixed(2)}</p>
           </Link>
         ))}
