@@ -36,21 +36,6 @@ export default function ProductCard({ product }: ProductCardProps) {
     );
   };
 
-  const toggleWishlist = () => {
-    if (isInWishlist) {
-      dispatch(removeFromWishlist(id));
-    } else {
-      dispatch(
-        addToWishlist({
-          id,
-          title,
-          price,
-          image: imageSrc,
-        })
-      );
-    }
-  };
-
   return (
     <article className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 overflow-hidden">
       {/* Image wrapper with shimmer blur placeholder */}
