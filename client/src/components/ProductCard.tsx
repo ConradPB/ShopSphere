@@ -7,6 +7,7 @@ import { addToCart } from "@/redux/cartSlice";
 import { addToWishlist, removeFromWishlist } from "@/redux/wishlistSlice";
 import { shimmer, toBase64 } from "@/lib/blur"; // 👈 use blur placeholder
 import type { Product } from "@/types/product";
+import WishlistButton from "./ui/WishlistButton";
 
 interface ProductCardProps {
   product: Product;
@@ -85,19 +86,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             Add to cart
           </button>
 
-          <button
-            type="button"
-            onClick={toggleWishlist}
-            aria-pressed={isInWishlist}
-            className={`px-3 py-2 border rounded-md text-sm transition ${
-              isInWishlist
-                ? "bg-red-100 text-red-600 border-red-300 hover:bg-red-200"
-                : "text-gray-700 hover:bg-gray-50"
-            }`}
-            aria-label={`${isInWishlist ? "Remove from" : "Add to"} wishlist`}
-          >
-            {isInWishlist ? "♥ Wishlisted" : "♡ Wishlist"}
-          </button>
+          <WishlistButton product={product} compact />
 
           <Link
             href={`/product/${id}`}
