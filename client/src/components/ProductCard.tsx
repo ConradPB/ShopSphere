@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { addToCart } from "@/redux/cartSlice";
 import { addToWishlist, removeFromWishlist } from "@/redux/wishlistSlice";
+import { shimmer, toBase64 } from "@/lib/blur"; // 👈 use blur placeholder
 import type { Product } from "@/types/product";
 
 interface ProductCardProps {
@@ -51,15 +52,19 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   return (
     <article className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 overflow-hidden">
-      {/* Image wrapper: fixed responsive heights to prevent image blowout */}
+      {/* Image wrapper with shimmer blur placeholder */}
       <div className="relative w-full h-48 sm:h-56 md:h-48 lg:h-56 overflow-hidden bg-neutral-100">
         <Image
           src={imageSrc}
-          alt={title}
+          alt={title || "Product image"}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           className="object-cover transition-transform duration-300 ease-in-out hover:scale-105"
-          priority={false}
+          placeholder="blur"
+          blurDataURL={`data:image/svg+xml;base64,${toBase64(
+            shimmer(700, 475)
+          )}`}
+          loading="lazy"
           unoptimized
         />
       </div>
@@ -72,6 +77,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         <div className="mt-4 flex gap-2">
           <button
+            type="button"
             onClick={handleAddToCart}
             className="flex-1 bg-primary text-white px-3 py-2 rounded-md hover:bg-primary-dark transition"
             aria-label={`Add ${title} to cart`}
@@ -80,7 +86,9 @@ export default function ProductCard({ product }: ProductCardProps) {
           </button>
 
           <button
+            type="button"
             onClick={toggleWishlist}
+            aria-pressed={isInWishlist}
             className={`px-3 py-2 border rounded-md text-sm transition ${
               isInWishlist
                 ? "bg-red-100 text-red-600 border-red-300 hover:bg-red-200"
