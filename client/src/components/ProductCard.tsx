@@ -50,7 +50,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             shimmer(700, 475)
           )}`}
           loading="lazy"
-          unoptimized
+          unoptimiz
         />
       </div>
 
