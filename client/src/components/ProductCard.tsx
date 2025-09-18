@@ -21,7 +21,6 @@ export default function ProductCard({ product }: ProductCardProps) {
   const imageSrc: string = product.image ?? "/fallback-image.jpg";
 
   const wishlistItems = useAppSelector((state) => state.wishlist.items);
-  const isInWishlist = wishlistItems.some((item) => item.id === id);
 
   const handleAddToCart = () => {
     dispatch(
