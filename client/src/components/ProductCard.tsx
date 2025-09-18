@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { addToCart } from "@/redux/cartSlice";
-import { addToWishlist, removeFromWishlist } from "@/redux/wishlistSlice";
 import { shimmer, toBase64 } from "@/lib/blur"; // 👈 use blur placeholder
 import type { Product } from "@/types/product";
 import WishlistButton from "./ui/WishlistButton";
