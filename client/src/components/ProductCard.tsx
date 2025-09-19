@@ -30,7 +30,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         title,
         price,
         image: imageSrc,
-        quantity: 1,
+        quantity:1,
       })
     );
   };
