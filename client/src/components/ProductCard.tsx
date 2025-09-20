@@ -28,7 +28,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       addToCart({
         id,
         title,
-        price,
+        price
         image: imageSrc,
         quantity: 1,
       })
