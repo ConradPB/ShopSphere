@@ -13,7 +13,7 @@ export type ProductDetailClientProps = {
   initialRecs?: Product[];
 };
 
-export default function ProductDetailClient({
+export default funtion ProductDetailClient({
   product,
   recommendations,
   initialRecs,
