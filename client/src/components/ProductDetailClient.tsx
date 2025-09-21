@@ -10,7 +10,7 @@ import Link from "next/link";
 export type ProductDetailClientProps = {
   product: Product;
   recommendations?: Product[];
-  initialRecs?: Product[];
+  initialRecs? Product[];
 };
 
 export default function ProductDetailClient({
