@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useAppDispatch } from "@/redux/hooks";
 import { addToCart } from "@/redux/cartSlice";
-import type { Poduct } from "@/types/product";
+import type { Product } from "@/types/product";
 import Link from "next/link";
 
 export type ProductDetailClientProps = {
