@@ -122,7 +122,7 @@ export default function ProductDetailClient({
                         ${r.price.toFixed(2)}
                       </p>
                     </div>
-                  <
+                  </a>
                 );
               })}
             </div>
