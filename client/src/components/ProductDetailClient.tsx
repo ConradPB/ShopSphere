@@ -107,7 +107,7 @@ export default function ProductDetailClient({
                   >
                     <div className="relative w-full aspect-square rounded overflow-hidden">
                       <Image
-                        src={rImg}
+                        rc={rImg}
                         alt={r.title || "Recommended product"}
                         fill
                         className="object-cover"
