@@ -115,9 +115,7 @@ export default function ProductDetailClient({
                       />
                     </div>
                     <div className="p-2">
-                      <h4 className="text-sm font-medium truncate">
-                        {r.title}
-                      </h4>
+                      <h4 className="text-sm font-medium truncate">{title}</h4>
                       <p className="text-xs text-indigo-600">
                         ${r.price.toFixed(2)}
                       </p>
