@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, ShoppingCart, Heart } from "lucide-react";
@@ -8,12 +8,17 @@ import { useAppSelector } from "@/redux/hooks";
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false); // ✅ for hydration fix
   const pathname = usePathname();
 
   const cartCount = useAppSelector((state) =>
     state.cart.items.reduce((sum, item) => sum + item.quantity, 0)
   );
   const wishlistCount = useAppSelector((state) => state.wishlist.items.length);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const navLinks = [
     { href: "/", label: "Home" },
@@ -52,11 +57,12 @@ const Navbar: React.FC = () => {
               className="relative flex items-center hover:scale-110 transition"
             >
               <Heart className="w-5 h-5" />
-              {wishlistCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-accent-purple text-xs text-white font-bold px-1.5 py-0.5 rounded-full shadow-card">
-                  {wishlistCount}
-                </span>
-              )}
+              {mounted &&
+                wishlistCount > 0 && ( // ✅ only after mount
+                  <span className="absolute -top-2 -right-2 bg-accent-purple text-xs text-white font-bold px-1.5 py-0.5 rounded-full shadow-card">
+                    {wishlistCount}
+                  </span>
+                )}
             </Link>
 
             {/* Cart */}
@@ -65,11 +71,12 @@ const Navbar: React.FC = () => {
               className="relative flex items-center hover:scale-110 transition"
             >
               <ShoppingCart className="w-5 h-5" />
-              {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-accent-green text-xs text-white font-bold px-1.5 py-0.5 rounded-full shadow-card">
-                  {cartCount}
-                </span>
-              )}
+              {mounted &&
+                cartCount > 0 && ( // ✅ only after mount
+                  <span className="absolute -top-2 -right-2 bg-accent-green text-xs text-white font-bold px-1.5 py-0.5 rounded-full shadow-card">
+                    {cartCount}
+                  </span>
+                )}
             </Link>
           </div>
 
@@ -104,14 +111,14 @@ const Navbar: React.FC = () => {
             className={linkClass("/wishlist")}
             onClick={() => setIsOpen(false)}
           >
-            Wishlist ({wishlistCount})
+            Wishlist {mounted && wishlistCount > 0 && `(${wishlistCount})`}
           </Link>
           <Link
             href="/checkout"
             className={linkClass("/checkout")}
             onClick={() => setIsOpen(false)}
           >
-            Cart ({cartCount})
+            Cart {mounted && cartCount > 0 && `(${cartCount})`}
           </Link>
         </div>
       )}
