@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { addToCart } from "@/redux/cartSlice";
-import { shimmer, toBase64 } from "@/lib/blur"; // 👈 use blur placeholder
+import { shimmer, toBase64 } from "@/lib/blur";
 import type { Product } from "@/types/product";
 import WishlistButton from "./ui/WishlistButton";
 
@@ -37,8 +37,8 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   return (
     <article className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 overflow-hidden">
-      {/* Image wrapper with shimmer blur placeholder */}
-      <div className="relative w-full h-48 sm:h-56 md:h-48 lg:h-56 overflow-hidden bg-neutral-100">
+      {/* Image wrapper */}
+      <div className="relative w-full h-48 sm:h-56 md:h-48 lg:h-56 overflow-hidden bg-neutral-100 max-h-[50vh]">
         <Image
           src={imageSrc}
           alt={title || "Product image"}
