@@ -20,7 +20,7 @@ export default function RecommendedProducts({
             href={`/product/${product.id}`}
             className="border rounded-lg p-4 hover:shadow block"
           >
-            <div className="relative w-full aspect-square mb-3 rounded overflow-hidden">
+            <div className="relative w-full aspect-square mb-3 rounded overflow-hidden max-h-[40vh]">
               <Image
                 src={product.image ?? "/fallback-image.jpg"}
                 alt={product.title}
