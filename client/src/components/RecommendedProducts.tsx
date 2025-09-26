@@ -18,7 +18,7 @@ export default function RecommendedProducts({
       </h2>
 
       {/* Grid layout */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 smgrid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
         {products.map((product) => (
           <Link
             key={product.id}
