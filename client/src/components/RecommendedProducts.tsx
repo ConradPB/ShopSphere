@@ -12,7 +12,7 @@ export default function RecommendedProducts({
 
   return (
     <div className="mt-12">
-      <h2 className="text-xl font-bold mb-4">You may also like</h2>
+      <h2 className="">You may also like</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {products.map((product) => (
           <Link
