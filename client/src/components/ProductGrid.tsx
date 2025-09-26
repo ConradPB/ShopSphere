@@ -62,7 +62,7 @@ export default function ProductGrid({ initialProducts, title }: Props) {
         </h2>
       )}
 
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="">
         {list.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
