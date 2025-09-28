@@ -1,181 +1,87 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
-import { calculateCartTotal } from "@/types/cart"; // <-- import helper
+import React, { useState } from "react";
+import InputField from "@/components/ui/InputField";
+import SectionCard from "@/components/ui/SectionCard";
+import PaymentOption from "@/components/ui/PaymentOption";
+import Button from "@/components/ui/Button";
 
 export default function CheckoutPage() {
-  const router = useRouter();
-  const cart = useSelector((state: RootState) => state.cart.items);
-
-  // ✅ calculate subtotal here instead of reading state.cart.total
-  const subtotal = calculateCartTotal(cart);
-  const shipping = 5; // placeholder flat rate
-  const total = subtotal + shipping;
-
-  const [paymentMethod, setPaymentMethod] = useState("card");
-
-  // ✅ Fix hydration mismatch
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const handlePlaceOrder = () => {
-    // For now just redirect to confirmation
-    router.push("/order-confirmation");
-  };
+  const [paymentMethod, setPaymentMethod] = useState("credit-card");
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-8">
-      <h1 className="text-3xl font-bold mb-6">Checkout</h1>
+    <div className="max-w-5xl mx-auto p-6 space-y-6">
+      {/* Page Title */}
+      <h1 className="text-3xl font-bold">Checkout</h1>
 
-      {/* Shipping Form */}
-      <div className="bg-white shadow p-6 rounded-2xl space-y-4">
-        <h2 className="text-xl font-semibold">Shipping Details</h2>
-        <form className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <input
-            type="text"
-            placeholder="Full Name"
-            className="border p-2 rounded"
-          />
-          <input
+      {/* Billing Info */}
+      <SectionCard title="Billing Information">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <InputField label="First Name" placeholder="John" />
+          <InputField label="Last Name" placeholder="Doe" />
+          <InputField
+            label="Email"
+            placeholder="john@example.com"
             type="email"
-            placeholder="Email"
-            className="border p-2 rounded"
           />
-          <input
-            type="tel"
-            placeholder="Phone Number"
-            className="border p-2 rounded md:col-span-2"
+          <InputField label="Phone" placeholder="+123456789" type="tel" />
+          <InputField
+            label="Address"
+            placeholder="123 Main Street"
+            className="md:col-span-2"
           />
-          <input
-            type="text"
-            placeholder="Street Address"
-            className="border p-2 rounded md:col-span-2"
-          />
-          <input
-            type="text"
-            placeholder="City"
-            className="border p-2 rounded"
-          />
-          <input
-            type="text"
-            placeholder="State/Province"
-            className="border p-2 rounded"
-          />
-          <input
-            type="text"
-            placeholder="Zip/Postal Code"
-            className="border p-2 rounded"
-          />
-          <input
-            type="text"
-            placeholder="Country"
-            className="border p-2 rounded"
-          />
-        </form>
-      </div>
+          <InputField label="City" placeholder="New York" />
+          <InputField label="Postal Code" placeholder="10001" />
+        </div>
+      </SectionCard>
 
       {/* Payment Options */}
-      <div className="bg-white shadow p-6 rounded-2xl space-y-4">
-        <h2 className="text-xl font-semibold">Payment Method</h2>
-        <div className="space-y-2">
-          <label className="flex items-center gap-2">
-            <input
-              type="radio"
-              name="payment"
-              value="card"
-              checked={paymentMethod === "card"}
-              onChange={() => setPaymentMethod("card")}
-            />
-            Credit/Debit Card
-          </label>
-          {paymentMethod === "card" && (
-            <div className="ml-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-              <input
-                type="text"
-                placeholder="Card Number"
-                className="border p-2 rounded md:col-span-2"
-              />
-              <input
-                type="text"
-                placeholder="MM/YY"
-                className="border p-2 rounded"
-              />
-              <input
-                type="text"
-                placeholder="CVC"
-                className="border p-2 rounded"
-              />
-            </div>
-          )}
-
-          <label className="flex items-center gap-2">
-            <input
-              type="radio"
-              name="payment"
-              value="crypto"
-              checked={paymentMethod === "crypto"}
-              onChange={() => setPaymentMethod("crypto")}
-            />
-            Pay with Crypto
-          </label>
-
-          <label className="flex items-center gap-2">
-            <input
-              type="radio"
-              name="payment"
-              value="cod"
-              checked={paymentMethod === "cod"}
-              onChange={() => setPaymentMethod("cod")}
-            />
-            Cash on Delivery
-          </label>
+      <SectionCard title="Payment Method">
+        <div className="space-y-3">
+          <PaymentOption
+            value="credit-card"
+            label="Credit / Debit Card"
+            selected={paymentMethod}
+            onChange={setPaymentMethod}
+          />
+          <PaymentOption
+            value="paypal"
+            label="PayPal"
+            selected={paymentMethod}
+            onChange={setPaymentMethod}
+          />
+          <PaymentOption
+            value="crypto"
+            label="Crypto (USDT / BTC / ETH)"
+            selected={paymentMethod}
+            onChange={setPaymentMethod}
+          />
         </div>
-      </div>
+      </SectionCard>
 
       {/* Order Summary */}
-      <div className="bg-white shadow p-6 rounded-2xl space-y-4">
-        <h2 className="text-xl font-semibold">Order Summary</h2>
-        {!mounted ? (
-          <p className="text-gray-500">Loading cart...</p>
-        ) : (
-          <div className="space-y-2">
-            {cart.map((item) => (
-              <div key={item.id} className="flex justify-between">
-                <span>
-                  {item.title} × {item.quantity}
-                </span>
-                <span>${(item.price * item.quantity).toFixed(2)}</span>
-              </div>
-            ))}
-            <hr />
-            <div className="flex justify-between font-medium">
-              <span>Subtotal</span>
-              <span>${subtotal.toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between font-medium">
-              <span>Shipping</span>
-              <span>${shipping.toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between font-bold text-lg">
-              <span>Total</span>
-              <span>${total.toFixed(2)}</span>
-            </div>
+      <SectionCard title="Order Summary">
+        <div className="space-y-2 text-sm">
+          <div className="flex justify-between">
+            <span>Product 1</span>
+            <span>$50</span>
           </div>
-        )}
-      </div>
+          <div className="flex justify-between">
+            <span>Product 2</span>
+            <span>$30</span>
+          </div>
+          <hr />
+          <div className="flex justify-between font-semibold">
+            <span>Total</span>
+            <span>$80</span>
+          </div>
+        </div>
+      </SectionCard>
 
-      {/* Place Order */}
-      <button
-        onClick={handlePlaceOrder}
-        className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-2xl font-semibold transition"
-      >
-        Place Order
-      </button>
+      {/* Place Order Button */}
+      <div className="flex justify-end">
+        <Button className="w-full md:w-auto">Place Order</Button>
+      </div>
     </div>
   );
 }
