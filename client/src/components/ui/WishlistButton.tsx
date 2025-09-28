@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { addToWishlist, removeFromWishlist } from "@/redux/wishlistSlice";
 import type { Product } from "@/types/product";
@@ -15,6 +16,12 @@ export default function WishlistButton({
 }: WishlistButtonProps) {
   const dispatch = useAppDispatch();
   const wishlistItems = useAppSelector((state) => state.wishlist.items);
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const isInWishlist = wishlistItems.some(
     (item) => item.id === String(product.id)
   );
@@ -33,6 +40,19 @@ export default function WishlistButton({
       );
     }
   };
+
+  // ✅ Prevent hydration mismatch by not rendering button until mounted
+  if (!mounted) {
+    return (
+      <button
+        type="button"
+        disabled
+        className="px-3 py-2 border rounded-md text-sm opacity-50 cursor-wait"
+      >
+        Loading...
+      </button>
+    );
+  }
 
   return (
     <button
