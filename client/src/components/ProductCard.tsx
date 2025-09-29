@@ -21,6 +21,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   const imageSrc: string = product.image ?? "/fallback-image.jpg";
 
   const wishlistItems = useAppSelector((state) => state.wishlist.items);
+  const isInWishlist = wishlistItems.some((item) => item.id === id);
 
   const handleAddToCart = () => {
     dispatch(
@@ -35,50 +36,45 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <article className="card hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
-      {/* Image wrapper: use explicit responsive heights (prevents blowout) */}
-      <div className="relative w-full h-44 sm:h-56 md:h-48 lg:h-56 bg-neutral-100 overflow-hidden">
+    <article className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 overflow-hidden">
+      {/* Image wrapper with fixed dimensions */}
+      <div className="w-full overflow-hidden bg-neutral-100 flex items-center justify-center">
         <Image
           src={imageSrc}
           alt={title || "Product image"}
-          fill
-          className="object-cover w-full h-full transition-transform duration-300 ease-in-out hover:scale-105"
+          width={400} // ✅ stable dimensions
+          height={300}
+          className="object-cover rounded-md transition-transform duration-300 ease-in-out hover:scale-105"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           placeholder="blur"
           blurDataURL={`data:image/svg+xml;base64,${toBase64(
-            shimmer(700, 475)
+            shimmer(400, 300)
           )}`}
           loading="lazy"
-          unoptimized
         />
-
-        {/* Top-right wishlist (absolute inside image wrapper) */}
-        <div className="absolute top-2 right-2 z-10">
-          <WishlistButton product={product} compact />
-        </div>
       </div>
 
-      {/* Content */}
       <div className="p-4">
-        <h3 className="text-base font-semibold text-neutral-900 truncate">
+        <h3 className="text-lg font-semibold text-gray-900 truncate">
           {title}
         </h3>
-
-        <p className="text-primary font-bold mt-1">${price.toFixed(2)}</p>
+        <p className="text-primary font-bold mt-2">${price.toFixed(2)}</p>
 
         <div className="mt-4 flex gap-2">
           <button
             type="button"
             onClick={handleAddToCart}
-            className="flex-1 btn-primary py-2 text-sm"
+            className="flex-1 bg-primary text-white px-3 py-2 rounded-md hover:bg-primary-dark transition"
             aria-label={`Add ${title} to cart`}
           >
             Add to cart
           </button>
 
+          <WishlistButton product={product} compact />
+
           <Link
             href={`/product/${id}`}
-            className="px-3 py-2 border rounded-lg text-sm text-neutral-700 hover:bg-neutral-50 transition"
+            className="px-3 py-2 border rounded-md text-sm text-gray-700 hover:bg-gray-50"
           >
             View
           </Link>
