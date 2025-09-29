@@ -50,12 +50,14 @@ export default function ProductDetailClient({
   return (
     <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 p-6">
       {/* Left: image (hero) */}
-      <div className="relative w-full aspect-square md:aspect-[4/3] rounded-lg overflow-hidden shadow max-h-[70vh]">
+      <div className="relative w-full rounded-lg overflow-hidden shadow max-h-[70vh] bg-neutral-100">
+        {/* Use intrinsic width/height to reserve space, but let CSS size it */}
         <Image
           src={imgSrc}
           alt={product.title || "Product image"}
-          fill
-          className="object-cover"
+          width={1200}
+          height={900}
+          className="object-cover w-full h-full"
           priority
           unoptimized
         />
@@ -105,12 +107,13 @@ export default function ProductDetailClient({
                     href={`/product/${r.id}`}
                     className="bg-white rounded-md shadow-sm overflow-hidden hover:shadow transition block"
                   >
-                    <div className="relative w-full aspect-square rounded overflow-hidden max-h-[40vh]">
+                    <div className="relative w-full aspect-square rounded overflow-hidden max-h-[40vh] bg-neutral-100">
                       <Image
                         src={rImg}
                         alt={r.title || "Recommended product"}
-                        fill
-                        className="object-cover"
+                        width={400}
+                        height={400}
+                        className="object-cover w-full h-full"
                         unoptimized
                       />
                     </div>
