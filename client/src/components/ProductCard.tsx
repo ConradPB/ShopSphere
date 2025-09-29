@@ -36,15 +36,14 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <article className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 overflow-hidden">
-      {/* Image wrapper with fixed dimensions */}
-      <div className="w-full overflow-hidden bg-neutral-100 flex items-center justify-center">
+    <article className="card hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+      {/* Image wrapper */}
+      <div className="relative w-full aspect-[4/3] bg-neutral-100 flex items-center justify-center overflow-hidden">
         <Image
           src={imageSrc}
           alt={title || "Product image"}
-          width={400} // ✅ stable dimensions
-          height={300}
-          className="object-cover rounded-md transition-transform duration-300 ease-in-out hover:scale-105"
+          fill
+          className="object-cover transition-transform duration-300 ease-in-out hover:scale-105"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           placeholder="blur"
           blurDataURL={`data:image/svg+xml;base64,${toBase64(
@@ -52,29 +51,33 @@ export default function ProductCard({ product }: ProductCardProps) {
           )}`}
           loading="lazy"
         />
+
+        {/* Top-right wishlist button */}
+        <div className="absolute top-2 right-2">
+          <WishlistButton product={product} compact />
+        </div>
       </div>
 
+      {/* Content */}
       <div className="p-4">
-        <h3 className="text-lg font-semibold text-gray-900 truncate">
+        <h3 className="text-base font-semibold text-neutral-900 truncate">
           {title}
         </h3>
-        <p className="text-primary font-bold mt-2">${price.toFixed(2)}</p>
+        <p className="text-primary font-bold mt-1">${price.toFixed(2)}</p>
 
         <div className="mt-4 flex gap-2">
           <button
             type="button"
             onClick={handleAddToCart}
-            className="flex-1 bg-primary text-white px-3 py-2 rounded-md hover:bg-primary-dark transition"
+            className="flex-1 btn-primary py-2 text-sm"
             aria-label={`Add ${title} to cart`}
           >
-            Add to cart
+            Add to Cart
           </button>
-
-          <WishlistButton product={product} compact />
 
           <Link
             href={`/product/${id}`}
-            className="px-3 py-2 border rounded-md text-sm text-gray-700 hover:bg-gray-50"
+            className="px-3 py-2 border rounded-lg text-sm text-neutral-700 hover:bg-neutral-50 transition"
           >
             View
           </Link>
