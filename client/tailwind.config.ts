@@ -1,4 +1,6 @@
 import type { Config } from "tailwindcss";
+import forms from "@tailwindcss/forms";
+import typography from "@tailwindcss/typography";
 
 const config: Config = {
   content: [
@@ -45,18 +47,17 @@ const config: Config = {
       },
 
       fontFamily: {
-        // we read CSS vars in globals.css (so you can swap fonts easily)
         sans: ["var(--font-sans)", "ui-sans-serif", "system-ui"],
-        display: ["var(--font-display)", "ui-sans-serif", "system-ui"],
+        display: ["var(--font-display)", "sans-serif"],
       },
 
       fontSize: {
-        "heading-xl": ["2.5rem", { lineHeight: "1.15", fontWeight: "700" }], // 40px
-        "heading-lg": ["2rem", { lineHeight: "1.2", fontWeight: "700" }], // 32px
-        "heading-md": ["1.5rem", { lineHeight: "1.35", fontWeight: "600" }], // 24px
-        "body-lg": ["1.125rem", { lineHeight: "1.6" }], // 18px
-        "body-base": ["1rem", { lineHeight: "1.6" }], // 16px
-        "body-sm": ["0.875rem", { lineHeight: "1.5" }], // 14px
+        "heading-xl": ["2.5rem", { lineHeight: "1.15", fontWeight: "700" }],
+        "heading-lg": ["2rem", { lineHeight: "1.2", fontWeight: "700" }],
+        "heading-md": ["1.5rem", { lineHeight: "1.35", fontWeight: "600" }],
+        "body-lg": ["1.125rem", { lineHeight: "1.6" }],
+        "body-base": ["1rem", { lineHeight: "1.6" }],
+        "body-sm": ["0.875rem", { lineHeight: "1.5" }],
       },
 
       boxShadow: {
@@ -69,21 +70,9 @@ const config: Config = {
         xl: "1rem",
         "2xl": "1.5rem",
       },
-
-      spacing: {
-        "container-x": "1rem", // px-4 etc
-      },
-
-      transitionTimingFunction: {
-        "in-expo": "cubic-bezier(0.95, 0.05, 0.795, 0.035)",
-      },
     },
   },
-  plugins: [
-    // if you want official plugins later: forms, typography, aspect-ratio, etc.
-    require("@tailwindcss/forms"),
-    require("@tailwindcss/typography"),
-  ],
+  plugins: [forms, typography],
 };
 
 export default config;
