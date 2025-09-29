@@ -1,21 +1,21 @@
 "use client";
 
 import React from "react";
+import cn from "classnames";
 
-interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
+  className?: string;
 }
 
-export default function InputField({ label, ...props }: InputFieldProps) {
+export default function InputField({ label, className, ...rest }: InputProps) {
   return (
-    <div className="flex flex-col space-y-1">
-      {label && (
-        <label className="text-sm font-medium text-gray-700">{label}</label>
-      )}
+    <label className={cn("block text-sm text-neutral-700", className && "")}>
+      {label && <span className="block mb-2 font-medium">{label}</span>}
       <input
-        {...props}
-        className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+        {...rest}
+        className="w-full rounded-lg border border-neutral-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/40"
       />
-    </div>
+    </label>
   );
 }
