@@ -25,6 +25,12 @@ export default async function HomePage() {
           </p>
         </div>
       </section>
+      <div className="grid grid-cols-3 gap-4 bg-red-100 p-4">
+        <div className="bg-blue-200 p-4">Box 1</div>
+        <div className="bg-blue-200 p-4">Box 2</div>
+        <div className="bg-blue-200 p-4">Box 3</div>
+        <div className="bg-blue-200 p-4">Box 4</div>
+      </div>
 
       {/* Featured products */}
       <ProductGrid initialProducts={featured} title="Featured Products" />
