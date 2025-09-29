@@ -50,9 +50,11 @@ export default function WishlistPage() {
               <Image
                 src={item.image ?? "/fallback-image.jpg"}
                 alt={item.title}
-                fill
+                width={700}
+                height={475}
+                className="object-cover w-full h-full"
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                className="object-cover"
+                unoptimized
               />
             </div>
 
