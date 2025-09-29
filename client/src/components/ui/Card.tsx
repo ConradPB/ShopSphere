@@ -1,6 +1,5 @@
 "use client";
 import Image from "next/image";
-import Link from "next/link";
 import React from "react";
 import Button from "./Button";
 
@@ -25,24 +24,22 @@ export default function Card({
 
   return (
     <article className={`card overflow-hidden ${className}`}>
-      {/* Constrained wrapper for image */}
-      <div className="relative w-full h-56 overflow-hidden bg-neutral-100 rounded-t-xl">
+      <div className="w-full h-56 relative bg-neutral-100">
         <Image
           src={img}
           alt={title}
-          fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-          className="object-cover transition-transform duration-300 ease-in-out hover:scale-105"
+          width={700}
+          height={475}
+          className="object-cover w-full h-full"
+          sizes="(max-width: 768px) 100vw, 33vw"
         />
       </div>
 
       <div className="p-4">
-        <h3 className="font-semibold text-lg mb-1 truncate">{title}</h3>
+        <h3 className="font-semibold text-lg mb-1">{title}</h3>
 
         {price != null && (
-          <p className="text-primary font-bold mb-3">
-            ${Number(price).toFixed(2)}
-          </p>
+          <p className="text-primary font-bold mb-3">${price}</p>
         )}
 
         <div className="flex gap-3">
@@ -51,13 +48,13 @@ export default function Card({
           </Button>
 
           {href ? (
-            <Link href={href} legacyBehavior>
-              <Button asLink href={href} variant="ghost">
-                View
-              </Button>
-            </Link>
+            <Button asLink href={href} variant="ghost">
+              View
+            </Button>
           ) : (
-            <Button variant="ghost">View</Button>
+            <Button variant="ghost" onClick={() => {}}>
+              View
+            </Button>
           )}
         </div>
       </div>
