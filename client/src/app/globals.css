@@ -1,32 +1,67 @@
 @import "tailwindcss";
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+/* Google fonts (Inter + Poppins) */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap");
+
+/* CSS variables for the fonts (we reference these in tailwind.config) */
+:root {
+  --font-sans: "Inter", ui-sans-serif, system-ui;
+  --font-display: "Poppins", ui-sans-serif, system-ui;
+
+  /* helpful CSS vars (optional, for inline styles/gradients) */
+  --brand-gradient: linear-gradient(90deg, rgba(96,165,250,1) 0%, rgba(37,99,235,1) 100%);
+}
+
+/* Base */
+html, body, #__next {
+  height: 100%;
+}
 
 body {
   @apply bg-neutral-50 text-neutral-900 font-sans text-body-base antialiased;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-h1 {
-  @apply font-display text-heading-xl;
-}
+/* Headings */
+h1 { @apply font-display text-heading-xl text-neutral-900; }
+h2 { @apply font-display text-heading-lg text-neutral-900; }
+h3 { @apply font-display text-heading-md text-neutral-900; }
 
-h2 {
-  @apply font-display text-heading-lg;
-}
+/* Links */
+a { @apply text-primary hover:text-primary-dark transition-colors; }
 
-h3 {
-  @apply font-display text-heading-md;
-}
-
-p {
-  @apply text-body-base;
-}
-
-/* UI utilities */
+/* Utility helpers */
 @layer components {
+  /* primary CTA */
   .btn-primary {
-    @apply inline-flex items-center justify-center px-4 py-2 rounded-xl bg-primary text-white font-medium shadow-card hover:bg-primary-dark transition;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 font-semibold text-white shadow-card transition transform hover:-translate-y-0.5 active:translate-y-0;
+    background-image: var(--brand-gradient);
+    background-size: 200% 200%;
   }
 
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-3 py-2 border font-medium transition hover:bg-neutral-100;
+  }
+
+  /* card shell */
   .card {
     @apply bg-white rounded-2xl shadow-card border border-neutral-100 overflow-hidden;
   }
+
+  /* subtle bordered container for form sections */
+  .section-card {
+    @apply bg-white rounded-xl p-6 border border-neutral-100 shadow-sm;
+  }
+
+  /* hero heading helper */
+  .hero-title {
+    @apply font-display text-heading-xl md:text-[3rem] leading-tight;
+  }
 }
+
+/* small adjustments to prevent large scrollbars for long lists */
+::-webkit-scrollbar { height: 10px; width: 10px; }
