@@ -25,20 +25,20 @@ export default function RecommendedProducts({
             href={`/product/${product.id}`}
             className="border rounded-xl p-4 bg-white shadow-sm hover:shadow-lg transition-transform transform hover:-translate-y-1"
           >
-            {/* Product image */}
-            <div className="relative w-full h-48 mb-4">
+            {/* Product image: fixed wrapper height + intrinsic size */}
+            <div className="relative w-full h-48 mb-4 overflow-hidden rounded-lg bg-neutral-100">
               <Image
                 src={product.image ?? "/fallback-image.jpg"}
                 alt={product.title}
-                fill
-                className="object-cover rounded-lg"
-                sizes="(max-width: 768px) 100vw,
-                       (max-width: 1200px) 50vw,
-                       25vw"
+                width={700}
+                height={475}
+                className="object-cover w-full h-full"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                 placeholder="blur"
                 blurDataURL={`data:image/svg+xml;base64,${toBase64(
                   shimmer(700, 475)
                 )}`}
+                unoptimized
               />
             </div>
 
