@@ -7,13 +7,11 @@ import ProductCard from "./ProductCard";
 
 type Props = {
   initialProducts?: Product[];
-  title?: string; // optional section title (e.g., "Featured Products")
+  title?: string;
 };
 
 export default function ProductGrid({ initialProducts, title }: Props) {
-  const [products, setProducts] = useState<Product[] | null>(
-    initialProducts ?? null
-  );
+  const [products, setProducts] = useState<Product[]>(initialProducts ?? []);
   const [loading, setLoading] = useState(!initialProducts);
 
   useEffect(() => {
@@ -46,9 +44,7 @@ export default function ProductGrid({ initialProducts, title }: Props) {
     );
   }
 
-  const list = products ?? [];
-
-  if (list.length === 0) {
+  if (products.length === 0) {
     return (
       <p className="text-center py-10 text-gray-500">No products found.</p>
     );
@@ -57,13 +53,14 @@ export default function ProductGrid({ initialProducts, title }: Props) {
   return (
     <section className="py-10 px-4 sm:px-6 lg:px-8">
       {title && (
-        <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+        <h2 className="text-2xl font-bold mb-6 text-neutral-800 text-center">
           {title}
         </h2>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-        {list.map((product) => (
+      {/* ✅ Grid fixed to match your working test grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {products.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </div>
