@@ -63,6 +63,8 @@ a { @apply text-primary hover:text-primary-dark transition-colors; }
 
   /* hero gradient */
   .test-hero {
+    background: linear-gradient(90deg, #06b6d4 0%, #0ea5b9 100%);
+
     @apply bg-gradient-to-r from-teal-500 via-cyan-400 to-blue-600;
   }
 
