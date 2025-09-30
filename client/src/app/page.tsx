@@ -9,7 +9,7 @@ export default async function HomePage() {
   return (
     <main className="min-h-screen bg-neutral-50">
       {/* HERO / Banner */}
-      /* src/app/page.tsx (hero block) */
+
       <section className="test-hero text-white py-20 relative overflow-hidden">
         {/* pattern overlay via CSS class */}
         <div
