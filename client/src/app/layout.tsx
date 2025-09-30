@@ -1,4 +1,4 @@
-import "./";
+import "./globals.css";
 import { ReduxProvider } from "@/redux/Provider";
 import CartDebugger from "@/components/CartDebugger";
 import Navbar from "@/components/Navbar";
