@@ -15,17 +15,18 @@ export default async function HomePage() {
     <main className="min-h-screen bg-neutral-50">
       {/* HERO / Banner */}
       <section className="test-hero text-white py-20 relative overflow-hidden">
-        <div className="absolute inset-0">
+        {/* Background pattern overlay */}
+        <div className="absolute inset-0 z-0">
           <Image
             src="/pattern.svg"
             alt=""
             fill
             className="object-cover opacity-20"
+            priority
           />
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10"></div>
-
+        {/* Content */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <h1 className="hero-title font-bold">Welcome to Shopsphere</h1>
           <p className="mt-3 text-body-lg max-w-2xl mx-auto text-white/90">
@@ -45,6 +46,7 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
       {/* Featured Products */}
       <section id="featured" className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
