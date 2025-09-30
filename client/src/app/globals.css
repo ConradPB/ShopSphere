@@ -61,14 +61,28 @@ a { @apply text-primary hover:text-primary-dark transition-colors; }
   .hero-title {
     @apply font-display text-heading-xl md:text-[3rem] leading-tight;
   }
+
+  /* inside @layer components in src/app/globals.css */
+  .test-hero {
+    @apply bg-gradient-to-r from-teal-500 via-cyan-400 to-blue-600 py-12;
+  }
+
+/* hero pattern overlay (non-interactive) */
+.hero-pattern {
+  pointer-events: none;         /* don't block clicks */
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-repeat: repeat;
+  background-position: center;
+  /* pattern tile size (adjust to taste) */
+  background-size: 140px 140px;
+  opacity: 0.06;                /* subtle — tweak 0.03 -> 0.12 */
+  mix-blend-mode: overlay;      /* makes the pattern softer on top of gradient */
+}
 }
 
 /* small adjustments to prevent large scrollbars for long lists */
 ::-webkit-scrollbar { height: 10px; width: 10px; }
 
-@layer components {
-  .test-hero {
-    @apply bg-gradient-to-r from-teal-500 via-cyan-400 to-blue-600 py-12;
-  }
-}
 
