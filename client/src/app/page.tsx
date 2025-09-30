@@ -14,7 +14,6 @@ export default async function HomePage() {
   return (
     <main className="min-h-screen bg-neutral-50">
       {/* HERO / Banner */}
-
       <section className="test-hero text-white py-20 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <h1 className="hero-title font-bold">Welcome to Shopsphere</h1>
@@ -35,7 +34,6 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-
       {/* Featured Products */}
       <section id="featured" className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
