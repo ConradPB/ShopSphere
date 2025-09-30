@@ -1,6 +1,6 @@
 import { getProducts } from "@/lib/supabase";
 import ProductGrid from "@/components/ProductGrid";
-
+import Image from "next/image";
 export default async function HomePage() {
   // Fetch products server-side
   const { data: products, error } = await getProducts();
@@ -15,6 +15,17 @@ export default async function HomePage() {
     <main className="min-h-screen bg-neutral-50">
       {/* HERO / Banner */}
       <section className="test-hero text-white py-20 relative overflow-hidden">
+        <div className="absolute inset-0">
+          <Image
+            src="/pattern.svg"
+            alt=""
+            fill
+            className="object-cover opacity-20"
+          />
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10"></div>
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <h1 className="hero-title font-bold">Welcome to Shopsphere</h1>
           <p className="mt-3 text-body-lg max-w-2xl mx-auto text-white/90">
