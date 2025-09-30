@@ -1,44 +1,38 @@
-import { getProducts } from "@/lib/supabase";
-import ProductGrid from "@/components/ProductGrid";
+"use client";
 
-export default async function HomePage() {
-  // Fetch products server-side
-  const { data: products, error } = await getProducts();
+import Link from "next/link";
 
-  if (error) {
-    console.error("Error fetching products:", error);
-  }
-
-  const featured = (products ?? []).slice(0, 6);
-
+export default function Hero() {
   return (
-    <main className="min-h-screen bg-neutral-50">
-      {/* HERO (simple, uses theme tokens) */}
-      <section className="test-hero">
-        <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-3xl font-display font-bold">
-            Tailwind is Active ✅
-          </h2>
-          <p className="mt-2 text-white/90">
-            If you see this gradient, Tailwind compiled correctly.
-          </p>
-        </div>
-      </section>
+    <section className="relative bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 text-white py-20 px-6 text-center">
+      {/* Overlay for subtle depth */}
+      <div className="absolute inset-0 bg-black/20"></div>
 
-      <section className="bg-gradient-to-r from-primary-light to-primary text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="font-display text-heading-xl font-bold">
-            Welcome to Shopsphere
-          </h1>
-          <p className="mt-3 text-body-lg max-w-2xl mx-auto text-white/90">
-            Discover amazing products from trusted sellers — curated,
-            recommended, and powered by smart tooling.
-          </p>
-        </div>
-      </section>
+      <div className="relative z-10 max-w-3xl mx-auto">
+        <h1 className="text-4xl md:text-6xl font-extrabold leading-tight drop-shadow-lg">
+          Discover the Future of Shopping
+        </h1>
 
-      {/* Featured products */}
-      <ProductGrid initialProducts={featured} title="Featured Products" />
-    </main>
+        <p className="mt-6 text-lg md:text-xl text-gray-100">
+          Explore unique products, add your favorites to your wishlist, and shop
+          effortlessly.
+        </p>
+
+        <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
+          <Link
+            href="/products"
+            className="bg-white text-blue-600 font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-gray-100 transition"
+          >
+            Shop Now
+          </Link>
+          <Link
+            href="/wishlist"
+            className="bg-pink-500 text-white font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-pink-600 transition"
+          >
+            View Wishlist
+          </Link>
+        </div>
+      </div>
+    </section>
   );
 }
