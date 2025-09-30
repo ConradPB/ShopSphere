@@ -14,6 +14,17 @@ export default async function HomePage() {
   return (
     <main className="min-h-screen bg-neutral-50">
       {/* HERO (simple, uses theme tokens) */}
+      <section className="test-hero">
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className="text-3xl font-display font-bold">
+            Tailwind is Active ✅
+          </h2>
+          <p className="mt-2 text-white/90">
+            If you see this gradient, Tailwind compiled correctly.
+          </p>
+        </div>
+      </section>
+
       <section className="bg-gradient-to-r from-primary-light to-primary text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="font-display text-heading-xl font-bold">
