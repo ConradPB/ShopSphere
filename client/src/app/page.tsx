@@ -1,6 +1,7 @@
 import { getProducts } from "@/lib/supabase";
 import ProductGrid from "@/components/ProductGrid";
-import Image from "next/image";
+// removed Image import — overlay is a simple div background now
+
 export default async function HomePage() {
   // Fetch products server-side
   const { data: products, error } = await getProducts();
@@ -15,16 +16,18 @@ export default async function HomePage() {
     <main className="min-h-screen bg-neutral-50">
       {/* HERO / Banner */}
       <section className="test-hero text-white py-20 relative overflow-hidden">
-        {/* Background pattern overlay */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="/pattern.svg"
-            alt=""
-            fill
-            className="object-cover opacity-20"
-            priority
-          />
-        </div>
+        {/* subtle pattern overlay via CSS background (pointer-events-none so it doesn't block clicks) */}
+        <div
+          aria-hidden
+          className="absolute inset-0 z-0 pointer-events-none"
+          style={{
+            backgroundImage: "url('/pattern-geo.svg')",
+            backgroundRepeat: "repeat",
+            backgroundSize: "120px 120px", // tile size — adjust to taste
+            backgroundPosition: "center",
+            opacity: 0.06, // subtle. 0.03 -> 0.12 is a reasonable range
+          }}
+        />
 
         {/* Content */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
