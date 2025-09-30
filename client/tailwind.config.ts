@@ -1,6 +1,8 @@
-// tailwind.config.cjs
-/** @type {import('tailwindcss').Config} */
-module.exports = {
+import type { Config } from "tailwindcss";
+import forms from "@tailwindcss/forms";
+import typography from "@tailwindcss/typography";
+
+const config: Config = {
   content: [
     "./src/app/**/*.{ts,tsx,js,jsx,mdx}",
     "./src/components/**/*.{ts,tsx,js,jsx,mdx}",
@@ -10,16 +12,8 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: {
-          DEFAULT: "#2563eb",
-          dark: "#1e40af",
-          light: "#60a5fa",
-        },
-        secondary: {
-          DEFAULT: "#f59e0b",
-          dark: "#b45309",
-          light: "#fbbf24",
-        },
+        primary: { DEFAULT: "#2563eb", dark: "#1e40af", light: "#60a5fa" },
+        secondary: { DEFAULT: "#f59e0b", dark: "#b45309", light: "#fbbf24" },
         neutral: {
           50: "#f9fafb",
           100: "#f3f4f6",
@@ -32,14 +26,9 @@ module.exports = {
           800: "#1f2937",
           900: "#111827",
         },
-        accent: {
-          green: "#10b981",
-          red: "#ef4444",
-          purple: "#8b5cf6",
-        },
+        accent: { green: "#10b981", red: "#ef4444", purple: "#8b5cf6" },
       },
       fontFamily: {
-        // use CSS vars so Next font loading / google fonts can be swapped easily
         sans: ["var(--font-sans)", "ui-sans-serif", "system-ui"],
         display: ["var(--font-display)", "sans-serif"],
       },
@@ -55,11 +44,10 @@ module.exports = {
         card: "0 4px 14px rgba(0, 0, 0, 0.08)",
         smooth: "0 2px 6px rgba(0, 0, 0, 0.06)",
       },
-      borderRadius: {
-        xl: "1rem",
-        "2xl": "1.5rem",
-      },
+      borderRadius: { xl: "1rem", "2xl": "1.5rem" },
     },
   },
-  plugins: [require("@tailwindcss/forms"), require("@tailwindcss/typography")],
+  plugins: [forms, typography],
 };
+
+export default config;
