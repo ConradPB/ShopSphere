@@ -66,4 +66,9 @@ a { @apply text-primary hover:text-primary-dark transition-colors; }
 /* small adjustments to prevent large scrollbars for long lists */
 ::-webkit-scrollbar { height: 10px; width: 10px; }
 
+@layer components {
+  .test-hero {
+    @apply bg-gradient-to-r from-teal-500 via-cyan-400 to-blue-600 py-12;
+  }
+}
 
