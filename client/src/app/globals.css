@@ -1,3 +1,8 @@
+/* src/app/globals.css */
+
+/* stylelint: allow Tailwind at-rules here (prevents Unknown at rule @apply warnings) */
+/* stylelint-disable at-rule-no-unknown */
+
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
@@ -10,7 +15,6 @@
   --font-sans: "Inter", ui-sans-serif, system-ui;
   --font-display: "Poppins", ui-sans-serif, system-ui;
 
-  /* helpful CSS vars (optional, for inline styles/gradients) */
   --brand-gradient: linear-gradient(90deg, rgba(96,165,250,1) 0%, rgba(37,99,235,1) 100%);
 }
 
@@ -61,26 +65,31 @@ a { @apply text-primary hover:text-primary-dark transition-colors; }
     @apply font-display text-heading-xl md:text-[3rem] leading-tight;
   }
 
-  /* hero gradient */
+  /* hero gradient (plain fallback + tailwind apply) */
   .test-hero {
+    /* guaranteed fallback so you see color even if Tailwind hasn't emitted utilities */
     background: linear-gradient(90deg, #06b6d4 0%, #0ea5b9 100%);
 
+    /* Tailwind utilities (these should be emitted when Tailwind is healthy) */
     @apply bg-gradient-to-r from-teal-500 via-cyan-400 to-blue-600;
   }
 
   /* hero pattern overlay (non-interactive) */
   .hero-pattern {
-    pointer-events: none;         /* don't block clicks */
+    pointer-events: none;
     position: absolute;
     inset: 0;
     z-index: 0;
     background-repeat: repeat;
     background-position: center;
-    background-size: 140px 140px; /* pattern tile size (adjust to taste) */
-    opacity: 0.06;                /* subtle — tweak 0.03 -> 0.12 */
-    mix-blend-mode: overlay;      /* makes the pattern softer on top of gradient */
+    background-size: 140px 140px;
+    opacity: 0.06;
+    mix-blend-mode: overlay;
   }
 }
+
+/* restore stylelint rule behaviour for later CSS */
+ /* stylelint-enable at-rule-no-unknown */
 
 /* small adjustments to prevent large scrollbars for long lists */
 ::-webkit-scrollbar { height: 10px; width: 10px; }
