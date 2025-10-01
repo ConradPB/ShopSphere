@@ -1,47 +1,21 @@
-import { getProducts } from "@/lib/supabase";
-import ProductGrid from "@/components/ProductGrid";
-
-export default async function HomePage() {
-  const { data: products, error } = await getProducts();
-  if (error) console.error("Error fetching products:", error);
-  const featured = (products ?? []).slice(0, 6);
-
+export default function HomePage() {
   return (
-    <main className="min-h-screen bg-neutral-50">
-      {/* HERO / Banner */}
-
-      <section className="test-hero text-white py-20 relative overflow-hidden">
-        {/* pattern overlay via CSS class */}
-        <div
-          aria-hidden
-          className="hero-pattern"
-          style={{ backgroundImage: "url('/pattern-geo.svg')" }}
-        />
-
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="hero-title font-bold">Welcome to Shopsphere</h1>
-          <p className="mt-3 text-body-lg max-w-2xl mx-auto text-white/90">
-            Discover amazing products from trusted sellers — curated,
-            recommended, and powered by smart tooling.
+    <main>
+      <section className="test-hero text-white text-center relative overflow-hidden">
+        <div className="relative z-10 max-w-3xl mx-auto px-4">
+          <h1 className="hero-title">Tailwind Baseline — Test Hero</h1>
+          <p className="mt-3">
+            If you see a gradient + white text, Tailwind is compiling.
           </p>
-
-          <div className="mt-6 flex justify-center gap-4">
-            <a href="/shop" className="btn-primary">
-              Shop Now
-            </a>
-            <a
-              href="/about"
-              className="btn-ghost text-white border-white/40 hover:bg-white/10"
-            >
-              Learn More
-            </a>
-          </div>
         </div>
       </section>
-      {/* Featured Products */}
-      <section id="featured" className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <ProductGrid initialProducts={featured} title="Featured Products" />
+
+      <section className="py-12">
+        <div className="max-w-3xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="bg-white p-6 rounded-lg shadow">Card 1</div>
+            <div className="bg-white p-6 rounded-lg shadow">Card 2</div>
+          </div>
         </div>
       </section>
     </main>
