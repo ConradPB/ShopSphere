@@ -7,8 +7,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        <main className="min-h-screen max-w-7xl mx-auto px-4">{children}</main>
+      <body className="bg-gray-100 text-gray-900 font-sans antialiased">
+        {/* Global wrapper */}
+        <main className="min-h-screen">{children}</main>
       </body>
     </html>
   );
