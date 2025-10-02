@@ -9,7 +9,6 @@
     "lint": "next lint",
     "test": "jest --passWithNoTests",
     "build:tailwind": "tailwindcss -i ./src/app/globals.css -o ./tmp/tw.css --minify"
-
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
@@ -29,7 +28,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/forms": "^0.5.10",
-    "@tailwindcss/postcss": "^4.1.13",
+    "@tailwindcss/postcss": "^4.1.14",
     "@tailwindcss/typography": "^0.5.19",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.6.4",
@@ -52,7 +51,7 @@
     "stylelint": "^16.24.0",
     "stylelint-config-standard": "^39.0.0",
     "stylelint-config-tailwindcss": "^1.0.0",
-    "tailwindcss": "^4.1.13",
+    "tailwindcss": "^4.1.14",
     "ts-jest": "^29.4.1",
     "ts-node": "^10.9.2",
     "tsx": "^4.20.3",
