@@ -1,9 +1,9 @@
-export default function HomePage() {
+export default function Home() {
   return (
-    <section className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white">
-      <h1 className="text-5xl font-bold mb-6">Hello Tailwind 🎉</h1>
-      <p className="text-lg">
-        If you see a purple → pink → red gradient, Tailwind is working!
+    <section className="test-hero text-center">
+      <h1 className="hero-title">Hello Tailwind v4 🎨</h1>
+      <p className="mt-4">
+        If you see a gradient background, Tailwind is fixed.
       </p>
     </section>
   );
