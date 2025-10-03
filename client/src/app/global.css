@@ -1,3 +1,18 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui;
+  --font-display: "Poppins", ui-sans-serif, system-ui;
+
+  /* You can define custom colors here */
+  --color-brand: #6366f1;
+  --color-brand-dark: #4338ca;
+}
+
+body {
+  @apply bg-neutral-50 text-neutral-900 font-sans antialiased;
+}
+
+.test-hero {
+  @apply bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white py-12;
+}
