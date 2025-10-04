@@ -1,4 +1,6 @@
 import "./global.css";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 export default function RootLayout({
   children,
@@ -7,9 +9,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-gray-100 text-gray-900 font-sans antialiased">
-        {/* Global wrapper */}
-        <main className="min-h-screen">{children}</main>
+      <body className="bg-white text-gray-900 font-sans">
+        <Navbar />
+        <main className="min-h-screen max-w-7xl mx-auto px-4 pt-20">
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
   );
