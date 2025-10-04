@@ -1,6 +1,10 @@
-import "./global.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import "./globals.css";
+import { ReduxProvider } from "@/redux/Provider";
+
+export const metadata = {
+  title: "ShopSphere",
+  description: "AI-powered E-commerce Platform",
+};
 
 export default function RootLayout({
   children,
@@ -9,12 +13,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-white text-gray-900 font-sans">
-        <Navbar />
-        <main className="min-h-screen max-w-7xl mx-auto px-4 pt-20">
-          {children}
-        </main>
-        <Footer />
+      <body>
+        <ReduxProvider>{children}</ReduxProvider>
       </body>
     </html>
   );
