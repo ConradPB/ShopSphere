@@ -1,4 +1,4 @@
-import "./globals.css";
+import "./global.css";
 import { ReduxProvider } from "@/redux/Provider";
 
 export const metadata = {
