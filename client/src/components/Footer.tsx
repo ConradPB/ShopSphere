@@ -6,7 +6,10 @@ import { Github, Twitter, Facebook } from "lucide-react";
 const Footer = () => {
   return (
     <footer className="relative bg-primary text-white mt-20 border-t border-white/10">
-      <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 py-12">
+      {/* Soft gradient for separation from white page background */}
+      <div className="absolute -top-6 left-0 w-full h-6 bg-gradient-to-t from-primary to-transparent pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
           {/* Brand */}
           <div>
