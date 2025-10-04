@@ -1,18 +1,104 @@
+/* src/app/global.css */
 @import "tailwindcss";
+/* optional: you can still include base/components/utilities individually if you prefer:
+   @import "tailwindcss/base";
+   @import "tailwindcss/components";
+   @import "tailwindcss/utilities";
+*/
 
-@theme {
+/* Google fonts (Inter + Poppins) */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap");
+
+/* Theme CSS variables */
+:root {
+  --color-primary: #3b82f6; /* blue-500 */
+  --color-secondary: #06b6d4; /* cyan-500 */
+  --color-accent: #f43f5e; /* rose-500 */
+  --color-bg: #f8fafc; /* slate-50 */
+  --color-text: #0f172a; /* slate-900 */
+
   --font-sans: "Inter", ui-sans-serif, system-ui;
   --font-display: "Poppins", ui-sans-serif, system-ui;
+}
 
-  /* You can define custom colors here */
-  --color-brand: #6366f1;
-  --color-brand-dark: #4338ca;
+/* Base */
+html,
+body,
+#__next {
+  height: 100%;
 }
 
 body {
-  @apply bg-neutral-50 text-neutral-900 font-sans antialiased;
+  /* Using CSS variable values inside @apply can be quirky in some PostCSS setups,
+     so we use Tailwind utilities for the core layout + vars for colors. */
+  @apply font-sans antialiased;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+/* Headings helpers */
+.hero-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 2.25rem;
+}
+
+/* visual helpers */
+.text-gradient {
+  background: linear-gradient(
+    90deg,
+    var(--color-primary),
+    var(--color-secondary)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Buttons & components (simple helpers) */
+.btn-primary {
+  background: linear-gradient(
+    90deg,
+    var(--color-primary),
+    var(--color-secondary)
+  );
+  @apply text-white font-semibold py-2 px-4 rounded-2xl shadow transition transform hover:scale-[1.02];
+}
+
+.btn-ghost {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg px-3 py-2 border font-medium transition hover:bg-neutral-100;
+}
+
+/* Card helper */
+.card {
+  @apply bg-white rounded-2xl shadow-lg hover:shadow-xl transition p-6;
+}
+
+/* hero/section helper */
 .test-hero {
-  @apply bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white py-12;
+  padding: 3rem 0;
+  background: linear-gradient(90deg, #06b6d4 0%, #2563eb 100%);
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+/* pattern overlay helper (works with inline style background-image:url(...)) */
+.hero-pattern {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-repeat: repeat;
+  background-position: center;
+  background-size: 140px 140px;
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+}
+
+/* small scrollbar nicety */
+::-webkit-scrollbar {
+  height: 10px;
+  width: 10px;
 }
