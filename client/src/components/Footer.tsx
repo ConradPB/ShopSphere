@@ -5,67 +5,69 @@ import { Github, Twitter, Facebook } from "lucide-react";
 
 const Footer = () => {
   return (
-    <footer className="bg-primary/90 text-white py-8 mt-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <footer className="bg-primary/95 text-white mt-20 border-t border-white/10">
+      <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 py-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
           {/* Brand */}
           <div>
-            <h2 className="text-2xl font-display font-bold">ShopSphere</h2>
-            <p className="mt-2 text-sm text-gray-200">
+            <h2 className="text-2xl font-display font-bold tracking-wide">
+              ShopSphere
+            </h2>
+            <p className="mt-3 text-sm text-gray-300 leading-relaxed max-w-xs">
               Your one-stop shop for everything you love. Quality products,
               seamless experience.
             </p>
           </div>
 
           {/* Quick Links */}
-          <div className="flex flex-col space-y-2">
-            <h3 className="font-semibold">Quick Links</h3>
-            <Link href="/" className="hover:text-accent-green">
-              Home
-            </Link>
-            <Link href="/products" className="hover:text-accent-green">
-              Products
-            </Link>
-            <Link href="/about" className="hover:text-accent-green">
-              About
-            </Link>
-            <Link href="/contact" className="hover:text-accent-green">
-              Contact
-            </Link>
+          <div>
+            <h3 className="text-lg font-semibold mb-3">Quick Links</h3>
+            <ul className="space-y-2 text-gray-300">
+              {[
+                { name: "Home", href: "/" },
+                { name: "Products", href: "/products" },
+                { name: "About", href: "/about" },
+                { name: "Contact", href: "/contact" },
+              ].map((link) => (
+                <li key={link.name}>
+                  <Link
+                    href={link.href}
+                    className="hover:text-accent-green transition-colors duration-200"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
 
           {/* Socials */}
           <div>
-            <h3 className="font-semibold">Connect with us</h3>
-            <div className="flex space-x-4 mt-2">
-              <Link
-                href="https://twitter.com"
-                target="_blank"
-                className="hover:text-accent-green"
-              >
-                <Twitter className="w-5 h-5" />
-              </Link>
-              <Link
-                href="https://facebook.com"
-                target="_blank"
-                className="hover:text-accent-green"
-              >
-                <Facebook className="w-5 h-5" />
-              </Link>
-              <Link
-                href="https://github.com"
-                target="_blank"
-                className="hover:text-accent-green"
-              >
-                <Github className="w-5 h-5" />
-              </Link>
+            <h3 className="text-lg font-semibold mb-3">Connect with us</h3>
+            <div className="flex space-x-5">
+              {[
+                { Icon: Twitter, href: "https://twitter.com" },
+                { Icon: Facebook, href: "https://facebook.com" },
+                { Icon: Github, href: "https://github.com" },
+              ].map(({ Icon, href }, i) => (
+                <Link
+                  key={i}
+                  href={href}
+                  target="_blank"
+                  className="p-2 rounded-full bg-white/10 hover:bg-accent-green hover:text-white transition-all duration-200"
+                >
+                  <Icon className="w-5 h-5" />
+                </Link>
+              ))}
             </div>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-white/20 mt-8 pt-4 text-center text-sm text-gray-300">
-          © {new Date().getFullYear()} ShopSphere. All rights reserved.
+        <div className="mt-10 pt-6 border-t border-white/10 text-center text-sm text-gray-400">
+          © {new Date().getFullYear()}{" "}
+          <span className="font-semibold text-white">ShopSphere</span>. All
+          rights reserved.
         </div>
       </div>
     </footer>
