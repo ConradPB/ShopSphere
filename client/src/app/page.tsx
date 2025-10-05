@@ -10,11 +10,8 @@ export default function HomePage() {
       {/* Hero Section */}
       <Hero />
 
-      {/* Transition Gradient */}
-      <div className="h-16 bg-gradient-to-b from-white via-cyan-50 to-transparent -mt-4" />
-
-      {/* Welcome Section */}
-      <section className="relative bg-gradient-to-r from-teal-500 via-cyan-400 to-blue-600 text-white py-24 shadow-lg overflow-hidden rounded-b-2xl mt-0">
+      {/* Welcome / CTA Section */}
+      <section className="relative bg-gradient-to-r from-teal-500 via-cyan-400 to-blue-600 text-white py-24 shadow-lg overflow-hidden -mt-1">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <Reveal>
             <h1 className="text-4xl md:text-6xl font-extrabold font-display drop-shadow-lg">
