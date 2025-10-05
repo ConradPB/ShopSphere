@@ -45,7 +45,7 @@ export default function HomePage() {
               href="/products"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.97 }}
-              className="bg-accent-green hover:bg-green-500 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition glow-green"
+              className="bg-accent-green hover:bg-green-500 text-white font-semibold px-6 py-3 rounded-lg shadow-md glow-green transition"
             >
               Shop Now
             </motion.a>
