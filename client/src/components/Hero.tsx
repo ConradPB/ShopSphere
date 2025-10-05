@@ -5,7 +5,6 @@ import Link from "next/link";
 
 const Hero = () => {
   return (
-    <section className="relative min-h-[85vh] flex flex-col justify-center items-center text-center px-6 sm:px-10 py-20 bg-gradient-to-br from-accent-green via-cyan-500 to-blue-600 text-white overflow-hidden">
       {/* Glow overlay for depth */}
       <div className="absolute inset-0 bg-gradient-to-t from-primary/40 to-transparent pointer-events-none" />
 
