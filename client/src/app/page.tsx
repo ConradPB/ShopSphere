@@ -1,10 +1,20 @@
 import Hero from "@/components/Hero";
+import ProductGrid from "@/components/ProductGrid";
+import { getProducts } from "@/lib/supabase";
 
-export default function HomePage() {
+export default async function HomePage() {
+  // server-side fetch (same as you had)
+  const { data: products, error } = await getProducts();
+  if (error) console.error("Error fetching products:", error);
+
+  const featured = (products ?? []).slice(0, 6);
+
   return (
     <>
       <Hero />
-      <section className="relative bg-gradient-to-r from-teal-500 via-cyan-400 to-blue-600 text-white py-24 rounded-2xl shadow-lg overflow-hidden">
+
+      {/* secondary banner / supporting section (keeps visual weight after hero) */}
+      <section className="relative bg-gradient-to-r from-teal-500 via-cyan-400 to-blue-600 text-white py-24 rounded-2xl shadow-lg overflow-hidden mx-4 sm:mx-0">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <h1 className="text-4xl md:text-6xl font-extrabold font-display drop-shadow-lg">
             Welcome to ShopSphere
@@ -27,6 +37,13 @@ export default function HomePage() {
               Learn More
             </a>
           </div>
+        </div>
+      </section>
+
+      {/* Featured products */}
+      <section id="featured" className="py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ProductGrid initialProducts={featured} title="Featured Products" />
         </div>
       </section>
     </>
