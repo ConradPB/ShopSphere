@@ -14,6 +14,7 @@ export default async function HomePage() {
       <Hero />
 
       {/* secondary banner / supporting section (keeps visual weight after hero) */}
+      <section className="relative bg-gradient-to-r from-teal-500 via-cyan-400 to-blue-600 text-white py-24 shadow-lg overflow-hidden mt-0">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <h1 className="text-4xl md:text-6xl font-extrabold font-display drop-shadow-lg">
             Welcome to ShopSphere
