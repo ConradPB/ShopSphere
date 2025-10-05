@@ -2,114 +2,112 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Menu, X, ShoppingCart, Heart } from "lucide-react";
+import { ShoppingCart, Heart, Menu, X } from "lucide-react";
 import { useAppSelector } from "@/redux/hooks";
 
-const Navbar: React.FC = () => {
+const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  const pathname = usePathname();
+  const [isVisible, setIsVisible] = useState(false);
 
   const cartCount = useAppSelector((state) =>
     state.cart.items.reduce((sum, item) => sum + item.quantity, 0)
   );
   const wishlistCount = useAppSelector((state) => state.wishlist.items.length);
 
-  useEffect(() => setMounted(true), []);
-
-  const navLinks = [
-    { href: "/", label: "Home" },
-    { href: "/products", label: "Products" },
-    { href: "/about", label: "About" },
-    { href: "/contact", label: "Contact" },
-  ];
-
-  const linkClass = (href: string) =>
-    `relative transition-colors duration-200 hover:text-accent-green ${
-      pathname === href
-        ? "font-semibold text-accent-green underline underline-offset-4"
-        : "text-white/90"
-    }`;
+  useEffect(() => {
+    const timer = setTimeout(() => setIsVisible(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 backdrop-blur-md bg-primary/95 border-b border-white/10 shadow-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+    <nav
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-5"
+      }`}
+    >
+      <div className="backdrop-blur-md bg-white/10 border-b border-white/20">
+        <div className="max-w-7xl mx-auto flex justify-between items-center py-4 px-6">
           {/* Logo */}
-          <div className="flex-shrink-0 text-white text-2xl font-display font-bold tracking-wide">
+          <Link
+            href="/"
+            className="text-2xl font-display font-bold tracking-wide text-white drop-shadow-md hover:opacity-90 transition-opacity"
+          >
             ShopSphere
-          </div>
+          </Link>
 
-          {/* Desktop Menu */}
-          <div className="hidden md:flex space-x-8 items-center font-medium">
-            {navLinks.map(({ href, label }) => (
-              <Link key={href} href={href} className={linkClass(href)}>
-                {label}
+          {/* Desktop Links */}
+          <div className="hidden md:flex space-x-8 text-white/90 font-medium">
+            {[
+              { name: "Home", href: "/" },
+              { name: "Products", href: "/products" },
+              { name: "About", href: "/about" },
+              { name: "Contact", href: "/contact" },
+            ].map((link) => (
+              <Link
+                key={link.name}
+                href={link.href}
+                className="hover:text-accent-green transition-colors duration-200"
+              >
+                {link.name}
               </Link>
             ))}
+          </div>
 
-            {/* Wishlist */}
-            <Link
-              href="/wishlist"
-              className="relative flex items-center hover:scale-110 transition-transform"
-            >
-              <Heart className="w-5 h-5 text-white" />
-              {mounted && wishlistCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-accent-purple text-xs text-white font-bold px-1.5 py-0.5 rounded-full">
+          {/* Icons */}
+          <div className="flex items-center gap-5">
+            <Link href="/wishlist" className="relative group">
+              <Heart className="w-5 h-5 text-white group-hover:text-accent-green transition-colors" />
+              {wishlistCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-accent-green text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
                   {wishlistCount}
                 </span>
               )}
             </Link>
 
-            {/* Cart */}
-            <Link
-              href="/checkout"
-              className="relative flex items-center hover:scale-110 transition-transform"
-            >
-              <ShoppingCart className="w-5 h-5 text-white" />
-              {mounted && cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-accent-green text-xs text-white font-bold px-1.5 py-0.5 rounded-full">
+            <Link href="/cart" className="relative group">
+              <ShoppingCart className="w-5 h-5 text-white group-hover:text-accent-green transition-colors" />
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-accent-green text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
                   {cartCount}
                 </span>
               )}
             </Link>
-          </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden text-white hover:scale-110 transition-transform"
-          >
-            {isOpen ? <X size={26} /> : <Menu size={26} />}
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Dropdown */}
-      {isOpen && (
-        <div className="md:hidden backdrop-blur-xl bg-primary-dark/95 px-4 py-4 space-y-3 text-white font-medium border-t border-white/10">
-          {navLinks.map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              onClick={() => setIsOpen(false)}
-              className={linkClass(href)}
+            {/* Mobile Menu Toggle */}
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="md:hidden text-white hover:text-accent-green transition"
             >
-              {label}
-            </Link>
-          ))}
-
-          <div className="flex space-x-6 pt-2">
-            <Link href="/wishlist" onClick={() => setIsOpen(false)}>
-              Wishlist {mounted && wishlistCount > 0 && `(${wishlistCount})`}
-            </Link>
-            <Link href="/checkout" onClick={() => setIsOpen(false)}>
-              Cart {mounted && cartCount > 0 && `(${cartCount})`}
-            </Link>
+              {isOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
+            </button>
           </div>
         </div>
-      )}
+
+        {/* Mobile Menu */}
+        {isOpen && (
+          <div className="md:hidden bg-black/70 backdrop-blur-md border-t border-white/10 py-4 text-center space-y-3 text-white font-medium">
+            {[
+              { name: "Home", href: "/" },
+              { name: "Products", href: "/products" },
+              { name: "About", href: "/about" },
+              { name: "Contact", href: "/contact" },
+            ].map((link) => (
+              <Link
+                key={link.name}
+                href={link.href}
+                className="block hover:text-accent-green transition-colors duration-200"
+                onClick={() => setIsOpen(false)}
+              >
+                {link.name}
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
     </nav>
   );
 };
