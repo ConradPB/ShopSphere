@@ -96,3 +96,7 @@ body {
   height: 10px;
   width: 10px;
 }
+
+.glow-green {
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+}
