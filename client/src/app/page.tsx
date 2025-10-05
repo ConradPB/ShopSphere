@@ -1,5 +1,6 @@
 export default function HomePage() {
   return (
+    <Hero />
     <section className="relative bg-gradient-to-r from-teal-500 via-cyan-400 to-blue-600 text-white py-24 rounded-2xl shadow-lg overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 text-center">
         <h1 className="text-4xl md:text-6xl font-extrabold font-display drop-shadow-lg">
