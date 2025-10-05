@@ -21,7 +21,7 @@ const Hero = () => {
         <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             href="/products"
-            className="px-6 py-3 bg-white text-primary font-semibold rounded-lg shadow-md hover:scale-105 transition-transform duration-200"
+            className="px-6 py-3 bg-white text-gray-900 font-semibold rounded-lg shadow-md hover:bg-gray-200 hover:scale-105 transition-all duration-200"
           >
             Shop Now
           </Link>
@@ -36,6 +36,9 @@ const Hero = () => {
 
       {/* Subtle floating background accent */}
       <div className="absolute w-96 h-96 bg-white/10 rounded-full blur-3xl -z-10 top-32 left-1/2 -translate-x-1/2" />
+
+      {/* Smooth blend to next section - removes white gap */}
+      <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-white to-transparent" />
     </section>
   );
 };
