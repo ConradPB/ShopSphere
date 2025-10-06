@@ -1,54 +1,70 @@
 "use client";
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { ShoppingCart, Heart } from "lucide-react";
-import { useAppSelector } from "@/redux/hooks";
 
-const Navbar = () => {
-  const [mounted, setMounted] = useState(false);
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { ShoppingBag } from "lucide-react";
+
+export default function Navbar() {
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const cartCount = useAppSelector((state) =>
-    state.cart.items.reduce((sum, item) => sum + item.quantity, 0)
-  );
-  const wishlistCount = useAppSelector((state) => state.wishlist.items.length);
-
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 backdrop-blur-md bg-black/20 text-white">
-      <div className="max-w-7xl mx-auto flex justify-between items-center py-4 px-6">
-        <Link href="/" className="text-2xl font-display font-bold">
-          ShopSphere
+    <motion.nav
+      initial={{ y: -50, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6 }}
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
+        scrolled
+          ? "backdrop-blur-md bg-white/70 shadow-md border-b border-gray-200"
+          : "bg-transparent"
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        {/* Logo */}
+        <Link href="/" className="flex items-center space-x-2">
+          <ShoppingBag className="text-primary w-6 h-6" />
+          <span className="text-xl font-semibold text-gray-800">
+            ShopSphere
+          </span>
         </Link>
 
-        <div className="flex items-center gap-6">
-          <Link href="/products" className="hover:text-accent-green">
-            Products
-          </Link>
-
-          <Link href="/cart" className="relative group">
-            <ShoppingCart className="w-5 h-5 text-white group-hover:text-accent-green transition-colors" />
-            {mounted && cartCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-accent-green text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                {cartCount}
-              </span>
-            )}
-          </Link>
-
-          <Link href="/wishlist" className="relative group">
-            <Heart className="w-5 h-5 text-white group-hover:text-accent-green transition-colors" />
-            {mounted && wishlistCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-accent-green text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                {wishlistCount}
-              </span>
-            )}
-          </Link>
+        {/* Links */}
+        <div className="hidden md:flex space-x-8">
+          {["Home", "Shop", "About", "Contact"].map((item) => (
+            <Link
+              key={item}
+              href={item === "Home" ? "/" : `/${item.toLowerCase()}`}
+              className={`text-sm font-medium transition-colors ${
+                scrolled
+                  ? "text-gray-700 hover:text-primary"
+                  : "text-white hover:text-primary"
+              }`}
+            >
+              {item}
+            </Link>
+          ))}
         </div>
-      </div>
-    </nav>
-  );
-};
 
-export default Navbar;
+        {/* Button */}
+        <Link
+          href="/shop"
+          className={`hidden md:inline-block px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+            scrolled
+              ? "bg-primary text-white hover:bg-primary/90"
+              : "bg-white text-primary hover:bg-primary hover:text-white"
+          }`}
+        >
+          Shop Now
+        </Link>
+      </div>
+    </motion.nav>
+  );
+}
