@@ -14,12 +14,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="w-full overflow-x-hidden">
-      <body className="min-h-screen flex flex-col bg-white text-gray-900 overflow-x-hidden antialiased">
+    <html lang="en">
+      <body className="min-h-screen flex flex-col bg-dark text-white">
         <ReduxProvider>
-          <Navbar />
-          <main className="flex-1 w-full">{children}</main>
-          <Footer />
+          <Provider store={store}>
+            <Navbar />
+            <main className="flex-grow">{children}</main>
+            <Footer />
+          </Provider>
         </ReduxProvider>
       </body>
     </html>
