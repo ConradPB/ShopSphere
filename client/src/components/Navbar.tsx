@@ -18,20 +18,24 @@ export default function Navbar() {
 
   return (
     <motion.nav
-      initial={{ y: -50, opacity: 0 }}
+      initial={{ y: -40, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6 }}
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
         scrolled
-          ? "backdrop-blur-md bg-white/70 shadow-md border-b border-gray-200"
-          : "bg-transparent"
+          ? "backdrop-blur-xl bg-white/60 shadow-md border-b border-white/20"
+          : "backdrop-blur-sm bg-white/20 border-b border-white/10"
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-2">
           <ShoppingBag className="text-primary w-6 h-6" />
-          <span className="text-xl font-semibold text-gray-800">
+          <span
+            className={`text-xl font-semibold transition-colors ${
+              scrolled ? "text-gray-800" : "text-white drop-shadow-md"
+            }`}
+          >
             ShopSphere
           </span>
         </Link>
@@ -44,8 +48,8 @@ export default function Navbar() {
               href={item === "Home" ? "/" : `/${item.toLowerCase()}`}
               className={`text-sm font-medium transition-colors ${
                 scrolled
-                  ? "text-gray-700 hover:text-primary"
-                  : "text-white hover:text-primary"
+                  ? "text-gray-800 hover:text-primary"
+                  : "text-white hover:text-accent-green"
               }`}
             >
               {item}
@@ -59,7 +63,7 @@ export default function Navbar() {
           className={`hidden md:inline-block px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
             scrolled
               ? "bg-primary text-white hover:bg-primary/90"
-              : "bg-white text-primary hover:bg-primary hover:text-white"
+              : "bg-white/90 text-primary hover:bg-primary hover:text-white"
           }`}
         >
           Shop Now
