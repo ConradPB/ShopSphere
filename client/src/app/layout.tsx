@@ -15,11 +15,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen flex flex-col bg-[var(--color-bg)] text-[var(--color-text)]">
+      <body className="min-h-screen flex flex-col bg-[var(--color-bg)] text-[var(--color-text)] overflow-x-hidden">
         <ReduxProvider>
           <Navbar />
-          {/* main must grow so footer sits after content */}
-          <main className="flex-1">{children}</main>
+          {/* main flex-1 so footer will always be after content */}
+          <main className="flex-1 w-full">{children}</main>
           <Footer />
         </ReduxProvider>
       </body>
