@@ -100,3 +100,9 @@ body {
 .glow-green {
   box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
 }
+
+html,
+body {
+  overflow-x: hidden !important;
+  width: 100%;
+}
