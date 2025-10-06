@@ -1,126 +1,103 @@
 @import "tailwindcss";
+
+/* Google fonts (Inter + Poppins) */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap");
 
-/* ===== Root Theme ===== */
+/* Theme CSS variables */
 :root {
-  --color-primary: #3b82f6; /* blue-500 */
-  --color-secondary: #06b6d4; /* cyan-500 */
-  --color-accent: #16a34a; /* green-600 */
-  --color-bg: #f8fafc; /* slate-50 */
-  --color-text: #0f172a; /* slate-900 */
-
+  --color-primary: #2563eb; /* primary blue */
+  --color-accent: #10b981; /* green accent */
+  --color-accent-2: #8b5cf6; /* purple accent */
+  --color-bg: #f8fafc; /* page bg */
+  --color-text: #0f172a; /* text */
   --font-sans: "Inter", ui-sans-serif, system-ui;
   --font-display: "Poppins", ui-sans-serif, system-ui;
 }
 
-/* ===== Base Layout ===== */
+/* Ensure full height layout */
+html,
+body,
+#__next {
+  height: 100%;
+}
+
+/* Prevent the "one-pixel / right-gap" overflow issue */
 html,
 body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden !important;
+  overflow-x: hidden;
   width: 100%;
+}
+
+/* Body base */
+body {
   @apply font-sans antialiased;
   background-color: var(--color-bg);
   color: var(--color-text);
-  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-#__next,
-body > div {
-  width: 100%;
-  overflow-x: hidden;
-}
-
-/* ===== Typography ===== */
+/* Heading helper using display font var */
 .hero-title {
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 2.25rem;
 }
 
+/* Gradient text helper */
 .text-gradient {
-  background: linear-gradient(
-    90deg,
-    var(--color-primary),
-    var(--color-secondary)
-  );
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-/* ===== Buttons ===== */
-.btn-primary {
-  background: linear-gradient(
-    90deg,
-    var(--color-primary),
-    var(--color-secondary)
-  );
-  @apply text-white font-semibold py-2 px-4 rounded-2xl shadow transition transform hover:scale-[1.02];
+/* Component helpers and small UI atoms */
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-2 font-semibold text-white shadow-lg transition transform hover:-translate-y-0.5;
+    background: linear-gradient(
+      90deg,
+      var(--color-primary),
+      var(--color-accent)
+    );
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-3 py-2 border font-medium transition hover:bg-neutral-100;
+  }
+
+  .card {
+    @apply bg-white rounded-2xl shadow-md border border-neutral-100 overflow-hidden;
+  }
+
+  /* hero wrapper (keeps gradient, but no extra rounded corners that could reveal whites) */
+  .site-hero {
+    @apply relative py-20;
+    background: linear-gradient(135deg, #06b6d4 0%, #2563eb 100%);
+    color: white;
+    overflow: hidden;
+  }
+
+  .hero-pattern {
+    pointer-events: none; /* does not block clicks */
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-repeat: repeat;
+    background-position: center;
+    background-size: 140px 140px;
+    opacity: 0.06;
+    mix-blend-mode: overlay;
+  }
+
+  /* navbar helpers */
+  .navbar-root {
+    transition: background-color 220ms, box-shadow 220ms, backdrop-filter 220ms;
+  }
 }
 
-.btn-ghost {
-  @apply inline-flex items-center justify-center gap-2 rounded-lg px-3 py-2 border font-medium transition hover:bg-neutral-100;
-}
-
-/* ===== Cards ===== */
-.card {
-  @apply bg-white rounded-2xl shadow-lg hover:shadow-xl transition p-6;
-}
-
-/* ===== Hero Section ===== */
-.test-hero {
-  padding: 3rem 0;
-  background: linear-gradient(90deg, #06b6d4 0%, #2563eb 100%);
-  color: white;
-  position: relative;
-  overflow: hidden;
-}
-
-.hero-pattern {
-  pointer-events: none;
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  background-repeat: repeat;
-  background-position: center;
-  background-size: 140px 140px;
-  opacity: 0.06;
-  mix-blend-mode: overlay;
-}
-
-/* ===== Footer Styling ===== */
-footer {
-  background: linear-gradient(to bottom, #0f172a, #1e293b);
-  color: #e2e8f0;
-}
-
-footer h3,
-footer h2 {
-  color: #ffffff;
-}
-
-footer a {
-  color: #cbd5e1;
-  transition: color 0.2s ease;
-}
-
-footer a:hover {
-  color: var(--color-accent);
-}
-
-/* ===== Small Touches ===== */
-.glow-green {
-  box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
-}
-
+/* small scrollbar nicety */
 ::-webkit-scrollbar {
   height: 10px;
   width: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--color-primary);
-  border-radius: 9999px;
 }
