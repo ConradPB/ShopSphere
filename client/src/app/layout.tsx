@@ -15,11 +15,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen flex flex-col bg-[var(--color-bg)] text-[var(--color-text)] overflow-x-hidden">
+      <body className="min-h-screen flex flex-col bg-[var(--color-bg)] text-[var(--color-text)]">
         <ReduxProvider>
+          {/* Navbar is fixed; add top padding on the main content */}
           <Navbar />
-          {/* main flex-1 so footer will always be after content */}
-          <main className="flex-1 w-full">{children}</main>
+          <main className="flex-1 pt-20">
+            {" "}
+            {/* pt-20 accounts for fixed navbar height */}
+            {children}
+          </main>
           <Footer />
         </ReduxProvider>
       </body>
