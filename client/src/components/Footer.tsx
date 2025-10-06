@@ -57,7 +57,7 @@ const Footer = () => {
                   key={i}
                   href={href}
                   target="_blank"
-                  className="p-2 rounded-full bg-white/10 hover:bg-accent-green hover:text-white transition-all duration-200"
+                  className="p-2 rounded-full bg-white/20 hover:bg-accent-green hover:text-white transition-all duration-200"
                 >
                   <Icon className="w-5 h-5" />
                 </Link>
