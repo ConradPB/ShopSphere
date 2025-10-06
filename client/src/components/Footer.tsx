@@ -5,7 +5,6 @@ import { Github, Twitter, Facebook } from "lucide-react";
 
 const Footer = () => {
   return (
-    <footer className="relative bg-primary text-white mt-20 border-t border-white/10">
       {/* Soft gradient for separation from white page background */}
       <div className="absolute -top-6 left-0 w-full h-6 bg-gradient-to-t from-primary to-transparent pointer-events-none" />
 
