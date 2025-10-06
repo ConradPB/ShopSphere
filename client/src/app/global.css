@@ -1,8 +1,3 @@
-/* src/app/global.css
-   Put this at the top of the file (if you're already importing tailwind with a different directive,
-   keep that and paste the rest below).
-*/
-
 @import "tailwindcss";
 
 /* --- Strict base rules & theme variables --- */
