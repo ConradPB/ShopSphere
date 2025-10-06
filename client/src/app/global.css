@@ -1,30 +1,43 @@
-/* Use the import that is working for you; if you were using `@import "tailwindcss";` keep that.
-   Example: with your working setup you may have `@import "tailwindcss";` or `@tailwind base;` etc.
-   Below I show just the app-level CSS that lives on top of Tailwind output. */
+/* src/app/global.css
+   Put this at the top of the file (if you're already importing tailwind with a different directive,
+   keep that and paste the rest below).
+*/
 
 @import "tailwindcss";
 
-/* Theme variables */
+/* --- Strict base rules & theme variables --- */
 :root {
   --color-primary: #2563eb; /* blue */
   --color-secondary: #06b6d4; /* teal */
   --color-accent: #10b981; /* green */
-  --color-bg: #f8fafc; /* very light */
-  --color-text: #0f172a; /* dark */
-  --font-sans: "Inter", ui-sans-serif, system-ui;
-  --font-display: "Poppins", ui-sans-serif, system-ui;
+  --color-bg: #f8fafc; /* page background */
+  --color-text: #0f172a; /* main text */
+  --ui-muted: rgba(255, 255, 255, 0.8);
+
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial;
+  --font-display: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto;
 }
 
-/* ensure full height layout */
+/* Box model sanity */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Make sure the root is full size and we avoid horizontal scroll */
 html,
 body,
 #__next {
   height: 100%;
   width: 100%;
   margin: 0;
+  padding: 0;
+  overflow-x: hidden;
 }
 
-/* page base */
+/* Core body styles */
 body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
@@ -33,21 +46,33 @@ body {
   color: var(--color-text);
 }
 
-/* make sure the header/navigation layering doesn't push content out */
-main {
-  /* main will grow via the layout's flex-1 */
+/* Ensure images, svgs, and videos never force overflow */
+img,
+svg,
+video,
+canvas,
+iframe {
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
 
-/* hero helper */
+/* -- Helpers & components -- */
+
+/* Hero section helper (safe: pattern is applied via inline style or .hero-pattern) */
 .test-hero {
   padding: 3rem 0;
-  background: linear-gradient(90deg, #06b6d4 0%, #2563eb 100%);
+  background: linear-gradient(
+    90deg,
+    var(--color-secondary) 0%,
+    var(--color-primary) 100%
+  );
   color: white;
   position: relative;
-  overflow: hidden;
+  overflow: hidden; /* prevents large absolute children from overflowing horizontally */
 }
 
-/* pattern overlay helper: use inline style background-image for tile */
+/* pattern overlay helper (use inline style for background-image, see page) */
 .hero-pattern {
   pointer-events: none;
   position: absolute;
@@ -60,14 +85,57 @@ main {
   mix-blend-mode: overlay;
 }
 
-/* ensure footer isn't accidentally fixed or overlaying content */
-footer {
-  position: relative; /* important: not fixed/sticky */
-  z-index: 1;
+/* Buttons: prefer utility classes, but keep a small helper */
+.btn-primary {
+  background: linear-gradient(
+    90deg,
+    var(--color-primary),
+    var(--color-secondary)
+  );
+  color: white;
+  padding: 0.6rem 1rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.12);
 }
 
-/* minor niceties */
+/* Footer baseline: not fixed; high contrast; ensures no accidental overlay */
+footer {
+  position: relative;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(37, 99, 235, 1),
+    rgba(6, 182, 212, 1)
+  );
+  color: white;
+}
+
+/* Stronger footer link / icon contrast */
+footer a {
+  color: rgba(255, 255, 255, 0.95);
+}
+footer .muted {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Remove accidental large margins near footer */
+section:last-child,
+.content-section:last-child {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Minor niceties */
 ::-webkit-scrollbar {
   height: 10px;
   width: 10px;
+}
+
+/* small debug helper while developing (remove later) */
+.debug-outline * {
+  outline: 1px dashed rgba(0, 0, 0, 0.06);
 }
