@@ -1,4 +1,4 @@
-import "./globals.css";
+import "./global.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ReduxProvider } from "@/redux/Provider";
