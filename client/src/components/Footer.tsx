@@ -1,3 +1,4 @@
+// src/components/Footer.tsx
 "use client";
 
 import Link from "next/link";
@@ -5,18 +6,18 @@ import { Github, Twitter, Facebook } from "lucide-react";
 
 const Footer = () => {
   return (
-    <footer className="relative bg-gradient-to-r from-[#2563eb] to-[#06b6d4] text-white mt-20">
-      {/* subtle top glow */}
-      <div className="absolute -top-6 left-0 w-full h-6 bg-gradient-to-t from-[#2563eb] to-transparent pointer-events-none" />
+    <footer className="relative bg-primary text-white">
+      {/* decorative top glow; not fixed */}
+      <div className="absolute -top-6 left-0 w-full h-6 bg-gradient-to-t from-primary to-transparent pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
+      <div className="max-w-7xl mx-auto px-6 py-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {/* Brand */}
           <div>
-            <h2 className="text-2xl font-display font-bold tracking-wide text-white">
+            <h2 className="text-2xl font-display font-bold tracking-wide">
               ShopSphere
             </h2>
-            <p className="mt-3 text-sm text-white/90 leading-relaxed max-w-xs">
+            <p className="mt-3 text-sm text-white/80 leading-relaxed max-w-xs">
               Your one-stop shop for everything you love. Quality products,
               seamless experience.
             </p>
@@ -24,10 +25,8 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-3 text-white">
-              Quick Links
-            </h3>
-            <ul className="space-y-2 text-white/90">
+            <h3 className="text-lg font-semibold mb-3">Quick Links</h3>
+            <ul className="space-y-2 text-white/80">
               {[
                 { name: "Home", href: "/" },
                 { name: "Products", href: "/products" },
@@ -37,7 +36,7 @@ const Footer = () => {
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="hover:text-white transition-colors duration-150"
+                    className="hover:text-white transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -48,42 +47,31 @@ const Footer = () => {
 
           {/* Socials */}
           <div>
-            <h3 className="text-lg font-semibold mb-3 text-white">
-              Connect with us
-            </h3>
-            <div className="flex space-x-4 mt-2">
+            <h3 className="text-lg font-semibold mb-3">Connect with us</h3>
+            <div className="flex space-x-4">
               {[
-                {
-                  Icon: Twitter,
-                  href: "https://twitter.com",
-                  label: "Twitter",
-                },
-                {
-                  Icon: Facebook,
-                  href: "https://facebook.com",
-                  label: "Facebook",
-                },
-                { Icon: Github, href: "https://github.com", label: "GitHub" },
-              ].map(({ Icon, href, label }, i) => (
+                { Icon: Twitter, href: "https://twitter.com" },
+                { Icon: Facebook, href: "https://facebook.com" },
+                { Icon: Github, href: "https://github.com" },
+              ].map(({ Icon, href }, i) => (
                 <Link
                   key={i}
                   href={href}
                   target="_blank"
-                  aria-label={label}
-                  className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all duration-200"
+                  className="p-2 rounded-full bg-white/6 hover:bg-white/12 transition-all duration-200"
                 >
-                  <Icon className="w-6 h-6" />
+                  <Icon className="w-5 h-5 text-white" />
                 </Link>
               ))}
             </div>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="mt-10 pt-6 border-t border-white/10 text-center text-sm text-white/80">
+        {/* bottom */}
+        <div className="mt-8 pt-6 border-t border-white/10 text-center text-sm text-white/70">
           © {new Date().getFullYear()}{" "}
-          <span className="font-semibold">ShopSphere</span>. All rights
-          reserved.
+          <span className="font-semibold text-white">ShopSphere</span>. All
+          rights reserved.
         </div>
       </div>
     </footer>
