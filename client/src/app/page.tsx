@@ -11,7 +11,7 @@ export default function HomePage() {
       <Hero />
 
       {/* Welcome / CTA Section */}
-      <section className="relative w-screen bg-gradient-to-r from-teal-500 via-cyan-400 to-blue-600 text-white py-24 rounded-none shadow-lg overflow-hidden">
+      <section className="relative w-full bg-gradient-to-r from-teal-500 via-cyan-400 to-blue-600 text-white py-24 rounded-none shadow-lg overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <Reveal>
             <h1 className="text-4xl md:text-6xl font-extrabold font-display drop-shadow-lg">
