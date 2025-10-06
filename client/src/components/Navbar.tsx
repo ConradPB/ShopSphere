@@ -16,7 +16,6 @@ const navLinks = [
 export default function Navbar() {
   const pathname = usePathname();
 
-  // redux counts (hydration-safe: only show after mount)
   const cartCount = useAppSelector((s) =>
     s.cart.items.reduce((sum, it) => sum + it.quantity, 0)
   );
@@ -34,10 +33,18 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  /* Two states:
+     - not scrolled: semi-transparent dark overlay so navbar is visible over hero (white text)
+     - scrolled: solid/blurred light background with dark text
+  */
   const rootClass = [
     "navbar-root fixed top-0 left-0 w-full z-50",
-    scrolled ? "bg-white/90 backdrop-blur-md shadow-md" : "bg-transparent",
+    scrolled
+      ? "bg-white/95 backdrop-blur-md shadow-md"
+      : "bg-black/25 backdrop-blur-sm",
   ].join(" ");
+
+  const linkColor = scrolled ? "text-neutral-900" : "text-white";
 
   const linkActive = (href: string) =>
     pathname === href ? "font-semibold underline underline-offset-4" : "";
@@ -47,13 +54,8 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Brand */}
-          <div
-            className={`flex items-center gap-3 ${
-              scrolled ? "text-neutral-900" : "text-white"
-            }`}
-          >
+          <div className={`flex items-center gap-3 ${linkColor}`}>
             <Link href="/" className="flex items-center gap-3">
-              {/* small square logo mark */}
               <span
                 aria-hidden
                 className="w-8 h-8 rounded-md bg-gradient-to-tr from-[var(--color-accent)] to-[var(--color-primary)] shadow"
@@ -70,21 +72,16 @@ export default function Navbar() {
               <Link
                 key={l.href}
                 href={l.href}
-                className={`transition hover:scale-105 ${
-                  scrolled ? "text-neutral-900" : "text-white"
-                } ${linkActive(l.href)}`}
+                className={`${linkColor} transition hover:scale-105 ${linkActive(
+                  l.href
+                )}`}
               >
                 {l.label}
               </Link>
             ))}
 
-            {/* wishlist */}
             <Link href="/wishlist" className="relative flex items-center">
-              <Heart
-                className={`${
-                  scrolled ? "text-neutral-700" : "text-white"
-                } w-5 h-5`}
-              />
+              <Heart className={`${linkColor} w-5 h-5`} />
               {mounted && wishlistCount > 0 && (
                 <span className="absolute -top-2 -right-2 bg-[var(--color-accent-2)] text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full shadow">
                   {wishlistCount}
@@ -92,13 +89,8 @@ export default function Navbar() {
               )}
             </Link>
 
-            {/* cart */}
             <Link href="/checkout" className="relative flex items-center">
-              <ShoppingCart
-                className={`${
-                  scrolled ? "text-neutral-700" : "text-white"
-                } w-5 h-5`}
-              />
+              <ShoppingCart className={`${linkColor} w-5 h-5`} />
               {mounted && cartCount > 0 && (
                 <span className="absolute -top-2 -right-2 bg-[var(--color-accent)] text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full shadow">
                   {cartCount}
@@ -112,9 +104,7 @@ export default function Navbar() {
             <button
               onClick={() => setIsOpen((v) => !v)}
               aria-label="Toggle menu"
-              className={`${
-                scrolled ? "text-neutral-900" : "text-white"
-              } p-2 rounded-md`}
+              className={`${linkColor} p-2 rounded-md`}
             >
               {isOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
@@ -125,9 +115,9 @@ export default function Navbar() {
       {/* Mobile menu */}
       {isOpen && (
         <div
-          className={`${
-            scrolled ? "bg-white/95 text-neutral-900" : "bg-black/70 text-white"
-          } md:hidden px-4 py-3`}
+          className={`md:hidden ${
+            scrolled ? "bg-white/95 text-neutral-900" : "bg-black/60 text-white"
+          } px-4 py-3`}
         >
           <div className="flex flex-col space-y-2">
             {navLinks.map((l) => (
@@ -140,6 +130,7 @@ export default function Navbar() {
                 {l.label}
               </Link>
             ))}
+
             <Link
               href="/wishlist"
               className="py-2"
