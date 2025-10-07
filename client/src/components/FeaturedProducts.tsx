@@ -71,9 +71,10 @@ export default function FeaturedProducts() {
             className="flex gap-6 overflow-x-auto scrollbar-hide scroll-smooth"
           >
             {products.map((product) => (
-              <div key={product.id} className="min-w-[280px] flex-shrink-0">
-                <ProductCard product={product} />
-              </div>
+              <div
+                key={product.id}
+                className="min-w-[280px] flex-shrink-0"
+              ></div>
             ))}
           </div>
 
