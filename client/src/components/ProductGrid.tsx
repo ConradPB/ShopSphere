@@ -51,14 +51,14 @@ export default function ProductGrid({ initialProducts, title }: Props) {
   }
 
   return (
-    <section className="py-10 px-4 sm:px-6 lg:px-8">
+    // pb-0 removes bottom padding so footer can sit directly below
+    <section className="py-10 px-4 sm:px-6 lg:px-8 pb-0">
       {title && (
         <h2 className="text-2xl font-bold mb-6 text-neutral-800 text-center">
           {title}
         </h2>
       )}
 
-      {/* ✅ Grid fixed to match your working test grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {products.map((product) => (
           <ProductCard key={product.id} product={product} />
