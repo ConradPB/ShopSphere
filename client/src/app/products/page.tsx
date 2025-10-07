@@ -1,59 +1,56 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import type { Product } from "@/types/product";
+import React, { useEffect, useState } from "react";
+import { getProducts } from "@/lib/supabase";
+import { Product } from "@/types/product";
+import ProductGrid from "@/components/ProductGrid";
+import Reveal from "@/components/Reveal";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Later, this will fetch from backend API
-    fetch("/api/products")
-      .then((res) => res.json())
-      .then(setProducts)
-      .catch(() => setProducts([]));
+    const fetchData = async () => {
+      const { data, error } = await getProducts();
+      if (error) {
+        console.error("Error loading products:", error);
+      } else {
+        setProducts(data ?? []);
+      }
+      setLoading(false);
+    };
+    fetchData();
   }, []);
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-[#0a0a0a] to-[#1a1a1a] text-white py-12 px-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Page title */}
-        <h1 className="text-3xl font-bold text-center mb-10">All Products</h1>
+    <main className="relative min-h-screen bg-gradient-to-b from-neutral-950 via-slate-900 to-neutral-950 text-white py-16">
+      <div className="max-w-7xl mx-auto px-6">
+        <Reveal>
+          <h1 className="text-4xl md:text-5xl font-extrabold text-center mb-12 font-display tracking-tight">
+            Explore Our Products
+          </h1>
+        </Reveal>
 
-        {/* Product grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
-          {products.length === 0 ? (
-            <p className="col-span-full text-center text-gray-400">
-              Loading products...
-            </p>
-          ) : (
-            products.map((product) => (
-              <Link
-                key={product.id}
-                href={`/product/${product.id}`}
-                className="bg-[#111] hover:bg-[#181818] rounded-lg overflow-hidden shadow-md hover:shadow-lg transition"
-              >
-                <div className="relative w-full aspect-square bg-neutral-800">
-                  <Image
-                    src={product.image ?? "/fallback-image.jpg"}
-                    alt={product.title || "Product image"}
-                    fill
-                    className="object-cover"
-                    unoptimized
-                  />
-                </div>
-                <div className="p-4">
-                  <h3 className="font-semibold truncate">{product.title}</h3>
-                  <p className="text-indigo-400 font-medium">
-                    ${product.price.toFixed(2)}
-                  </p>
-                </div>
-              </Link>
-            ))
-          )}
-        </div>
+        {loading ? (
+          <p className="text-center py-12 text-gray-400 animate-pulse">
+            Loading products...
+          </p>
+        ) : products.length === 0 ? (
+          <p className="text-center py-12 text-gray-400">
+            No products available yet.
+          </p>
+        ) : (
+          <div className="relative z-10">
+            <ProductGrid initialProducts={products} />
+          </div>
+        )}
+      </div>
+
+      {/* Subtle neon glow effect */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-cyan-500/10 blur-[120px] rounded-full" />
+        <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-purple-500/10 blur-[100px] rounded-full" />
       </div>
     </main>
   );
