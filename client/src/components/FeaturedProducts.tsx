@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { getProducts } from "@/lib/supabase";
 import { Product } from "@/types/product";
@@ -10,29 +10,29 @@ export default function FeaturedProducts() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const controls = useAnimation();
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchFeatured = async () => {
       const { data, error } = await getProducts();
       if (!error && data) {
-        // Duplicate products for smooth looping illusion
         const subset = data.slice(0, 6);
-        setProducts([...subset, ...subset]);
+        setProducts([...subset, ...subset]); // duplicate for smooth loop
       }
       setLoading(false);
     };
     fetchFeatured();
   }, []);
 
-  // Auto-scroll animation loop
+  // Auto-scroll animation (left to right)
   useEffect(() => {
     if (!products.length) return;
     const runLoop = async () => {
       while (true) {
         await controls.start({
-          x: ["0%", "-50%"],
+          x: ["-50%", "0%"],
           transition: {
-            duration: 30, // adjust for speed
+            duration: 30,
             ease: "linear",
             repeat: Infinity,
           },
@@ -51,21 +51,31 @@ export default function FeaturedProducts() {
   }
 
   return (
-    <section className="relative py-16 bg-gradient-to-b from-neutral-50 via-white to-neutral-100 overflow-hidden">
+    <section className="relative py-16 bg-gradient-to-b from-neutral-900 via-black to-neutral-900 text-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
-        <h2 className="text-3xl font-extrabold text-center mb-10 bg-gradient-to-r from-blue-600 via-teal-500 to-purple-600 text-transparent bg-clip-text drop-shadow-sm">
+        <h2 className="text-3xl font-extrabold text-center mb-10 bg-gradient-to-r from-blue-400 via-teal-400 to-purple-400 text-transparent bg-clip-text drop-shadow-md">
           Featured Products
         </h2>
 
-        {/* Carousel wrapper */}
+        {/* Carousel Wrapper */}
         <div className="relative overflow-hidden">
+          {/* Fade edges */}
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-neutral-900 via-neutral-900/80 to-transparent z-20" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-neutral-900 via-neutral-900/80 to-transparent z-20" />
+
+          {/* Scrollable motion container */}
           <motion.div
+            ref={containerRef}
             animate={controls}
-            className="flex gap-6"
+            drag="x"
+            dragConstraints={{ left: -300, right: 300 }}
+            dragElastic={0.15}
+            whileTap={{ cursor: "grabbing" }}
+            className="flex gap-6 cursor-grab select-none"
             onMouseEnter={() => controls.stop()}
             onMouseLeave={() =>
               controls.start({
-                x: ["0%", "-50%"],
+                x: ["-50%", "0%"],
                 transition: {
                   duration: 30,
                   ease: "linear",
@@ -77,7 +87,7 @@ export default function FeaturedProducts() {
             {products.map((product, i) => (
               <motion.div
                 key={`${product.id}-${i}`}
-                whileHover={{ scale: 1.03 }}
+                whileHover={{ scale: 1.04 }}
                 transition={{ type: "spring", stiffness: 200, damping: 15 }}
                 className="relative group min-w-[300px] flex-shrink-0"
               >
