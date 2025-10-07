@@ -3,72 +3,70 @@
 import Link from "next/link";
 import { Github, Twitter, Facebook } from "lucide-react";
 
-export default function Footer() {
+const Footer = () => {
   return (
-    <footer className="bg-neutral-900 text-white mt-12">
+    <footer className="relative bg-primary text-white border-t border-white/10">
+      {/* subtle top gradient accent */}
+      <div className="absolute -top-6 left-0 w-full h-6 bg-gradient-to-t from-primary to-transparent pointer-events-none" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
+          {/* Brand */}
           <div>
             <h2 className="text-2xl font-display font-bold tracking-wide">
               ShopSphere
             </h2>
-            <p className="mt-3 text-sm text-gray-300 max-w-xs">
-              Your one-stop shop for quality products and modern shopping
-              experiences.
+            <p className="mt-3 text-sm text-gray-300 leading-relaxed max-w-xs">
+              Your one-stop shop for everything you love. Quality products,
+              seamless experience.
             </p>
           </div>
 
+          {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-3 text-gray-200">
-              Quick Links
-            </h3>
+            <h3 className="text-lg font-semibold mb-3">Quick Links</h3>
             <ul className="space-y-2 text-gray-300">
-              <li>
-                <Link href="/">Home</Link>
-              </li>
-              <li>
-                <Link href="/products">Products</Link>
-              </li>
-              <li>
-                <Link href="/about">About</Link>
-              </li>
-              <li>
-                <Link href="/contact">Contact</Link>
-              </li>
+              {[
+                { name: "Home", href: "/" },
+                { name: "Products", href: "/products" },
+                { name: "About", href: "/about" },
+                { name: "Contact", href: "/contact" },
+              ].map((link) => (
+                <li key={link.name}>
+                  <Link
+                    href={link.href}
+                    className="hover:text-accent transition-colors duration-200"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
+          {/* Socials */}
           <div>
-            <h3 className="text-lg font-semibold mb-3 text-gray-200">
-              Connect
-            </h3>
-            <div className="flex items-center gap-3">
-              <Link
-                href="https://twitter.com"
-                target="_blank"
-                className="p-2 rounded-full bg-white/6 hover:bg-white/12 transition"
-              >
-                <Twitter className="w-5 h-5 text-white" />
-              </Link>
-              <Link
-                href="https://facebook.com"
-                target="_blank"
-                className="p-2 rounded-full bg-white/6 hover:bg-white/12 transition"
-              >
-                <Facebook className="w-5 h-5 text-white" />
-              </Link>
-              <Link
-                href="https://github.com"
-                target="_blank"
-                className="p-2 rounded-full bg-white/6 hover:bg-white/12 transition"
-              >
-                <Github className="w-5 h-5 text-white" />
-              </Link>
+            <h3 className="text-lg font-semibold mb-3">Connect with us</h3>
+            <div className="flex space-x-5">
+              {[
+                { Icon: Twitter, href: "https://twitter.com" },
+                { Icon: Facebook, href: "https://facebook.com" },
+                { Icon: Github, href: "https://github.com" },
+              ].map(({ Icon, href }, i) => (
+                <Link
+                  key={i}
+                  href={href}
+                  target="_blank"
+                  className="p-2 rounded-full bg-white/10 hover:bg-accent hover:text-white transition-all duration-200"
+                >
+                  <Icon className="w-5 h-5" />
+                </Link>
+              ))}
             </div>
           </div>
         </div>
 
-        <div className="mt-8 pt-6 border-t border-white/10 text-center text-sm text-gray-400">
+        {/* Bottom Bar */}
+        <div className="mt-10 pt-6 border-t border-white/10 text-center text-sm text-gray-400">
           © {new Date().getFullYear()}{" "}
           <span className="font-semibold text-white">ShopSphere</span>. All
           rights reserved.
@@ -76,4 +74,6 @@ export default function Footer() {
       </div>
     </footer>
   );
-}
+};
+
+export default Footer;
