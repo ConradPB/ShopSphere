@@ -3,7 +3,9 @@
 /* Google fonts */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap");
 
-/* Theme variables */
+/* ===========================
+   THEME VARIABLES
+   =========================== */
 :root {
   --color-primary: #2563eb;
   --color-accent: #10b981;
@@ -14,13 +16,15 @@
   --font-display: "Poppins", ui-sans-serif, system-ui;
 }
 
-/* full height and prevent horizontal overflow (fix right-gap) */
+/* ===========================
+   GLOBAL LAYOUT RULES
+   =========================== */
 html,
 body,
 #__next {
   height: 100%;
   max-width: 100vw; /* prevent children from overflowing width */
-  overflow-x: hidden; /* important: hides horizontal scrollbar & right-gap */
+  overflow-x: hidden; /* fix right-gap */
 }
 
 /* Body */
@@ -32,14 +36,49 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* helpers */
+/* ===========================
+   VISUALLY HIDE SCROLLBAR (cross-browser)
+   =========================== */
+/* ⚠️ Keeps scrolling functional but hides scrollbar UI.
+   Add or remove as you prefer for preview or production.
+   To disable globally, comment this section.
+*/
+
+/* Firefox & IE/Edge legacy */
+html,
+body {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+/* WebKit (Chrome, Safari, Edge Chromium) */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+/* Optional utility: apply to any scrollable element selectively */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* ===========================
+   HELPERS
+   =========================== */
+
+/* Hero */
 .hero-title {
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 2.25rem;
 }
 
-/* CTA helpers */
+/* CTA */
 .btn-primary {
   @apply inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-2 text-white font-semibold shadow transition-transform hover:-translate-y-0.5;
   background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
@@ -49,20 +88,20 @@ body {
   @apply inline-flex items-center justify-center gap-2 rounded-lg px-3 py-2 border font-medium transition hover:bg-neutral-100;
 }
 
-/* Card helper */
+/* Card */
 .card {
   @apply bg-white rounded-2xl shadow-md border border-neutral-100 overflow-hidden;
 }
 
-/* Site hero (keeps gradient, but prevents corner white gaps) */
+/* Site hero */
 .site-hero {
   @apply relative py-20;
   background: linear-gradient(135deg, #06b6d4 0%, #2563eb 100%);
   color: white;
-  overflow: visible; /* allow pattern to show, but we've prevented horizontal overflow on root */
+  overflow: visible; /* allow pattern to show */
 }
 
-/* subtle pattern overlay helper */
+/* Hero pattern overlay */
 .hero-pattern {
   pointer-events: none;
   position: absolute;
@@ -75,7 +114,7 @@ body {
   mix-blend-mode: overlay;
 }
 
-/* make images, svgs, and next/image safe (no overflow) */
+/* Safe media */
 img,
 svg,
 video {
@@ -84,18 +123,23 @@ video {
   display: block;
 }
 
-/* navbar helpers */
+/* Navbar transitions */
 .navbar-root {
   transition: background-color 220ms, box-shadow 220ms, backdrop-filter 220ms;
 }
 
-/* small scrollbar nicety */
-::-webkit-scrollbar {
-  height: 10px;
-  width: 10px;
-}
+/* Optional styled scrollbar (disabled by hide rules)
+   — uncomment if you want visible but subtle scrollbar instead.
+   ::-webkit-scrollbar {
+     width: 8px;
+   }
+   ::-webkit-scrollbar-thumb {
+     background-color: rgba(100,100,100,0.4);
+     border-radius: 10px;
+   }
+*/
 
-/* keep content from shifting by ensuring body width stays within the viewport */
+/* Container safety */
 .container-safe {
   max-width: 100%;
   overflow-x: hidden;
