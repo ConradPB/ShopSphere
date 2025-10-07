@@ -17,13 +17,12 @@ export default function RootLayout({
     <html lang="en">
       <body className="min-h-screen flex flex-col bg-[var(--color-bg)] text-[var(--color-text)]">
         <ReduxProvider>
-          {/* Navbar is fixed; add top padding on the main content */}
+          {/* Navbar is fixed and overlays the hero */}
           <Navbar />
-          <main className="flex-1 pt-20">
-            {" "}
-            {/* pt-20 accounts for fixed navbar height */}
-            {children}
-          </main>
+
+          {/* Main no longer has top padding — hero will start at the top and sit under the navbar */}
+          <main className="flex-1 w-full">{children}</main>
+
           <Footer />
         </ReduxProvider>
       </body>
