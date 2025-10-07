@@ -1,5 +1,6 @@
 "use client";
 
+import FeaturedProducts from "@/components/FeaturedProducts";
 import Hero from "@/components/Hero";
 import ProductShowcaseSection from "@/components/ProductShowcaseSection";
 import Reveal from "@/components/Reveal";
@@ -50,6 +51,8 @@ export default function HomePage() {
           </Reveal>
         </div>
       </section>
+      {/* Featured Products Carousel */}
+      <FeaturedProducts />
       <ProductShowcaseSection />
     </>
   );
