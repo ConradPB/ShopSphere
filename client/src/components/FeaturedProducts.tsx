@@ -71,10 +71,18 @@ export default function FeaturedProducts() {
             className="flex gap-6 overflow-x-auto scrollbar-hide scroll-smooth"
           >
             {products.map((product) => (
-              <div
-                key={product.id}
-                className="min-w-[280px] flex-shrink-0"
-              ></div>
+              <div key={product.id} className="min-w-[280px] flex-shrink-0">
+                <motion.div
+                  whileHover={{ scale: 1.03 }}
+                  transition={{ type: "spring", stiffness: 200, damping: 15 }}
+                  className="relative group"
+                >
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/10 via-teal-400/10 to-purple-500/10 opacity-0 group-hover:opacity-100 blur-xl transition duration-500" />
+                  <div className="relative">
+                    <ProductCard product={product} />
+                  </div>
+                </motion.div>
+              </div>
             ))}
           </div>
 
