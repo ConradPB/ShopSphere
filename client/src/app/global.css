@@ -129,15 +129,14 @@ video {
 }
 
 /* Optional styled scrollbar (disabled by hide rules)
-   — uncomment if you want visible but subtle scrollbar instead.
-   ::-webkit-scrollbar {
-     width: 8px;
-   }
-   ::-webkit-scrollbar-thumb {
-     background-color: rgba(100,100,100,0.4);
-     border-radius: 10px;
-   }
-*/
+   — uncomment if you want visible but subtle scrollbar instead.*/
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 100, 100, 0.4);
+  border-radius: 10px;
+}
 
 /* Container safety */
 .container-safe {
