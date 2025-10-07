@@ -1,6 +1,7 @@
 "use client";
 
 import Hero from "@/components/Hero";
+import ProductShowcaseSection from "@/components/ProductShowcaseSection";
 import Reveal from "@/components/Reveal";
 import { motion } from "framer-motion";
 
@@ -49,6 +50,7 @@ export default function HomePage() {
           </Reveal>
         </div>
       </section>
+      <ProductShowcaseSection />
     </>
   );
 }
