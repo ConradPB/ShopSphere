@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useAppSelector } from "@/redux/hooks"; // ✅ for real cart data
 import InputField from "@/components/ui/InputField";
 import SectionCard from "@/components/ui/SectionCard";
 import PaymentOption from "@/components/ui/PaymentOption";
@@ -9,16 +10,26 @@ import { toast } from "react-hot-toast";
 
 export default function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState("credit-card");
+  const cartItems = useAppSelector((state) => state.cart.items);
+
+  const total = cartItems.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0
+  );
 
   const handlePlaceOrder = () => {
+    if (cartItems.length === 0) {
+      toast.error("Your cart is empty!");
+      return;
+    }
     toast.success("Order placed successfully!");
   };
 
   return (
-    <main className="relative min-h-screen bg-gradient-to-b from-black via-neutral-950 to-black text-gray-100 pt-28 pb-20">
+    <main className="relative min-h-screen bg-gradient-to-b from-black via-neutral-950 to-black text-gray-100 pt-28 pb-20 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 space-y-12">
         {/* Page Title */}
-        <h1 className="text-4xl md:text-5xl font-extrabold text-center mb-4 font-display tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500 drop-shadow-lg">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-center mb-4 font-display tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500 drop-shadow-lg">
           Checkout
         </h1>
 
@@ -29,7 +40,7 @@ export default function CheckoutPage() {
             {/* Billing Info */}
             <SectionCard
               title="Billing Information"
-              className="bg-neutral-900/60 border border-neutral-800 rounded-2xl backdrop-blur-sm shadow-lg shadow-cyan-500/5"
+              className="bg-neutral-900/70 border border-neutral-800 rounded-2xl backdrop-blur-md shadow-lg shadow-cyan-500/10"
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <InputField label="First Name" placeholder="John" />
@@ -53,42 +64,27 @@ export default function CheckoutPage() {
             {/* Payment Options */}
             <SectionCard
               title="Payment Method"
-              className="bg-neutral-900/60 border border-neutral-800 rounded-2xl backdrop-blur-sm shadow-lg shadow-purple-500/5"
+              className="bg-neutral-900/70 border border-neutral-800 rounded-2xl backdrop-blur-md shadow-lg shadow-purple-500/10"
             >
               <div className="space-y-4">
-                <PaymentOption
-                  value="credit-card"
-                  label="💳 Credit / Debit Card"
-                  selected={paymentMethod}
-                  onChange={setPaymentMethod}
-                  className={`p-3 rounded-lg cursor-pointer transition-all ${
-                    paymentMethod === "credit-card"
-                      ? "bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-500/40"
-                      : "hover:bg-neutral-800/70 border border-neutral-800"
-                  }`}
-                />
-                <PaymentOption
-                  value="paypal"
-                  label="🪙 PayPal"
-                  selected={paymentMethod}
-                  onChange={setPaymentMethod}
-                  className={`p-3 rounded-lg cursor-pointer transition-all ${
-                    paymentMethod === "paypal"
-                      ? "bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-500/40"
-                      : "hover:bg-neutral-800/70 border border-neutral-800"
-                  }`}
-                />
-                <PaymentOption
-                  value="crypto"
-                  label="💠 Crypto (USDT / BTC / ETH)"
-                  selected={paymentMethod}
-                  onChange={setPaymentMethod}
-                  className={`p-3 rounded-lg cursor-pointer transition-all ${
-                    paymentMethod === "crypto"
-                      ? "bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-500/40"
-                      : "hover:bg-neutral-800/70 border border-neutral-800"
-                  }`}
-                />
+                {[
+                  { value: "credit-card", label: "💳 Credit / Debit Card" },
+                  { value: "paypal", label: "🪙 PayPal" },
+                  { value: "crypto", label: "💠 Crypto (USDT / BTC / ETH)" },
+                ].map((option) => (
+                  <PaymentOption
+                    key={option.value}
+                    value={option.value}
+                    label={option.label}
+                    selected={paymentMethod}
+                    onChange={setPaymentMethod}
+                    className={`p-3 rounded-lg cursor-pointer transition-all ${
+                      paymentMethod === option.value
+                        ? "bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-500/40"
+                        : "hover:bg-neutral-800/70 border border-neutral-800"
+                    }`}
+                  />
+                ))}
               </div>
             </SectionCard>
           </div>
@@ -98,21 +94,31 @@ export default function CheckoutPage() {
             <div className="sticky top-28 space-y-6">
               <SectionCard
                 title="Order Summary"
-                className="bg-neutral-900/70 border border-neutral-800 rounded-2xl backdrop-blur-sm shadow-lg shadow-cyan-500/5"
+                className="bg-neutral-900/80 border border-neutral-800 rounded-2xl backdrop-blur-md shadow-lg shadow-cyan-500/10"
               >
                 <div className="space-y-3 text-sm">
-                  <div className="flex justify-between text-gray-300">
-                    <span>Product 1</span>
-                    <span className="text-gray-100 font-medium">$50</span>
-                  </div>
-                  <div className="flex justify-between text-gray-300">
-                    <span>Product 2</span>
-                    <span className="text-gray-100 font-medium">$30</span>
-                  </div>
+                  {cartItems.length > 0 ? (
+                    cartItems.map((item) => (
+                      <div
+                        key={item.id}
+                        className="flex justify-between items-center text-gray-300"
+                      >
+                        <span className="truncate">{item.title}</span>
+                        <span className="text-gray-100 font-medium">
+                          ${(item.price * item.quantity).toFixed(2)}
+                        </span>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-center text-gray-500 py-6">
+                      No items in your cart
+                    </p>
+                  )}
+
                   <hr className="border-neutral-800 my-3" />
                   <div className="flex justify-between font-semibold text-lg text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">
                     <span>Total</span>
-                    <span>$80</span>
+                    <span>${total.toFixed(2)}</span>
                   </div>
                 </div>
               </SectionCard>
