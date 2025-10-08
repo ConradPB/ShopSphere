@@ -2,17 +2,17 @@
 
 import React from "react";
 
-type SectionCardProps = {
+export interface SectionCardProps {
   title?: string;
   children: React.ReactNode;
   className?: string;
-};
+}
 
-export default function SectionCard({
+export const SectionCard = ({
   title,
   children,
   className = "",
-}: SectionCardProps) {
+}: SectionCardProps) => {
   return (
     <section
       className={`bg-white/90 dark:bg-neutral-900/70 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-6 shadow-sm ${className}`}
@@ -27,4 +27,6 @@ export default function SectionCard({
       <div>{children}</div>
     </section>
   );
-}
+};
+
+export default SectionCard;
