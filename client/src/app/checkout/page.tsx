@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import InputField from "@/components/ui/InputField";
-import SectionCard from "@/components/ui/SectionCard";
+import { SectionCard } from "@/components/ui/SectionCard";
 import PaymentOption from "@/components/ui/PaymentOption";
 import Button from "@/components/ui/Button";
 import { toast } from "react-hot-toast";
