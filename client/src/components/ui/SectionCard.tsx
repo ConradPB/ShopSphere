@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import clsx from "clsx"; // ensures clean merging of className safely
 
 export interface SectionCardProps {
   title?: React.ReactNode;
@@ -9,22 +10,19 @@ export interface SectionCardProps {
 }
 
 /**
- * SectionCard
- * A small, re-usable card wrapper for form sections, sidebars, etc.
- * - Accepts an optional `title`
- * - Accepts `className` so callers (like CheckoutPage) can pass theme-specific classes
+ * SectionCard — clean reusable card wrapper for sections
  */
-export default function SectionCard({
+export const SectionCard: React.FC<SectionCardProps> = ({
   title,
   children,
-  className = "",
-}: SectionCardProps) {
+  className,
+}) => {
   return (
     <section
-      className={
-        `bg-white/90 dark:bg-neutral-900/70 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-6 shadow-sm ` +
+      className={clsx(
+        "bg-white/90 dark:bg-neutral-900/70 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-6 shadow-sm",
         className
-      }
+      )}
     >
       {title && (
         <header className="mb-4">
@@ -33,8 +31,9 @@ export default function SectionCard({
           </h3>
         </header>
       )}
-
       <div>{children}</div>
     </section>
   );
-}
+};
+
+export default SectionCard;
