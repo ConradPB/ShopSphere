@@ -2,6 +2,7 @@ import "./global.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ReduxProvider } from "@/redux/Provider";
+import { Toaster } from "react-hot-toast";
 
 export const metadata = {
   title: "ShopSphere",
