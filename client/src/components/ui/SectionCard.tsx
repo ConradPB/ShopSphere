@@ -1,28 +1,21 @@
 "use client";
 
 import React from "react";
-import clsx from "clsx"; // ensures clean merging of className safely
 
-export interface SectionCardProps {
-  title?: React.ReactNode;
+type SectionCardProps = {
+  title?: string;
   children: React.ReactNode;
   className?: string;
-}
+};
 
-/**
- * SectionCard — clean reusable card wrapper for sections
- */
-export const SectionCard: React.FC<SectionCardProps> = ({
+export default function SectionCard({
   title,
   children,
-  className,
-}) => {
+  className = "",
+}: SectionCardProps) {
   return (
     <section
-      className={clsx(
-        "bg-white/90 dark:bg-neutral-900/70 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-6 shadow-sm",
-        className
-      )}
+      className={`bg-white/90 dark:bg-neutral-900/70 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-6 shadow-sm ${className}`}
     >
       {title && (
         <header className="mb-4">
@@ -34,6 +27,4 @@ export const SectionCard: React.FC<SectionCardProps> = ({
       <div>{children}</div>
     </section>
   );
-};
-
-export default SectionCard;
+}
