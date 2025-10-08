@@ -1,34 +1,29 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import InputField from "@/components/ui/InputField";
 import SectionCard from "@/components/ui/SectionCard";
 import PaymentOption from "@/components/ui/PaymentOption";
 import Button from "@/components/ui/Button";
-import toast from "react-hot-toast";
+import { toast } from "react-hot-toast"; // Optional but recommended
 
 export default function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState("credit-card");
-  const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    // render a static placeholder that matches both server and client
-    return (
-      <p className="text-center py-20 text-gray-400">Loading checkout...</p>
-    );
-  }
+  const handlePlaceOrder = () => {
+    toast.success("Order placed successfully!");
+  };
 
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-6">
+      {/* Page Title */}
       <h1 className="text-3xl font-bold mb-6">Checkout</h1>
 
+      {/* Grid Layout */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Left Column (Billing + Payment) */}
         <div className="space-y-6 md:col-span-2">
+          {/* Billing Info */}
           <SectionCard title="Billing Information">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <InputField label="First Name" placeholder="John" />
@@ -49,6 +44,7 @@ export default function CheckoutPage() {
             </div>
           </SectionCard>
 
+          {/* Payment Options */}
           <SectionCard title="Payment Method">
             <div className="space-y-3">
               <PaymentOption
@@ -94,7 +90,10 @@ export default function CheckoutPage() {
               </div>
             </SectionCard>
 
-            <Button className="w-full">Place Order</Button>
+            {/* Place Order Button */}
+            <Button className="w-full" onClick={handlePlaceOrder}>
+              Place Order
+            </Button>
           </div>
         </div>
       </div>
