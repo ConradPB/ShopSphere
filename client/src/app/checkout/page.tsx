@@ -15,10 +15,10 @@ export default function CheckoutPage() {
   };
 
   return (
-    <main className="relative min-h-screen bg-gradient-to-b from-neutral-950 via-slate-900 to-neutral-950 text-white pt-28 pb-20">
+    <main className="relative min-h-screen bg-gradient-to-b from-black via-neutral-950 to-black text-gray-100 pt-28 pb-20">
       <div className="max-w-7xl mx-auto px-6 space-y-12">
         {/* Page Title */}
-        <h1 className="text-4xl md:text-5xl font-extrabold text-center mb-4 font-display tracking-tight">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-center mb-4 font-display tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500 drop-shadow-lg">
           Checkout
         </h1>
 
@@ -27,7 +27,10 @@ export default function CheckoutPage() {
           {/* Left Column */}
           <div className="space-y-8 md:col-span-2">
             {/* Billing Info */}
-            <SectionCard title="Billing Information">
+            <SectionCard
+              title="Billing Information"
+              className="bg-neutral-900/60 border border-neutral-800 rounded-2xl backdrop-blur-sm shadow-lg shadow-cyan-500/5"
+            >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <InputField label="First Name" placeholder="John" />
                 <InputField label="Last Name" placeholder="Doe" />
@@ -48,25 +51,43 @@ export default function CheckoutPage() {
             </SectionCard>
 
             {/* Payment Options */}
-            <SectionCard title="Payment Method">
+            <SectionCard
+              title="Payment Method"
+              className="bg-neutral-900/60 border border-neutral-800 rounded-2xl backdrop-blur-sm shadow-lg shadow-purple-500/5"
+            >
               <div className="space-y-4">
                 <PaymentOption
                   value="credit-card"
-                  label="Credit / Debit Card"
+                  label="💳 Credit / Debit Card"
                   selected={paymentMethod}
                   onChange={setPaymentMethod}
+                  className={`p-3 rounded-lg cursor-pointer transition-all ${
+                    paymentMethod === "credit-card"
+                      ? "bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-500/40"
+                      : "hover:bg-neutral-800/70 border border-neutral-800"
+                  }`}
                 />
                 <PaymentOption
                   value="paypal"
-                  label="PayPal"
+                  label="🪙 PayPal"
                   selected={paymentMethod}
                   onChange={setPaymentMethod}
+                  className={`p-3 rounded-lg cursor-pointer transition-all ${
+                    paymentMethod === "paypal"
+                      ? "bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-500/40"
+                      : "hover:bg-neutral-800/70 border border-neutral-800"
+                  }`}
                 />
                 <PaymentOption
                   value="crypto"
-                  label="Crypto (USDT / BTC / ETH)"
+                  label="💠 Crypto (USDT / BTC / ETH)"
                   selected={paymentMethod}
                   onChange={setPaymentMethod}
+                  className={`p-3 rounded-lg cursor-pointer transition-all ${
+                    paymentMethod === "crypto"
+                      ? "bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-500/40"
+                      : "hover:bg-neutral-800/70 border border-neutral-800"
+                  }`}
                 />
               </div>
             </SectionCard>
@@ -75,18 +96,21 @@ export default function CheckoutPage() {
           {/* Right Column */}
           <aside className="md:col-span-1">
             <div className="sticky top-28 space-y-6">
-              <SectionCard title="Order Summary">
+              <SectionCard
+                title="Order Summary"
+                className="bg-neutral-900/70 border border-neutral-800 rounded-2xl backdrop-blur-sm shadow-lg shadow-cyan-500/5"
+              >
                 <div className="space-y-3 text-sm">
-                  <div className="flex justify-between">
+                  <div className="flex justify-between text-gray-300">
                     <span>Product 1</span>
-                    <span>$50</span>
+                    <span className="text-gray-100 font-medium">$50</span>
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex justify-between text-gray-300">
                     <span>Product 2</span>
-                    <span>$30</span>
+                    <span className="text-gray-100 font-medium">$30</span>
                   </div>
-                  <hr className="border-gray-700" />
-                  <div className="flex justify-between font-semibold">
+                  <hr className="border-neutral-800 my-3" />
+                  <div className="flex justify-between font-semibold text-lg text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">
                     <span>Total</span>
                     <span>$80</span>
                   </div>
@@ -94,7 +118,7 @@ export default function CheckoutPage() {
               </SectionCard>
 
               <Button
-                className="w-full py-4 text-lg font-semibold bg-gradient-to-r from-cyan-500 to-purple-500 hover:opacity-90 transition"
+                className="w-full py-4 text-lg font-semibold bg-gradient-to-r from-cyan-500 to-purple-600 hover:opacity-90 transition shadow-lg shadow-purple-500/20"
                 onClick={handlePlaceOrder}
               >
                 Place Order
@@ -104,7 +128,7 @@ export default function CheckoutPage() {
         </div>
       </div>
 
-      {/* Ambient lighting effect */}
+      {/* Ambient glow background */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-cyan-500/10 blur-[120px] rounded-full" />
         <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-purple-500/10 blur-[100px] rounded-full" />
