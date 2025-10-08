@@ -8,14 +8,27 @@ import Button from "@/components/ui/Button";
 import { toast } from "react-hot-toast";
 
 export default function CheckoutPage() {
-  // ✅ Hydration-safe client flag
+  // ---- HOOKS: always declared at top-level (prevents rules-of-hooks errors) ----
   const [isClient, setIsClient] = useState(false);
-  useEffect(() => setIsClient(true), []);
-  if (!isClient) return null;
-
   const [paymentMethod, setPaymentMethod] = useState("credit-card");
 
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // SSR-safe placeholder until client mounts — hooks have already been called above.
+  if (!isClient) {
+    return (
+      <main className="min-h-screen pt-28">
+        <div className="max-w-7xl mx-auto px-6 py-20">
+          <h1 className="text-3xl font-bold text-center">Loading checkout…</h1>
+        </div>
+      </main>
+    );
+  }
+
   const handlePlaceOrder = () => {
+    // TODO: wire payment + order creation (Stripe / supabase, etc.)
     toast.success("Order placed successfully!");
   };
 
@@ -40,39 +53,41 @@ export default function CheckoutPage() {
                 <InputField
                   label="First Name"
                   placeholder="John"
-                  className="bg-neutral-800/60 border border-neutral-700 text-gray-100 placeholder-gray-400"
+                  wrapperClassName=""
+                  inputClassName="bg-neutral-800/60 border border-neutral-700 text-gray-100 placeholder-gray-400"
                 />
                 <InputField
                   label="Last Name"
                   placeholder="Doe"
-                  className="bg-neutral-800/60 border border-neutral-700 text-gray-100 placeholder-gray-400"
+                  inputClassName="bg-neutral-800/60 border border-neutral-700 text-gray-100 placeholder-gray-400"
                 />
                 <InputField
                   label="Email"
                   placeholder="john@example.com"
                   type="email"
-                  className="bg-neutral-800/60 border border-neutral-700 text-gray-100 placeholder-gray-400"
+                  inputClassName="bg-neutral-800/60 border border-neutral-700 text-gray-100 placeholder-gray-400"
                 />
                 <InputField
                   label="Phone"
                   placeholder="+123456789"
                   type="tel"
-                  className="bg-neutral-800/60 border border-neutral-700 text-gray-100 placeholder-gray-400"
+                  inputClassName="bg-neutral-800/60 border border-neutral-700 text-gray-100 placeholder-gray-400"
                 />
                 <InputField
                   label="Address"
                   placeholder="123 Main Street"
-                  className="md:col-span-2 bg-neutral-800/60 border border-neutral-700 text-gray-100 placeholder-gray-400"
+                  wrapperClassName="md:col-span-2"
+                  inputClassName="bg-neutral-800/60 border border-neutral-700 text-gray-100 placeholder-gray-400"
                 />
                 <InputField
                   label="City"
                   placeholder="New York"
-                  className="bg-neutral-800/60 border border-neutral-700 text-gray-100 placeholder-gray-400"
+                  inputClassName="bg-neutral-800/60 border border-neutral-700 text-gray-100 placeholder-gray-400"
                 />
                 <InputField
                   label="Postal Code"
                   placeholder="10001"
-                  className="bg-neutral-800/60 border border-neutral-700 text-gray-100 placeholder-gray-400"
+                  inputClassName="bg-neutral-800/60 border border-neutral-700 text-gray-100 placeholder-gray-400"
                 />
               </div>
             </SectionCard>
