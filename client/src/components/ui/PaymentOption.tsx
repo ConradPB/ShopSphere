@@ -7,7 +7,7 @@ interface PaymentOptionProps {
   label: string;
   selected: string;
   onChange: (value: string) => void;
-  className?: string; // ✅ add this
+  className?: string;
 }
 
 export default function PaymentOption({
@@ -15,33 +15,33 @@ export default function PaymentOption({
   label,
   selected,
   onChange,
-  className = "", // ✅ default value
+  className = "",
 }: PaymentOptionProps) {
   const isSelected = selected === value;
 
   return (
     <div
-      className={`flex items-center justify-between border rounded-xl p-4 cursor-pointer transition 
-        ${
-          isSelected
-            ? "border-blue-500 bg-blue-50"
-            : "border-gray-300 hover:bg-gray-50"
-        } ${className}`} // ✅ apply the extra className if passed
+      role="button"
+      tabIndex={0}
       onClick={() => onChange(value)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          onChange(value);
+        }
+      }}
+      className={`${className} flex items-center justify-between rounded-xl cursor-pointer transition`}
     >
       <span
-        className={`font-medium ${
-          isSelected ? "text-blue-700" : "text-gray-800 dark:text-gray-200"
-        }`}
+        className={`font-medium ${isSelected ? "text-white" : "text-gray-200"}`}
       >
         {label}
       </span>
-
       <input
         type="radio"
+        name="payment-option"
         value={value}
         checked={isSelected}
-        onChange={() => onChange(value)}
+        readOnly
         className="hidden"
       />
     </div>
