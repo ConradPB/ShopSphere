@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
-import { useAppSelector } from "@/redux/hooks"; // ✅ for real cart data
+import React, { useState, useEffect } from "react";
 import InputField from "@/components/ui/InputField";
 import SectionCard from "@/components/ui/SectionCard";
 import PaymentOption from "@/components/ui/PaymentOption";
@@ -9,27 +8,22 @@ import Button from "@/components/ui/Button";
 import { toast } from "react-hot-toast";
 
 export default function CheckoutPage() {
-  const [paymentMethod, setPaymentMethod] = useState("credit-card");
-  const cartItems = useAppSelector((state) => state.cart.items);
+  // ✅ Hydration-safe client flag
+  const [isClient, setIsClient] = useState(false);
+  useEffect(() => setIsClient(true), []);
+  if (!isClient) return null;
 
-  const total = cartItems.reduce(
-    (acc, item) => acc + item.price * item.quantity,
-    0
-  );
+  const [paymentMethod, setPaymentMethod] = useState("credit-card");
 
   const handlePlaceOrder = () => {
-    if (cartItems.length === 0) {
-      toast.error("Your cart is empty!");
-      return;
-    }
     toast.success("Order placed successfully!");
   };
 
   return (
-    <main className="relative min-h-screen bg-gradient-to-b from-black via-neutral-950 to-black text-gray-100 pt-28 pb-20 overflow-hidden">
+    <main className="relative min-h-screen bg-gradient-to-b from-black via-neutral-950 to-black text-gray-100 pt-28 pb-20">
       <div className="max-w-7xl mx-auto px-6 space-y-12">
         {/* Page Title */}
-        <h1 className="text-4xl md:text-5xl font-extrabold text-center mb-4 font-display tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500 drop-shadow-lg">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-center mb-4 font-display tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500 drop-shadow-[0_0_10px_rgba(56,189,248,0.3)]">
           Checkout
         </h1>
 
@@ -40,47 +34,69 @@ export default function CheckoutPage() {
             {/* Billing Info */}
             <SectionCard
               title="Billing Information"
-              className="bg-neutral-900/70 border border-neutral-800 rounded-2xl backdrop-blur-md shadow-lg shadow-cyan-500/10"
+              className="bg-neutral-900/70 border border-neutral-800 rounded-2xl backdrop-blur-md shadow-xl hover:shadow-cyan-500/10 transition-all duration-300"
             >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <InputField label="First Name" placeholder="John" />
-                <InputField label="Last Name" placeholder="Doe" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-200">
+                <InputField
+                  label="First Name"
+                  placeholder="John"
+                  className="bg-neutral-800/60 border border-neutral-700 text-gray-100 placeholder-gray-400"
+                />
+                <InputField
+                  label="Last Name"
+                  placeholder="Doe"
+                  className="bg-neutral-800/60 border border-neutral-700 text-gray-100 placeholder-gray-400"
+                />
                 <InputField
                   label="Email"
                   placeholder="john@example.com"
                   type="email"
+                  className="bg-neutral-800/60 border border-neutral-700 text-gray-100 placeholder-gray-400"
                 />
-                <InputField label="Phone" placeholder="+123456789" type="tel" />
+                <InputField
+                  label="Phone"
+                  placeholder="+123456789"
+                  type="tel"
+                  className="bg-neutral-800/60 border border-neutral-700 text-gray-100 placeholder-gray-400"
+                />
                 <InputField
                   label="Address"
                   placeholder="123 Main Street"
-                  className="md:col-span-2"
+                  className="md:col-span-2 bg-neutral-800/60 border border-neutral-700 text-gray-100 placeholder-gray-400"
                 />
-                <InputField label="City" placeholder="New York" />
-                <InputField label="Postal Code" placeholder="10001" />
+                <InputField
+                  label="City"
+                  placeholder="New York"
+                  className="bg-neutral-800/60 border border-neutral-700 text-gray-100 placeholder-gray-400"
+                />
+                <InputField
+                  label="Postal Code"
+                  placeholder="10001"
+                  className="bg-neutral-800/60 border border-neutral-700 text-gray-100 placeholder-gray-400"
+                />
               </div>
             </SectionCard>
 
             {/* Payment Options */}
             <SectionCard
               title="Payment Method"
-              className="bg-neutral-900/70 border border-neutral-800 rounded-2xl backdrop-blur-md shadow-lg shadow-purple-500/10"
+              className="bg-neutral-900/70 border border-neutral-800 rounded-2xl backdrop-blur-md shadow-xl hover:shadow-purple-500/10 transition-all duration-300"
             >
               <div className="space-y-4">
                 {[
                   { value: "credit-card", label: "💳 Credit / Debit Card" },
                   { value: "paypal", label: "🪙 PayPal" },
                   { value: "crypto", label: "💠 Crypto (USDT / BTC / ETH)" },
-                ].map((option) => (
+                ].map(({ value, label }) => (
                   <PaymentOption
-                    key={option.value}
-                    value={option.value}
-                    label={option.label}
+                    key={value}
+                    value={value}
+                    label={label}
                     selected={paymentMethod}
                     onChange={setPaymentMethod}
-                    className={`p-3 rounded-lg cursor-pointer transition-all ${
-                      paymentMethod === option.value
-                        ? "bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-500/40"
+                    className={`p-3 rounded-lg cursor-pointer transition-all duration-300 ${
+                      paymentMethod === value
+                        ? "bg-gradient-to-r from-cyan-500/25 to-purple-500/25 border border-cyan-500/40 shadow-md shadow-cyan-500/20"
                         : "hover:bg-neutral-800/70 border border-neutral-800"
                     }`}
                   />
@@ -96,29 +112,19 @@ export default function CheckoutPage() {
                 title="Order Summary"
                 className="bg-neutral-900/80 border border-neutral-800 rounded-2xl backdrop-blur-md shadow-lg shadow-cyan-500/10"
               >
-                <div className="space-y-3 text-sm">
-                  {cartItems.length > 0 ? (
-                    cartItems.map((item) => (
-                      <div
-                        key={item.id}
-                        className="flex justify-between items-center text-gray-300"
-                      >
-                        <span className="truncate">{item.title}</span>
-                        <span className="text-gray-100 font-medium">
-                          ${(item.price * item.quantity).toFixed(2)}
-                        </span>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="text-center text-gray-500 py-6">
-                      No items in your cart
-                    </p>
-                  )}
-
+                <div className="space-y-3 text-sm text-gray-200">
+                  <div className="flex justify-between items-center">
+                    <span>Product 1</span>
+                    <span className="text-gray-100 font-medium">$50</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Product 2</span>
+                    <span className="text-gray-100 font-medium">$30</span>
+                  </div>
                   <hr className="border-neutral-800 my-3" />
                   <div className="flex justify-between font-semibold text-lg text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">
                     <span>Total</span>
-                    <span>${total.toFixed(2)}</span>
+                    <span>$80</span>
                   </div>
                 </div>
               </SectionCard>
