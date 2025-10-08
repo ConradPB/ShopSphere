@@ -42,10 +42,13 @@ export default function ProductCard({ product }: ProductCardProps) {
       "
     >
       {/* Glow border effect */}
-      <div className="absolute inset-0 border border-transparent rounded-2xl group-hover:border-cyan-400/60 transition-all duration-500"></div>
+      <div className="absolute inset-0 border border-transparent rounded-2xl group-hover:border-cyan-400/60 transition-all duration-500" />
 
       {/* Product Image */}
-      <div className="relative w-full h-64 overflow-hidden">
+      <Link
+        href={`/product/${id}`}
+        className="block relative w-full h-64 overflow-hidden"
+      >
         <Image
           src={imageSrc}
           alt={title || "Product image"}
@@ -59,17 +62,22 @@ export default function ProductCard({ product }: ProductCardProps) {
           )}`}
           loading="lazy"
         />
-
-        {/* Wishlist floating button */}
         <div className="absolute top-3 right-3 z-10">
           <WishlistButton product={product} compact />
         </div>
-      </div>
+      </Link>
 
       {/* Content */}
       <div className="p-5 text-center text-white">
-        <h3 className="text-lg font-semibold line-clamp-1">{title}</h3>
-        <p className="text-cyan-300 font-bold mt-2">${price.toFixed(2)}</p>
+        <Link href={`/product/${id}`}>
+          <h3 className="text-lg font-semibold line-clamp-1 hover:text-cyan-300 transition">
+            {title}
+          </h3>
+        </Link>
+
+        <p className="text-cyan-300 font-bold mt-2 text-lg drop-shadow-sm">
+          ${price.toFixed(2)}
+        </p>
 
         <div className="mt-6 flex gap-3 justify-center">
           <motion.button
@@ -84,7 +92,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
           <Link
             href={`/product/${id}`}
-            className="px-4 py-2 border border-cyan-400/40 rounded-lg text-sm text-cyan-200 hover:bg-cyan-400/10 transition-all duration-300"
+            className="px-4 py-2 border border-cyan-400/40 rounded-lg text-sm text-cyan-200 hover:bg-cyan-400/10 hover:text-cyan-300 transition-all duration-300"
           >
             View
           </Link>
