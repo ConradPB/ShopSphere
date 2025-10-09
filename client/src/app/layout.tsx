@@ -23,7 +23,7 @@ export default function RootLayout({
 
           {/* Main no longer has top padding — hero will start at the top and sit under the navbar */}
           <main className="flex-1 w-full">{children}</main>
-          <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
+          <Toaster position="top-center" toastOptions={{ duration: 3000 }} />
 
           <Footer />
         </ReduxProvider>
