@@ -21,14 +21,15 @@ export default function WishlistButton({
   const router = useRouter();
 
   const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  useEffect(() => setMounted(true), []);
 
   const prodId = String(product.id);
   const isInWishlist = wishlistItems.some((item) => item.id === prodId);
 
-  const toggleWishlist = () => {
+  const toggleWishlist = (e: React.MouseEvent) => {
+    e.stopPropagation(); // ✅ prevent accidental link navigation
+    e.preventDefault();
+
     if (isInWishlist) {
       dispatch(removeFromWishlist(prodId));
       toast.custom(
@@ -36,7 +37,7 @@ export default function WishlistButton({
           <div
             className={`${
               t.visible ? "animate-enter" : "animate-leave"
-            } bg-gradient-to-r from-red-500 to-pink-500 text-white px-4 py-3 rounded-lg shadow-lg flex items-center gap-3`}
+            } bg-gradient-to-r from-red-500 to-pink-600 text-white px-4 py-3 rounded-lg shadow-lg flex items-center gap-3`}
           >
             <span>❌ Removed from Wishlist</span>
           </div>
@@ -44,65 +45,5 @@ export default function WishlistButton({
         { duration: 2000 }
       );
     } else {
-      dispatch(
-        addToWishlist({
-          id: prodId,
-          title: product.title ?? "Unnamed Product",
-          price: Number(product.price ?? 0),
-          image: product.image ?? "/fallback-image.jpg",
-        })
-      );
-      toast.custom(
-        (t) => (
-          <div
-            className={`${
-              t.visible ? "animate-enter" : "animate-leave"
-            } bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-3 rounded-lg shadow-lg flex items-center justify-between gap-3`}
-          >
-            <span>💚 Added to Wishlist</span>
-            <button
-              onClick={() => {
-                router.push("/wishlist");
-                toast.dismiss(t.id);
-              }}
-              className="text-sm underline font-medium hover:text-white/80"
-            >
-              View
-            </button>
-          </div>
-        ),
-        { duration: 3000 }
-      );
-    }
-  };
-
-  if (!mounted) {
-    return (
-      <button
-        type="button"
-        disabled
-        className="px-3 py-2 border rounded-md text-sm opacity-50 cursor-wait"
-        aria-hidden
-      >
-        Loading...
-      </button>
-    );
-  }
-
-  return (
-    <button
-      type="button"
-      onClick={toggleWishlist}
-      aria-pressed={isInWishlist}
-      className={`px-3 py-2 rounded-md text-sm font-medium transition-all border flex items-center gap-2 ${
-        isInWishlist
-          ? "bg-gradient-to-r from-red-500 to-pink-600 text-white border-transparent hover:brightness-110 shadow-md hover:shadow-lg"
-          : "bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 border-gray-300 dark:from-gray-700 dark:to-gray-800 dark:text-gray-100 dark:border-gray-600 hover:brightness-110"
-      } ${compact ? "text-xs py-1 px-2" : ""}`}
-      aria-label={`${isInWishlist ? "Remove from" : "Add to"} wishlist`}
-    >
-      <span aria-hidden>{isInWishlist ? "♥" : "♡"}</span>
-      {!compact && <span>{isInWishlist ? "Wishlisted" : "Wishlist"}</span>}
-    </button>
-  );
+      
 }
