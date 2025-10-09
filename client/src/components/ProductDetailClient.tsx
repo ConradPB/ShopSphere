@@ -2,12 +2,10 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/redux/hooks";
 import { addToCart } from "@/redux/cartSlice";
 import type { Product } from "@/types/product";
-import WishlistButton from "./ui/WishlistButton";
+import Link from "next/link";
 
 export type ProductDetailClientProps = {
   product: Product;
@@ -21,7 +19,6 @@ export default function ProductDetailClient({
   initialRecs,
 }: ProductDetailClientProps) {
   const dispatch = useAppDispatch();
-  const router = useRouter();
 
   const seeded = useMemo(
     () => recommendations ?? initialRecs ?? [],
@@ -29,7 +26,6 @@ export default function ProductDetailClient({
   );
   const [recs, setRecs] = useState<Product[]>(seeded);
   const [adding, setAdding] = useState(false);
-  const [qty, setQty] = useState(1);
 
   useEffect(() => {
     setRecs(seeded ?? []);
@@ -37,165 +33,120 @@ export default function ProductDetailClient({
 
   const imgSrc = product.image ?? "/fallback-image.jpg";
 
-  function handleAdd(qtyToAdd = 1) {
+  function handleAdd(qty = 1) {
     setAdding(true);
     dispatch(
       addToCart({
-        id: String(product.id),
-        title: product.title ?? "Unnamed Product",
-        price: Number(product.price ?? 0),
+        id: product.id,
+        title: product.title,
+        price: product.price,
         image: imgSrc,
-        quantity: qtyToAdd,
+        quantity: qty,
       })
     );
-    // small UX delay for feedback
-    setTimeout(() => setAdding(false), 350);
+    setTimeout(() => setAdding(false), 250);
   }
 
   return (
-    <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 p-6">
-      {/* Left: image + back button */}
-      <div className="relative w-full rounded-lg overflow-hidden shadow max-h-[75vh] bg-neutral-900/40">
-        <div className="absolute top-4 left-4 z-20">
-          <button
-            onClick={() => router.back()}
-            className="inline-flex items-center gap-2 bg-black/50 text-white px-3 py-2 rounded-lg backdrop-blur-sm hover:opacity-90 transition"
-            aria-label="Back to products"
-          >
-            ← Back
-          </button>
-        </div>
+    <main className="relative min-h-screen bg-gradient-to-b from-neutral-950 via-slate-900 to-neutral-950 text-white py-20">
+      {/* Ambient glow */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute -top-48 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-cyan-500/10 blur-[120px] rounded-full" />
+        <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-blue-500/10 blur-[100px] rounded-full" />
+      </div>
 
-        {/* Wishlist btn placed top-right */}
-        <div className="absolute top-4 right-4 z-20">
-          <WishlistButton
-            product={
-              {
-                id: String(product.id),
-                title: product.title ?? "Unnamed Product",
-                price: Number(product.price ?? 0),
-                image: product.image ?? "/fallback-image.jpg",
-              } as Product
-            }
-            compact
-          />
-        </div>
-
-        {/* Image (use intrinsic width/height to reserve space) */}
-        <div className="relative w-full h-[min(60vh,600px)] bg-neutral-800/20 flex items-center justify-center">
+      <div className="relative max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 px-6 z-10">
+        {/* Left: Product Image */}
+        <div className="relative w-full rounded-2xl overflow-hidden shadow-lg border border-white/10 bg-white/5 backdrop-blur-lg">
           <Image
             src={imgSrc}
             alt={product.title || "Product image"}
             width={1200}
             height={900}
-            className="object-contain w-full h-full"
+            className="object-cover w-full h-full transition-transform duration-700 hover:scale-105"
             priority
             unoptimized
           />
         </div>
-      </div>
 
-      {/* Right: info */}
-      <div className="flex flex-col">
-        <div className="mb-4">
-          <h1 className="text-2xl md:text-3xl font-semibold text-white">
+        {/* Right: Product Info */}
+        <div className="flex flex-col justify-center">
+          <h1 className="text-3xl md:text-4xl font-bold mb-4">
             {product.title}
           </h1>
-          <p className="text-cyan-300 font-bold text-xl mt-2">
-            ${Number(product.price ?? 0).toFixed(2)}
+          <p className="text-cyan-400 text-2xl font-semibold mb-6">
+            ${product.price.toFixed(2)}
           </p>
-          <p className="text-neutral-300 mt-3">{product.description}</p>
-        </div>
+          <p className="text-gray-300 leading-relaxed mb-8">
+            {product.description ??
+              "A high-quality product — detailed description coming soon."}
+          </p>
 
-        {/* Quantity + Add to cart */}
-        <div className="mt-auto">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 rounded-lg bg-neutral-900/40 p-1">
-              <button
-                aria-label="Decrease quantity"
-                onClick={() => setQty((q) => Math.max(1, q - 1))}
-                className="px-3 py-2 rounded-md bg-transparent hover:bg-white/5 transition text-white"
-              >
-                −
-              </button>
-              <div className="px-4 py-2 font-medium text-white min-w-[48px] text-center">
-                {qty}
-              </div>
-              <button
-                aria-label="Increase quantity"
-                onClick={() => setQty((q) => q + 1)}
-                className="px-3 py-2 rounded-md bg-transparent hover:bg-white/5 transition text-white"
-              >
-                +
-              </button>
-            </div>
-
+          <div className="flex items-center gap-4 mb-8">
             <button
-              onClick={() => handleAdd(qty)}
+              onClick={() => handleAdd(1)}
               disabled={adding}
-              className="ml-3 inline-flex items-center gap-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-5 py-3 rounded-lg shadow-lg hover:scale-102 transition transform"
+              className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-5 py-3 rounded-lg shadow-md hover:opacity-90 transition-all duration-300"
             >
-              {adding ? "Adding..." : "Add to cart"}
+              {adding ? "Adding..." : "Add to Cart"}
             </button>
 
             <Link
               href="/cart"
-              className="ml-2 inline-flex items-center px-4 py-2 border border-neutral-700 rounded-lg text-white hover:bg-white/5 transition"
+              className="border border-cyan-400/40 px-5 py-3 rounded-lg text-cyan-300 hover:bg-cyan-400/10 transition-all duration-300"
             >
-              View cart
+              Go to Cart
             </Link>
           </div>
 
-          {/* small meta row */}
-          <div className="mt-4 text-sm text-neutral-400">
-            <div>Category: {product.category ?? "General"}</div>
-            <div className="mt-1">SKU: {String(product.id)}</div>
-          </div>
+          <Link
+            href="/products"
+            className="text-sm text-cyan-400 hover:underline"
+          >
+            ← Continue Shopping
+          </Link>
         </div>
-
-        {/* Recommendations */}
-        <section className="mt-8">
-          <h3 className="text-lg font-semibold text-white mb-4">
-            You might also like
-          </h3>
-
-          {recs.length === 0 ? (
-            <p className="text-sm text-neutral-400">No recommendations yet.</p>
-          ) : (
-            <div className="grid grid-cols-2 gap-4">
-              {recs.map((r) => {
-                const rImg = r.image ?? "/fallback-image.jpg";
-                return (
-                  <Link
-                    key={r.id}
-                    href={`/product/${r.id}`}
-                    className="flex items-center gap-3 bg-neutral-900/40 p-2 rounded-lg hover:shadow-md transition"
-                  >
-                    <div className="w-16 h-16 bg-neutral-800 rounded-md overflow-hidden flex-shrink-0">
-                      <Image
-                        src={rImg}
-                        alt={r.title || "Recommended product"}
-                        width={200}
-                        height={200}
-                        className="object-cover w-full h-full"
-                        unoptimized
-                      />
-                    </div>
-                    <div>
-                      <div className="text-sm text-white line-clamp-1">
-                        {r.title}
-                      </div>
-                      <div className="text-xs text-cyan-300">
-                        ${Number(r.price ?? 0).toFixed(2)}
-                      </div>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-          )}
-        </section>
       </div>
-    </div>
+
+      {/* Related Products Section */}
+      <section className="relative max-w-6xl mx-auto mt-20 px-6 z-10">
+        <h2 className="text-2xl font-semibold mb-6 text-cyan-300">
+          Related Products
+        </h2>
+
+        {recs.length === 0 ? (
+          <p className="text-gray-500">No related products yet.</p>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+            {recs.map((r) => (
+              <Link
+                key={r.id}
+                href={`/product/${r.id}`}
+                className="group bg-white/5 border border-white/10 rounded-xl overflow-hidden backdrop-blur-sm shadow-md hover:shadow-cyan-500/20 hover:border-cyan-400/40 transition-all duration-300"
+              >
+                <div className="relative w-full aspect-square">
+                  <Image
+                    src={r.image ?? "/fallback-image.jpg"}
+                    alt={r.title || "Related product"}
+                    width={400}
+                    height={400}
+                    className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110"
+                    unoptimized
+                  />
+                </div>
+                <div className="p-3 text-center">
+                  <h3 className="text-sm font-medium text-white truncate">
+                    {r.title}
+                  </h3>
+                  <p className="text-cyan-400 text-sm font-semibold mt-1">
+                    ${r.price.toFixed(2)}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </section>
+    </main>
   );
 }
