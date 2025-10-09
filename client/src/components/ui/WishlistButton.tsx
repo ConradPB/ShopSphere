@@ -88,4 +88,21 @@ export default function WishlistButton({
       </button>
     );
   }
+
+  return (
+    <button
+      type="button"
+      onClick={toggleWishlist}
+      aria-pressed={isInWishlist}
+      className={`px-3 py-2 rounded-md text-sm font-medium transition-all border flex items-center gap-2 ${
+        isInWishlist
+          ? "bg-gradient-to-r from-red-500 to-pink-600 text-white border-transparent hover:brightness-110 shadow-md hover:shadow-lg"
+          : "bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 border-gray-300 dark:from-gray-700 dark:to-gray-800 dark:text-gray-100 dark:border-gray-600 hover:brightness-110"
+      } ${compact ? "text-xs py-1 px-2" : ""}`}
+      aria-label={`${isInWishlist ? "Remove from" : "Add to"} wishlist`}
+    >
+      <span aria-hidden>{isInWishlist ? "♥" : "♡"}</span>
+      {!compact && <span>{isInWishlist ? "Wishlisted" : "Wishlist"}</span>}
+    </button>
+  );
 }
