@@ -30,26 +30,59 @@ export default function WishlistPage() {
     dispatch(removeFromWishlist(id));
   };
 
+  // Empty state
   if (wishlistItems.length === 0) {
     return (
-      <div className="min-h-screen bg-neutral-900 flex items-center justify-center">
-        <p className="text-gray-400 text-lg">Your wishlist is empty.</p>
-      </div>
+      <main className="min-h-screen bg-neutral-900 text-gray-100 py-20">
+        <div className="max-w-3xl mx-auto px-6 text-center">
+          <h1 className="text-3xl font-bold mb-4">Your wishlist is empty</h1>
+          <p className="text-gray-400 mb-8">
+            Save items you love and come back later — we'll keep them here for
+            you.
+          </p>
+
+          <div className="flex justify-center gap-4">
+            <Link
+              href="/products"
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-2xl shadow-lg hover:scale-[1.02] transition"
+            >
+              Continue Shopping
+            </Link>
+
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl border border-neutral-700 text-gray-200 hover:bg-neutral-800 transition"
+            >
+              Back to Home
+            </Link>
+          </div>
+        </div>
+      </main>
     );
   }
 
+  // Non-empty state
   return (
-    <div className="min-h-screen bg-neutral-900 text-gray-100">
-      <div className="max-w-6xl mx-auto p-6">
-        <h1 className="text-3xl font-bold mb-8 text-center text-white">
-          My Wishlist
-        </h1>
+    <main className="min-h-screen bg-neutral-900 text-gray-100 py-12">
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-3xl font-bold text-white">My Wishlist</h1>
+
+          <div className="flex items-center gap-3">
+            <Link
+              href="/products"
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2 rounded-2xl shadow hover:scale-[1.02] transition"
+            >
+              Continue Shopping
+            </Link>
+          </div>
+        </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {wishlistItems.map((item) => (
             <article
               key={item.id}
-              className="bg-neutral-800 rounded-2xl shadow-lg border border-neutral-700 overflow-hidden hover:scale-[1.02] hover:shadow-xl transition-all duration-300"
+              className="bg-neutral-800 rounded-2xl shadow-lg border border-neutral-700 overflow-hidden hover:scale-[1.02] transition-all duration-300"
             >
               <div className="relative w-full h-52 bg-neutral-700 overflow-hidden">
                 <Image
@@ -57,7 +90,7 @@ export default function WishlistPage() {
                   alt={item.title}
                   width={700}
                   height={475}
-                  className="object-cover w-full h-full hover:scale-105 transition-transform duration-300"
+                  className="object-cover w-full h-full transition-transform duration-300 hover:scale-105"
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   unoptimized
                 />
@@ -82,6 +115,7 @@ export default function WishlistPage() {
                       )
                     }
                     className="flex-1 bg-green-600 text-white px-3 py-2 rounded-md hover:bg-green-700 transition"
+                    aria-label={`Move ${item.title} to cart`}
                   >
                     Move to Cart
                   </button>
@@ -99,7 +133,17 @@ export default function WishlistPage() {
             </article>
           ))}
         </div>
+
+        {/* Bottom CTA (redundant but handy) */}
+        <div className="mt-10 text-center">
+          <Link
+            href="/products"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-2xl shadow-lg hover:scale-[1.02] transition"
+          >
+            Continue Shopping
+          </Link>
+        </div>
       </div>
-    </div>
+    </main>
   );
 }
