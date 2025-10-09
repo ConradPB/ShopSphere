@@ -6,7 +6,6 @@ import { useAppDispatch } from "@/redux/hooks";
 import { addToCart } from "@/redux/cartSlice";
 import type { Product } from "@/types/product";
 import Link from "next/link";
-import { getRandomRecommendations } from "lib/supabase"; // new helper
 
 export type ProductDetailClientProps = {
   product: Product;
@@ -37,14 +36,18 @@ export default function ProductDetailClient({
     setTimeout(() => setAdding(false), 250);
   }
 
-  // Fetch random recommendations (excluding current product)
   useEffect(() => {
+    // Optionally fetch fresh random recs (if helper exists). If you prefer
+    // to rely only on initialRecs, you can remove this effect.
     const fetchRecs = async () => {
-      const { data: products, error } = await getRandomRecommendations(
-        product.id,
-        4
-      );
-      if (!error) setRecs(products ?? []);
+      try {
+        // if you implemented getRandomRecommendations on server/lib,
+        // uncomment the next lines. Otherwise this call will fail.
+        // const { data: products, error } = await getRandomRecommendations(4, product.id);
+        // if (!error && products) setRecs(products);
+      } catch {
+        // ignore
+      }
     };
     fetchRecs();
   }, [product.id]);
@@ -52,7 +55,7 @@ export default function ProductDetailClient({
   return (
     <main className="relative min-h-screen bg-gradient-to-b from-neutral-950 via-slate-900 to-neutral-950 text-white py-20">
       <div className="relative max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8 z-10">
-        {/* Product Image */}
+        {/* LEFT: Image */}
         <div className="relative w-full rounded-lg overflow-hidden shadow max-h-[70vh] bg-neutral-800">
           <Image
             src={imgSrc}
@@ -65,12 +68,23 @@ export default function ProductDetailClient({
           />
         </div>
 
-        {/* Product Info */}
+        {/* RIGHT: Info */}
         <div>
+          {/* Back link */}
+          <div className="mb-4">
+            <Link
+              href="/products"
+              className="inline-block text-sm text-cyan-300 hover:underline"
+            >
+              ← Back to products
+            </Link>
+          </div>
+
           <h1 className="text-3xl font-bold mb-2">{product.title}</h1>
           <p className="text-indigo-400 text-2xl font-semibold mb-4">
-            ${product.price.toFixed(2)}
+            ${Number(product.price ?? 0).toFixed(2)}
           </p>
+
           <p className="text-gray-300 mb-6">
             {product.description ??
               "A high-quality product — description to come later."}
@@ -100,6 +114,7 @@ export default function ProductDetailClient({
         <h2 className="text-2xl font-semibold mb-6 text-white">
           You might also like
         </h2>
+
         {recs.length === 0 ? (
           <p className="text-gray-400 text-sm">No recommendations available.</p>
         ) : (
@@ -127,7 +142,7 @@ export default function ProductDetailClient({
                       {r.title}
                     </h4>
                     <p className="text-indigo-400 text-xs mt-1">
-                      ${r.price.toFixed(2)}
+                      ${Number(r.price ?? 0).toFixed(2)}
                     </p>
                   </div>
                 </Link>
