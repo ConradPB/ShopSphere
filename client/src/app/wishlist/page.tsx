@@ -57,8 +57,8 @@ export default function WishlistPage() {
         <div className="max-w-3xl mx-auto px-6 text-center">
           <h1 className="text-3xl font-bold mb-4">Your wishlist is empty</h1>
           <p className="text-gray-400 mb-8">
-            Save items you love and come back later — we'll keep them here for
-            you.
+            Save items you love and come back later — we&lsquo;ll keep them here
+            for you.
           </p>
 
           <Link
@@ -207,7 +207,7 @@ export default function WishlistPage() {
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
           <div className="bg-neutral-900 border border-neutral-700 p-6 rounded-xl max-w-sm w-full text-center">
             <h3 className="text-lg font-semibold mb-4">
-              Remove "{confirmRemove.title}" from your wishlist?
+              Remove &#34;{confirmRemove.title}&rdquo; from your wishlist?
             </h3>
             <div className="flex justify-center gap-4">
               <button
