@@ -12,10 +12,7 @@ interface WishlistButtonProps {
   compact?: boolean;
 }
 
-export default function WishlistButton({
-  product,
-  compact,
-}: WishlistButtonProps) {
+export default function WishlistButton({ product, compact }: WishlistButtonProps) {
   const dispatch = useAppDispatch();
   const wishlistItems = useAppSelector((state) => state.wishlist.items);
   const router = useRouter();
@@ -45,5 +42,13 @@ export default function WishlistButton({
         { duration: 2000 }
       );
     } else {
-      
+      dispatch(
+        addToWishlist({
+          id: prodId,
+          title: product.title ?? "Unnamed Product",
+          price: Number(product.price ?? 0),
+          image: product.image ?? "/fallback-image.jpg",
+        })
+      );
+
 }
