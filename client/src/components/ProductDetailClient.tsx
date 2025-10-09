@@ -1,107 +1,201 @@
 "use client";
 
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/redux/hooks";
 import { addToCart } from "@/redux/cartSlice";
-import WishlistButton from "./ui/WishlistButton";
 import type { Product } from "@/types/product";
-import ProductGrid from "./ProductGrid"; // for recommended section
-import { shimmer, toBase64 } from "@/lib/blur";
+import WishlistButton from "./ui/WishlistButton";
 
-interface Props {
+export type ProductDetailClientProps = {
   product: Product;
+  recommendations?: Product[];
   initialRecs?: Product[];
-}
+};
 
-export default function ProductDetailClient({ product, initialRecs }: Props) {
+export default function ProductDetailClient({
+  product,
+  recommendations,
+  initialRecs,
+}: ProductDetailClientProps) {
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
-  const id = String(product.id);
-  const title = product.title ?? "Unnamed Product";
-  const price = Number(product.price ?? 0);
-  const imageSrc: string = product.image ?? "/fallback-image.jpg";
-  const description =
-    product.description ?? "No description available for this product.";
+  const seeded = useMemo(
+    () => recommendations ?? initialRecs ?? [],
+    [recommendations, initialRecs]
+  );
+  const [recs, setRecs] = useState<Product[]>(seeded);
+  const [adding, setAdding] = useState(false);
+  const [qty, setQty] = useState(1);
 
-  const handleAddToCart = () => {
-    dispatch(addToCart({ id, title, price, image: imageSrc, quantity: 1 }));
-  };
+  useEffect(() => {
+    setRecs(seeded ?? []);
+  }, [seeded]);
+
+  const imgSrc = product.image ?? "/fallback-image.jpg";
+
+  function handleAdd(qtyToAdd = 1) {
+    setAdding(true);
+    dispatch(
+      addToCart({
+        id: String(product.id),
+        title: product.title ?? "Unnamed Product",
+        price: Number(product.price ?? 0),
+        image: imgSrc,
+        quantity: qtyToAdd,
+      })
+    );
+    // small UX delay for feedback
+    setTimeout(() => setAdding(false), 350);
+  }
 
   return (
-    <motion.section
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="min-h-screen bg-gradient-to-b from-black via-slate-900 to-black text-white px-6 md:px-12 py-16"
-    >
-      {/* Product container */}
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-        {/* Product Image */}
-        <motion.div
-          initial={{ opacity: 0, x: -30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
-          className="relative rounded-2xl overflow-hidden shadow-[0_0_25px_rgba(56,189,248,0.3)]"
-        >
-          <Image
-            src={imageSrc}
-            alt={title}
-            width={600}
-            height={600}
-            className="object-cover w-full h-[450px] md:h-[550px] rounded-2xl"
-            placeholder="blur"
-            blurDataURL={`data:image/svg+xml;base64,${toBase64(
-              shimmer(600, 600)
-            )}`}
+    <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 p-6">
+      {/* Left: image + back button */}
+      <div className="relative w-full rounded-lg overflow-hidden shadow max-h-[75vh] bg-neutral-900/40">
+        <div className="absolute top-4 left-4 z-20">
+          <button
+            onClick={() => router.back()}
+            className="inline-flex items-center gap-2 bg-black/50 text-white px-3 py-2 rounded-lg backdrop-blur-sm hover:opacity-90 transition"
+            aria-label="Back to products"
+          >
+            ← Back
+          </button>
+        </div>
+
+        {/* Wishlist btn placed top-right */}
+        <div className="absolute top-4 right-4 z-20">
+          <WishlistButton
+            product={
+              {
+                id: String(product.id),
+                title: product.title ?? "Unnamed Product",
+                price: Number(product.price ?? 0),
+                image: product.image ?? "/fallback-image.jpg",
+              } as Product
+            }
+            compact
           />
+        </div>
 
-          <div className="absolute top-3 right-3 z-10">
-            <WishlistButton product={product} compact />
-          </div>
-
-          {/* Glow */}
-          <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/20 via-blue-500/20 to-purple-500/20 opacity-0 hover:opacity-30 transition duration-700 blur-2xl rounded-2xl"></div>
-        </motion.div>
-
-        {/* Product Info */}
-        <motion.div
-          initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
-          className="space-y-6"
-        >
-          <h1 className="text-3xl md:text-4xl font-bold text-cyan-300">
-            {title}
-          </h1>
-          <p className="text-xl font-semibold text-cyan-400">
-            ${price.toFixed(2)}
-          </p>
-          <p className="text-gray-300 leading-relaxed">{description}</p>
-
-          <div className="flex gap-4 mt-8">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleAddToCart}
-              className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:shadow-cyan-500/40 transition-all duration-300"
-            >
-              Add to Cart
-            </motion.button>
-
-            <WishlistButton product={product} />
-          </div>
-        </motion.div>
+        {/* Image (use intrinsic width/height to reserve space) */}
+        <div className="relative w-full h-[min(60vh,600px)] bg-neutral-800/20 flex items-center justify-center">
+          <Image
+            src={imgSrc}
+            alt={product.title || "Product image"}
+            width={1200}
+            height={900}
+            className="object-contain w-full h-full"
+            priority
+            unoptimized
+          />
+        </div>
       </div>
 
-      {/* Recommended Section */}
-      {initialRecs && initialRecs.length > 0 && (
-        <div className="mt-24">
-          <h2 className="text-center text-2xl font-bold mb-8 text-cyan-300">
-            You might also like
-          </h2>
-          <ProductGrid initialProducts={initialRecs} />
+      {/* Right: info */}
+      <div className="flex flex-col">
+        <div className="mb-4">
+          <h1 className="text-2xl md:text-3xl font-semibold text-white">
+            {product.title}
+          </h1>
+          <p className="text-cyan-300 font-bold text-xl mt-2">
+            ${Number(product.price ?? 0).toFixed(2)}
+          </p>
+          <p className="text-neutral-300 mt-3">{product.description}</p>
         </div>
-      )}
-    </motion.section>
+
+        {/* Quantity + Add to cart */}
+        <div className="mt-auto">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 rounded-lg bg-neutral-900/40 p-1">
+              <button
+                aria-label="Decrease quantity"
+                onClick={() => setQty((q) => Math.max(1, q - 1))}
+                className="px-3 py-2 rounded-md bg-transparent hover:bg-white/5 transition text-white"
+              >
+                −
+              </button>
+              <div className="px-4 py-2 font-medium text-white min-w-[48px] text-center">
+                {qty}
+              </div>
+              <button
+                aria-label="Increase quantity"
+                onClick={() => setQty((q) => q + 1)}
+                className="px-3 py-2 rounded-md bg-transparent hover:bg-white/5 transition text-white"
+              >
+                +
+              </button>
+            </div>
+
+            <button
+              onClick={() => handleAdd(qty)}
+              disabled={adding}
+              className="ml-3 inline-flex items-center gap-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-5 py-3 rounded-lg shadow-lg hover:scale-102 transition transform"
+            >
+              {adding ? "Adding..." : "Add to cart"}
+            </button>
+
+            <Link
+              href="/cart"
+              className="ml-2 inline-flex items-center px-4 py-2 border border-neutral-700 rounded-lg text-white hover:bg-white/5 transition"
+            >
+              View cart
+            </Link>
+          </div>
+
+          {/* small meta row */}
+          <div className="mt-4 text-sm text-neutral-400">
+            <div>Category: {product.category ?? "General"}</div>
+            <div className="mt-1">SKU: {String(product.id)}</div>
+          </div>
+        </div>
+
+        {/* Recommendations */}
+        <section className="mt-8">
+          <h3 className="text-lg font-semibold text-white mb-4">
+            You might also like
+          </h3>
+
+          {recs.length === 0 ? (
+            <p className="text-sm text-neutral-400">No recommendations yet.</p>
+          ) : (
+            <div className="grid grid-cols-2 gap-4">
+              {recs.map((r) => {
+                const rImg = r.image ?? "/fallback-image.jpg";
+                return (
+                  <Link
+                    key={r.id}
+                    href={`/product/${r.id}`}
+                    className="flex items-center gap-3 bg-neutral-900/40 p-2 rounded-lg hover:shadow-md transition"
+                  >
+                    <div className="w-16 h-16 bg-neutral-800 rounded-md overflow-hidden flex-shrink-0">
+                      <Image
+                        src={rImg}
+                        alt={r.title || "Recommended product"}
+                        width={200}
+                        height={200}
+                        className="object-cover w-full h-full"
+                        unoptimized
+                      />
+                    </div>
+                    <div>
+                      <div className="text-sm text-white line-clamp-1">
+                        {r.title}
+                      </div>
+                      <div className="text-xs text-cyan-300">
+                        ${Number(r.price ?? 0).toFixed(2)}
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
+        </section>
+      </div>
+    </div>
   );
 }
