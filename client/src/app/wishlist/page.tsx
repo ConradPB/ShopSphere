@@ -37,8 +37,8 @@ export default function WishlistPage() {
         <div className="max-w-3xl mx-auto px-6 text-center">
           <h1 className="text-3xl font-bold mb-4">Your wishlist is empty</h1>
           <p className="text-gray-400 mb-8">
-            Save items you love and come back later — we'll keep them here for
-            you.
+            Save items you love and come back later — we&apos;ll keep them here
+            for you.
           </p>
 
           <div className="flex justify-center gap-4">
