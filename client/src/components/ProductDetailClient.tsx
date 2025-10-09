@@ -6,7 +6,7 @@ import { useAppDispatch } from "@/redux/hooks";
 import { addToCart } from "@/redux/cartSlice";
 import type { Product } from "@/types/product";
 import Link from "next/link";
-import { getRandomProducts } from "lib/supabase"; // new helper
+import { getRandomRecommendations } from "lib/supabase"; // new helper
 
 export type ProductDetailClientProps = {
   product: Product;
@@ -40,7 +40,10 @@ export default function ProductDetailClient({
   // Fetch random recommendations (excluding current product)
   useEffect(() => {
     const fetchRecs = async () => {
-      const { data: products, error } = await getRandomProducts(4, product.id);
+      const { data: products, error } = await getRandomRecommendations(
+        4,
+        product.id
+      );
       if (!error) setRecs(products ?? []);
     };
     fetchRecs();
