@@ -12,7 +12,10 @@ interface WishlistButtonProps {
   compact?: boolean;
 }
 
-export default function WishlistButton({ product, compact }: WishlistButtonProps) {
+export default function WishlistButton({
+  product,
+  compact,
+}: WishlistButtonProps) {
   const dispatch = useAppDispatch();
   const wishlistItems = useAppSelector((state) => state.wishlist.items);
   const router = useRouter();
@@ -49,7 +52,27 @@ export default function WishlistButton({ product, compact }: WishlistButtonProps
           image: product.image ?? "/fallback-image.jpg",
         })
       );
-     
+      toast.custom(
+        (t) => (
+          <div
+            className={`${
+              t.visible ? "animate-enter" : "animate-leave"
+            } bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-3 rounded-lg shadow-lg flex items-center justify-between gap-3`}
+          >
+            <span>💚 Added to Wishlist</span>
+            <button
+              onClick={() => {
+                router.push("/wishlist");
+                toast.dismiss(t.id);
+              }}
+              className="text-sm underline font-medium hover:text-white/80"
+            >
+              View
+            </button>
+          </div>
+        ),
+        { duration: 3000 }
+      );
+    }
   };
-
 }
