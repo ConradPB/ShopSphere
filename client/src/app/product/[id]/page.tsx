@@ -1,13 +1,12 @@
 import { getProductById, getRecommendations } from "@/lib/supabase";
 import ProductDetailClient from "@/components/ProductDetailClient";
-import type { Product } from "@/types/product";
 
 type PageProps = {
   params: Promise<{ id: string }>;
 };
 
 export default async function ProductPage({ params }: PageProps) {
-  const { id } = await params; // ✅ await params
+  const { id } = await params; // await params (Next.js 15+)
 
   const { data: product } = await getProductById(id);
   if (!product) {
