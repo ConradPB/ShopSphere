@@ -6,7 +6,7 @@ import { useAppDispatch } from "@/redux/hooks";
 import { addToCart } from "@/redux/cartSlice";
 import type { Product } from "@/types/product";
 import Link from "next/link";
-import { getRandomProducts } from "@/lib/supabase"; // new helper
+// new helper
 
 export type ProductDetailClientProps = {
   product: Product;
