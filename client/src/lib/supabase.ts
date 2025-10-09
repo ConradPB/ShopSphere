@@ -64,3 +64,25 @@ export async function getRecommendations(
   const normalized = (data as DBRow[] | null)?.map(normalizeRow) ?? [];
   return { data: normalized, error: null };
 }
+
+export async function getRandomRecommendations(
+  productId: string,
+  count = 4
+): Promise<{ data: Product[] | null; error: string | null }> {
+  // Fetch all products except the current one
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .neq("id", productId);
+
+  if (error) return { data: null, error: error.message };
+  if (!data || data.length === 0) return { data: [], error: null };
+
+  // Shuffle the array client-side
+  const shuffled = (data as DBRow[]).sort(() => Math.random() - 0.5);
+
+  // Take only 'count' products
+  const selected = shuffled.slice(0, count).map(normalizeRow);
+
+  return { data: selected, error: null };
+}
