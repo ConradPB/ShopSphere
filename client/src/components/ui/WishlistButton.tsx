@@ -75,4 +75,17 @@ export default function WishlistButton({
       );
     }
   };
+
+  if (!mounted) {
+    return (
+      <button
+        type="button"
+        disabled
+        className="px-3 py-2 border rounded-md text-sm opacity-50 cursor-wait"
+        aria-hidden
+      >
+        Loading...
+      </button>
+    );
+  }
 }
