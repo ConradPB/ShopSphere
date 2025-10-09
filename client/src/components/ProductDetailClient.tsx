@@ -41,7 +41,6 @@ export default function ProductDetailClient({
   useEffect(() => {
     const fetchRecs = async () => {
       const { data: products, error } = await getRandomRecommendations(
-        4,
         product.id
       );
       if (!error) setRecs(products ?? []);
