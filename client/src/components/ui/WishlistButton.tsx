@@ -76,4 +76,41 @@ export default function WishlistButton({
       );
     }
   };
+
+  if (!mounted) {
+    return (
+      <button
+        type="button"
+        disabled
+        className="px-3 py-2 border rounded-md text-sm opacity-50 cursor-wait"
+      >
+        Loading...
+      </button>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={toggleWishlist}
+      aria-pressed={isInWishlist}
+      className={`px-3 py-2 rounded-md text-sm font-medium transition-all border flex items-center gap-2
+        ${
+          isInWishlist
+            ? "bg-transparent border-red-500 text-red-500 hover:bg-red-500/10"
+            : "bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 border-gray-300 dark:from-gray-700 dark:to-gray-800 dark:text-gray-100 dark:border-gray-600 hover:brightness-110"
+        }
+        ${compact ? "text-xs py-1 px-2" : ""}
+      `}
+      aria-label={`${isInWishlist ? "Remove from" : "Add to"} wishlist`}
+    >
+      <span
+        aria-hidden
+        className={isInWishlist ? "text-red-500" : "text-gray-500"}
+      >
+        {isInWishlist ? "♥" : "♡"}
+      </span>
+      {!compact && <span>{isInWishlist ? "Wishlisted" : "Wishlist"}</span>}
+    </button>
+  );
 }
