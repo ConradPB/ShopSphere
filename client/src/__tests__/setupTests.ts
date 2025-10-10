@@ -38,3 +38,27 @@ Object.defineProperty(window, "matchMedia", {
     dispatchEvent: () => false,
   }),
 });
+
+// ✅ Mock Next.js Image safely without JSX
+jest.mock("next/image", () => ({
+  __esModule: true,
+  default: (
+    props: React.ImgHTMLAttributes<HTMLImageElement>
+  ): React.ReactElement =>
+    React.createElement("img", {
+      ...props,
+      alt: props.alt ?? "mocked image",
+    }),
+}));
+
+// ✅ Extend Jest matchers with type-safe version
+expect.extend({
+  toBeVisible(received: HTMLElement): { pass: boolean; message: () => string } {
+    const isVisible = received.offsetParent !== null;
+    return {
+      pass: isVisible,
+      message: () =>
+        isVisible ? "Element is visible" : "Element is not visible",
+    };
+  },
+});
