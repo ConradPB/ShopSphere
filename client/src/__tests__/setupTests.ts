@@ -2,6 +2,17 @@ import "@testing-library/jest-dom";
 import { expect } from "@jest/globals";
 import React from "react";
 
+jest.mock("next/navigation", () => ({
+  useRouter: jest.fn(() => ({
+    push: jest.fn(),
+    prefetch: jest.fn(),
+    back: jest.fn(),
+    forward: jest.fn(),
+    replace: jest.fn(),
+    refresh: jest.fn(),
+  })),
+}));
+
 // Define a strict type for window.matchMedia to prevent 'any' issues
 interface MatchMedia {
   matches: boolean;
