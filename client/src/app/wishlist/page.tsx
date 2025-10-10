@@ -14,6 +14,9 @@ export default function WishlistPage() {
   const wishlistItems = useAppSelector((state) => state.wishlist.items);
   const dispatch = useAppDispatch();
 
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   const [previewItem, setPreviewItem] = useState<Product | null>(null);
   const [confirmRemove, setConfirmRemove] = useState<Product | null>(null);
 
