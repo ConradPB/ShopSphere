@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { addToWishlist, removeFromWishlist } from "@/redux/wishlistSlice";
 import type { Product } from "@/types/product";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 
 interface WishlistButtonProps {
@@ -25,22 +26,33 @@ export default function WishlistButton({
 
   const prodId = String(product.id);
   const isInWishlist = wishlistItems.some((item) => item.id === prodId);
+  const [animate, setAnimate] = useState(false);
 
   const toggleWishlist = (e: React.MouseEvent) => {
-    e.stopPropagation(); // ✅ prevent accidental link navigation
+    // prevent parent anchors / clicks from triggering navigation
+    e.stopPropagation();
     e.preventDefault();
+
+    // small pop animation
+    setAnimate(true);
+    setTimeout(() => setAnimate(false), 420);
 
     if (isInWishlist) {
       dispatch(removeFromWishlist(prodId));
+
       toast.custom(
         (t) => (
-          <div
+          <motion.div
+            initial={{ opacity: 0, y: 12, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -12, scale: 0.98 }}
+            transition={{ duration: 0.28 }}
             className={`${
               t.visible ? "animate-enter" : "animate-leave"
             } bg-gradient-to-r from-red-500 to-pink-600 text-white px-4 py-3 rounded-lg shadow-lg flex items-center gap-3`}
           >
-            <span>❌ Removed from Wishlist</span>
-          </div>
+            <span className="flex-1">💔 Removed from wishlist</span>
+          </motion.div>
         ),
         { duration: 2000 }
       );
@@ -53,24 +65,33 @@ export default function WishlistButton({
           image: product.image ?? "/fallback-image.jpg",
         })
       );
+
       toast.custom(
         (t) => (
-          <div
+          <motion.div
+            initial={{ opacity: 0, y: 12, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -12, scale: 0.98 }}
+            transition={{ duration: 0.28 }}
             className={`${
               t.visible ? "animate-enter" : "animate-leave"
-            } bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-3 rounded-lg shadow-lg flex items-center justify-between gap-3`}
+            } bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-3 rounded-lg shadow-lg flex items-center gap-3`}
           >
-            <span>💚 Added to Wishlist</span>
+            <span className="flex-1">💚 Added to wishlist</span>
+
+            {/* Use a plain button + router.push to avoid nested <a> issues */}
             <button
-              onClick={() => {
-                router.push("/wishlist");
+              onClick={(ev) => {
+                ev.stopPropagation();
                 toast.dismiss(t.id);
+                // navigate imperatively (no <a> inside toast)
+                router.push("/wishlist");
               }}
               className="text-sm underline font-medium hover:text-white/80"
             >
               View
             </button>
-          </div>
+          </motion.div>
         ),
         { duration: 3000 }
       );
@@ -90,11 +111,13 @@ export default function WishlistButton({
   }
 
   return (
-    <button
+    <motion.button
       type="button"
       onClick={toggleWishlist}
       aria-pressed={isInWishlist}
-      className={`px-3 py-2 rounded-md text-sm font-medium transition-all border flex items-center gap-2
+      animate={animate ? { scale: [1, 1.18, 1] } : {}}
+      transition={{ duration: 0.36, ease: "easeInOut" }}
+      className={`px-3 py-2 rounded-md text-sm font-medium transition-all border flex items-center gap-2 select-none
         ${
           isInWishlist
             ? "bg-transparent border-red-500 text-red-500 hover:bg-red-500/10"
@@ -104,13 +127,18 @@ export default function WishlistButton({
       `}
       aria-label={`${isInWishlist ? "Remove from" : "Add to"} wishlist`}
     >
-      <span
+      <motion.span
         aria-hidden
-        className={isInWishlist ? "text-red-500" : "text-gray-500"}
+        animate={animate ? { scale: [1, 1.5, 1] } : {}}
+        transition={{ duration: 0.32 }}
+        className={`${
+          isInWishlist ? "text-red-500" : "text-gray-500 dark:text-gray-300"
+        }`}
       >
         {isInWishlist ? "♥" : "♡"}
-      </span>
+      </motion.span>
+
       {!compact && <span>{isInWishlist ? "Wishlisted" : "Wishlist"}</span>}
-    </button>
+    </motion.button>
   );
 }
