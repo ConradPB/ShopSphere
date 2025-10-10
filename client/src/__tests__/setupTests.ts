@@ -1,33 +1,57 @@
 import "@testing-library/jest-dom";
-import React from "react";
 
-// --- Mock Next.js navigation & router ---
+// ✅ Mock next/image (Next.js 14/15)
+jest.mock("next/image", () => ({
+  __esModule: true,
+  default: function MockedImage(props: any) {
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img {...props} alt={props.alt || "mocked image"} />;
+  },
+}));
+
+// ✅ Mock next/navigation (to avoid router-related errors in components)
 jest.mock("next/navigation", () => ({
   useRouter: () => ({
     push: jest.fn(),
     replace: jest.fn(),
     prefetch: jest.fn(),
-    back: jest.fn(),
   }),
-  usePathname: () => "/",
-  useSearchParams: () => new URLSearchParams(),
 }));
 
-// --- Mock next/image so Jest doesn’t crash on optimization ---
-jest.mock("next/image", () => (props: any) => {
-  // eslint-disable-next-line @next/next/no-img-element
-  return <img {...props} alt={props.alt || "mocked image"} />;
+// ✅ Provide missing browser APIs (some components like MUI need them)
+Object.defineProperty(window, "matchMedia", {
+  writable: true,
+  value: (query: string) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(), // deprecated but used by older libs
+    removeListener: jest.fn(),
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn(),
+  }),
 });
 
-// --- Silence console noise from async server components ---
-const origError = console.error;
+// ✅ Mock scrollTo to prevent runtime errors
+window.scrollTo = jest.fn();
+
+// ✅ Optional: silence known React warnings in tests
+const originalError = console.error;
 beforeAll(() => {
   console.error = (...args) => {
-    if (typeof args[0] === "string" && args[0].includes("ReactDOMServer"))
+    const [msg] = args;
+    if (
+      typeof msg === "string" &&
+      (msg.includes("Warning: An update to") ||
+        msg.includes("Warning: ReactDOM.render"))
+    ) {
       return;
-    origError(...args);
+    }
+    originalError(...args);
   };
 });
+
 afterAll(() => {
-  console.error = origError;
+  console.error = originalError;
 });
