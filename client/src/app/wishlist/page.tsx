@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import { removeFromWishlist } from "@/redux/wishlistSlice";
@@ -15,10 +16,10 @@ export default function WishlistPage() {
   const dispatch = useAppDispatch();
 
   const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-
   const [previewItem, setPreviewItem] = useState<Product | null>(null);
   const [confirmRemove, setConfirmRemove] = useState<Product | null>(null);
+
+  useEffect(() => setMounted(true), []);
 
   const handleMoveToCart = (
     id: string,
@@ -51,22 +52,25 @@ export default function WishlistPage() {
     }
   };
 
-  if (!mounted) return null; // prevents SSR mismatch
-  // Empty state
+  if (!mounted) return null; // Prevent SSR hydration mismatch
+
+  // ✅ Empty Wishlist
   if (wishlistItems.length === 0) {
     return (
-      <main className="min-h-screen bg-neutral-900 text-gray-100 py-20">
+      <main className="min-h-screen bg-neutral-900 text-gray-100 pt-32 pb-20 flex flex-col items-center justify-center text-center">
         <Toaster position="top-center" />
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <h1 className="text-3xl font-bold mb-4">Your wishlist is empty</h1>
+        <div className="max-w-3xl px-6">
+          <h1 className="text-4xl font-bold mb-4 text-white">
+            Your wishlist is empty
+          </h1>
           <p className="text-gray-400 mb-8">
-            Save items you love and come back later — we&lsquo;ll keep them here
-            for you.
+            Save items you love and come back later — we’ll keep them here for
+            you.
           </p>
 
           <Link
             href="/products"
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-2xl shadow-lg hover:scale-[1.02] transition"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-2xl shadow-lg hover:scale-[1.02] transition-transform duration-200"
           >
             Continue Shopping
           </Link>
@@ -75,22 +79,24 @@ export default function WishlistPage() {
     );
   }
 
-  // Non-empty state
+  // ✅ Non-empty Wishlist
   return (
-    <main className="min-h-screen bg-neutral-900 text-gray-100 py-12 relative">
+    <main className="min-h-screen bg-neutral-900 text-gray-100 pt-32 pb-16 relative">
       <Toaster position="top-center" />
       <div className="max-w-6xl mx-auto px-6">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold text-white">My Wishlist</h1>
+        {/* Page header */}
+        <div className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4">
+          <h1 className="text-4xl font-bold text-white">My Wishlist</h1>
 
           <Link
             href="/products"
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2 rounded-2xl shadow hover:scale-[1.02] transition"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-5 py-2 rounded-2xl shadow hover:scale-[1.02] transition-transform duration-200"
           >
             Continue Shopping
           </Link>
         </div>
 
+        {/* Wishlist Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {wishlistItems.map((item) => (
             <article
@@ -129,7 +135,6 @@ export default function WishlistPage() {
                       )
                     }
                     className="flex-1 bg-green-600 text-white px-3 py-2 rounded-md hover:bg-green-700 transition"
-                    aria-label={`Move ${item.title} to cart`}
                   >
                     Move to Cart
                   </button>
@@ -154,7 +159,7 @@ export default function WishlistPage() {
         </div>
       </div>
 
-      {/* ✅ Lightbox Preview */}
+      {/* ✅ Product Preview Modal */}
       {previewItem && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-6">
           <div className="relative max-w-2xl w-full bg-neutral-900 rounded-xl shadow-lg overflow-hidden">
@@ -210,7 +215,7 @@ export default function WishlistPage() {
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
           <div className="bg-neutral-900 border border-neutral-700 p-6 rounded-xl max-w-sm w-full text-center">
             <h3 className="text-lg font-semibold mb-4">
-              Remove &#34;{confirmRemove.title}&rdquo; from your wishlist?
+              Remove “{confirmRemove.title}” from your wishlist?
             </h3>
             <div className="flex justify-center gap-4">
               <button
