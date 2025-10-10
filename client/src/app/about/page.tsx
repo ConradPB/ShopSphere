@@ -53,10 +53,12 @@ export default function AboutPage() {
           transition={{ duration: 0.6 }}
           className="relative w-full h-72 md:h-96 rounded-2xl overflow-hidden shadow-lg"
         >
-          <img
+          <Image
             src="https://images.unsplash.com/photo-1556742043-3c52d6e88c62"
             alt="ShopSphere team at work"
-            className="object-cover w-full h-full"
+            fill
+            className="object-cover"
+            unoptimized
           />
         </motion.div>
       </section>
