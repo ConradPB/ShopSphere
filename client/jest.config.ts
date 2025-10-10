@@ -13,6 +13,13 @@ const customJestConfig: Config = {
     "^@/(.*)$": "<rootDir>/src/$1",
     "^@/lib/supabase$": "<rootDir>/src/__mocks__/supabase.ts",
   },
+  testMatch: [
+    "**/_tests_/**/*.test.[jt]s?(x)",
+    "**/__tests__/**/*.test.[jt]s?(x)",
+  ],
+  collectCoverage: true,
+  collectCoverageFrom: ["src/**/*.{ts,tsx}"],
+  coverageReporters: ["text", "lcov", "json", "html"],
 };
 
 export default createJestConfig(customJestConfig);
