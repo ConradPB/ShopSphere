@@ -14,6 +14,9 @@ export default function ProductGrid({ initialProducts, title }: Props) {
   const [products, setProducts] = useState<Product[]>(initialProducts ?? []);
   const [loading, setLoading] = useState(!initialProducts);
 
+  // Default heading used when no `title` prop is provided
+  const heading = title ?? "Featured Products";
+
   useEffect(() => {
     if (!initialProducts) {
       let mounted = true;
@@ -38,26 +41,34 @@ export default function ProductGrid({ initialProducts, title }: Props) {
 
   if (loading) {
     return (
-      <p className="text-center py-10 text-gray-500 animate-pulse">
-        Loading products...
-      </p>
+      <section className="py-10 px-4 sm:px-6 lg:px-8 pb-0">
+        <h2 className="text-2xl font-bold mb-6 text-neutral-800 text-center">
+          {heading}
+        </h2>
+        <p className="text-center py-10 text-gray-500 animate-pulse">
+          Loading products...
+        </p>
+      </section>
     );
   }
 
   if (products.length === 0) {
     return (
-      <p className="text-center py-10 text-gray-500">No products found.</p>
+      <section className="py-10 px-4 sm:px-6 lg:px-8 pb-0">
+        <h2 className="text-2xl font-bold mb-6 text-neutral-800 text-center">
+          {heading}
+        </h2>
+        <p className="text-center py-10 text-gray-500">No products found.</p>
+      </section>
     );
   }
 
   return (
     // pb-0 removes bottom padding so footer can sit directly below
     <section className="py-10 px-4 sm:px-6 lg:px-8 pb-0">
-      {title && (
-        <h2 className="text-2xl font-bold mb-6 text-neutral-800 text-center">
-          {title}
-        </h2>
-      )}
+      <h2 className="text-2xl font-bold mb-6 text-neutral-800 text-center">
+        {heading}
+      </h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {products.map((product) => (
