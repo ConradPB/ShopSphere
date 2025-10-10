@@ -1,86 +1,59 @@
 import "@testing-library/jest-dom";
-import React from "react";
+import { expect } from "@jest/globals";
 
-/**
- * Mock next/image to a plain <img> element using React.createElement
- * (avoids using JSX in a .ts file which caused parser complaints previously).
- */
-type NextImageProps = React.ImgHTMLAttributes<HTMLImageElement> & {
-  priority?: boolean;
-  placeholder?: string;
-  blurDataURL?: string;
-  unoptimized?: boolean;
-};
+// Define a type for window.matchMedia to avoid 'any'
+interface MatchMedia {
+  matches: boolean;
+  media: string;
+  onchange: ((this: MediaQueryList, ev: MediaQueryListEvent) => any) | null;
+  addEventListener: (
+    type: "change",
+    listener: (this: MediaQueryList, ev: MediaQueryListEvent) => any
+  ) => void;
+  removeEventListener: (
+    type: "change",
+    listener: (this: MediaQueryList, ev: MediaQueryListEvent) => any
+  ) => void;
+  addListener: (
+    listener: (this: MediaQueryList, ev: MediaQueryListEvent) => any
+  ) => void;
+  removeListener: (
+    listener: (this: MediaQueryList, ev: MediaQueryListEvent) => any
+  ) => void;
+  dispatchEvent: (event: Event) => boolean;
+}
 
-jest.mock("next/image", () => {
-  return {
-    __esModule: true,
-    default: (props: NextImageProps) =>
-      React.createElement("img", {
-        ...props,
-        alt: props.alt ?? "mocked image",
-      }),
-  };
-});
-
-/**
- * Mock next/navigation so components using useRouter / usePathname do not error.
- * This prevents tests from requiring the full Next.js App Router to be mounted.
- */
-jest.mock("next/navigation", () => ({
-  useRouter: () => ({
-    push: jest.fn(),
-    replace: jest.fn(),
-    prefetch: jest.fn().mockResolvedValue(undefined),
-    back: jest.fn(),
-  }),
-  usePathname: () => "/",
-}));
-
-/**
- * matchMedia polyfill used by some libs and components.
- */
+// Mock matchMedia to prevent test environment errors
 Object.defineProperty(window, "matchMedia", {
   writable: true,
-  value: (query: string) => ({
+  value: (query: string): MatchMedia => ({
     matches: false,
     media: query,
     onchange: null,
-    addListener: () => {}, // deprecated API (kept for compatibility)
-    removeListener: () => {},
     addEventListener: () => {},
     removeEventListener: () => {},
+    addListener: () => {},
+    removeListener: () => {},
     dispatchEvent: () => false,
   }),
 });
 
-/** Prevent scrollTo runtime errors in tests */
-window.scrollTo = () => {};
+// Mock Next.js image
+jest.mock("next/image", () => ({
+  __esModule: true,
+  default: (props: React.ImgHTMLAttributes<HTMLImageElement>): JSX.Element => (
+    <img {...props} alt={props.alt ?? "mocked image"} />
+  ),
+}));
 
-/**
- * Optionally silence noisy React warnings during tests.
- * Keep the console error behavior intact for other messages.
- */
-const originalConsoleError = console.error.bind(console) as (
-  ...args: unknown[]
-) => void;
-
-beforeAll(() => {
-  console.error = (...args: unknown[]) => {
-    const first = args[0];
-    if (
-      typeof first === "string" &&
-      (first.includes("Warning: An update to") ||
-        first.includes("Warning: ReactDOM.render"))
-    ) {
-      // ignore these noisy warnings in Jest output
-      return;
-    }
-    originalConsoleError(...args);
-  };
-});
-
-afterAll(() => {
-  // restore
-  console.error = originalConsoleError;
+// Extend Jest matchers
+expect.extend({
+  toBeVisible(received: HTMLElement): { pass: boolean; message: () => string } {
+    const isVisible = received.offsetParent !== null;
+    return {
+      pass: isVisible,
+      message: () =>
+        isVisible ? "Element is visible" : "Element is not visible",
+    };
+  },
 });
