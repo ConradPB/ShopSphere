@@ -62,3 +62,21 @@ jest.mock("@/lib/supabase", () => ({
   ),
   getRecommendations: jest.fn(() => Promise.resolve({ data: [], error: null })),
 }));
+
+/**
+ * Polyfill TextEncoder/TextDecoder for the test environment.
+ *
+ * Node's `util` exports TextEncoder/TextDecoder which don't perfectly match
+ * the DOM types in TypeScript. Cast via `unknown` into the DOM `typeof`
+ * to satisfy the compiler without using `any`.
+ */
+import {
+  TextEncoder as NodeTextEncoder,
+  TextDecoder as NodeTextDecoder,
+} from "util";
+
+declare global {
+  // expose DOM-like types to TypeScript
+  var TextEncoder: typeof globalThis.TextEncoder;
+  var TextDecoder: typeof globalThis.TextDecoder;
+}
