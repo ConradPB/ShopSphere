@@ -80,3 +80,17 @@ declare global {
   var TextEncoder: typeof globalThis.TextEncoder;
   var TextDecoder: typeof globalThis.TextDecoder;
 }
+
+(
+  globalThis as unknown as {
+    TextEncoder: typeof globalThis.TextEncoder;
+    TextDecoder: typeof globalThis.TextDecoder;
+  }
+).TextEncoder = NodeTextEncoder as unknown as typeof globalThis.TextEncoder;
+
+(
+  globalThis as unknown as {
+    TextEncoder: typeof globalThis.TextEncoder;
+    TextDecoder: typeof globalThis.TextDecoder;
+  }
+).TextDecoder = NodeTextDecoder as unknown as typeof globalThis.TextDecoder;
