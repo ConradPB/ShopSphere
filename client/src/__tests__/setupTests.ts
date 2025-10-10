@@ -1,3 +1,5 @@
+/// <reference types="react" />
+
 import "@testing-library/jest-dom";
 
 // ✅ Mock next/image (Next.js 14/15)
