@@ -94,3 +94,10 @@ declare global {
     TextDecoder: typeof globalThis.TextDecoder;
   }
 ).TextDecoder = NodeTextDecoder as unknown as typeof globalThis.TextDecoder;
+
+/**
+ * Clear mocks between tests to avoid cross-test leakage.
+ */
+afterEach(() => {
+  jest.clearAllMocks();
+});
