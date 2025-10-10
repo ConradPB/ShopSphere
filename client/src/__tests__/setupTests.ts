@@ -1,33 +1,46 @@
-/// <reference types="react" />
-
 import "@testing-library/jest-dom";
+import React from "react";
 
-// ✅ Mock next/image (Next.js 14/15)
-jest.mock("next/image", () => ({
-  __esModule: true,
-  default: function MockedImage(props: any) {
-    // eslint-disable-next-line @next/next/no-img-element
-    return <img {...props} alt={props.alt || "mocked image"} />;
-  },
-}));
+/**
+ * Mock next/image to a plain <img> element using React.createElement
+ * (avoids using JSX in a .ts file which caused the parser errors).
+ */
+jest.mock("next/image", () => {
+  return {
+    __esModule: true,
+    default: (props: any) =>
+      // createElement avoids JSX parsing issues in .ts files
+      React.createElement("img", {
+        ...props,
+        alt: props.alt ?? "mocked image",
+      }),
+  };
+});
 
-// ✅ Mock next/navigation (to avoid router-related errors in components)
+/**
+ * Mock next/navigation (useRouter / usePathname) to avoid "app router not mounted"
+ * errors in tests that render components using those hooks.
+ */
 jest.mock("next/navigation", () => ({
   useRouter: () => ({
     push: jest.fn(),
     replace: jest.fn(),
-    prefetch: jest.fn(),
+    prefetch: jest.fn().mockResolvedValue(undefined),
+    back: jest.fn(),
   }),
+  usePathname: () => "/",
 }));
 
-// ✅ Provide missing browser APIs (some components like MUI need them)
+/**
+ * Provide matchMedia polyfill used by some libs and components.
+ */
 Object.defineProperty(window, "matchMedia", {
   writable: true,
   value: (query: string) => ({
     matches: false,
     media: query,
     onchange: null,
-    addListener: jest.fn(), // deprecated but used by older libs
+    addListener: jest.fn(), // deprecated API (some libs still call)
     removeListener: jest.fn(),
     addEventListener: jest.fn(),
     removeEventListener: jest.fn(),
@@ -35,25 +48,28 @@ Object.defineProperty(window, "matchMedia", {
   }),
 });
 
-// ✅ Mock scrollTo to prevent runtime errors
+/** Prevent scrollTo runtime errors in tests */
 window.scrollTo = jest.fn();
 
-// ✅ Optional: silence known React warnings in tests
-const originalError = console.error;
+/**
+ * Optionally silence noisy React warnings during tests.
+ * Keeps the console error behavior intact for other messages.
+ */
+const originalConsoleError = console.error;
 beforeAll(() => {
-  console.error = (...args) => {
-    const [msg] = args;
+  console.error = (...args: any[]) => {
+    const first = args[0];
     if (
-      typeof msg === "string" &&
-      (msg.includes("Warning: An update to") ||
-        msg.includes("Warning: ReactDOM.render"))
+      typeof first === "string" &&
+      (first.includes("Warning: An update to") ||
+        first.includes("Warning: ReactDOM.render"))
     ) {
-      return;
+      return; // ignore these noisy warnings in Jest output
     }
-    originalError(...args);
+    originalConsoleError(...args);
   };
 });
 
 afterAll(() => {
-  console.error = originalError;
+  console.error = originalConsoleError;
 });
