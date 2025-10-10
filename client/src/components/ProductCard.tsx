@@ -101,5 +101,8 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
       </div>
 
-    
+      {/* Neon pulse effect */}
+      <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-20 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 blur-2xl transition-opacity duration-700"></div>
+    </motion.article>
+  );
 }
