@@ -89,5 +89,17 @@ export default function ProductCard({ product }: ProductCardProps) {
             onClick={handleAddToCart}
             className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:shadow-cyan-500/40 transition-all duration-300"
           >
-          
+            Add to Cart
+          </motion.button>
+
+          <Link
+            href={`/product/${id}`}
+            className="px-4 py-2 border border-cyan-400/40 rounded-lg text-sm text-cyan-200 hover:bg-cyan-400/10 hover:text-cyan-300 transition-all duration-300"
+          >
+            View
+          </Link>
+        </div>
+      </div>
+
+    
 }
