@@ -1,6 +1,7 @@
 import "@testing-library/jest-dom";
+import React from "react";
 
-// 🧭 Mock Next.js App Router hooks
+// Mock next/navigation (app router hooks)
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(() => ({
     push: jest.fn(),
@@ -14,35 +15,49 @@ jest.mock("next/navigation", () => ({
   useSearchParams: jest.fn(() => new URLSearchParams()),
 }));
 
-// 🖼️ Mock Next.js Image component safely
+// Mock next/image without JSX (use React.createElement to avoid JSX issues)
 jest.mock("next/image", () => {
-  return function MockNextImage(props: any) {
+  return function MockNextImage(props: Record<string, unknown>) {
     const { src, alt, ...rest } = props;
 
-    // Remove Next.js-only props that cause warnings in Jest
+    // Remove Next.js-only props that would warn in the DOM
     const safeProps = Object.fromEntries(
       Object.entries(rest).filter(
         ([key]) =>
-          !["priority", "unoptimized", "fill", "placeholder"].includes(key)
+          ![
+            "priority",
+            "unoptimized",
+            "fill",
+            "placeholder",
+            "blurDataURL",
+            "sizes",
+          ].includes(key)
       )
     );
 
-    // Return a normal img for testing
-    return <img src={src} alt={alt} {...safeProps} />;
+    return React.createElement("img", { src, alt, ...safeProps } as any);
   };
 });
 
-// 🪣 Basic Supabase mock (prevents runtime import errors)
+// Basic supabase mock used by tests
 jest.mock("@/lib/supabase", () => ({
   getProducts: jest.fn(() => Promise.resolve({ data: [], error: null })),
 }));
 
-// 🧩 Polyfill for TextEncoder/TextDecoder (some Next.js deps require it)
-import { TextEncoder, TextDecoder } from "util";
-(global as any).TextEncoder = TextEncoder;
-(global as any).TextDecoder = TextDecoder;
+// Provide typed globals for TextEncoder/TextDecoder to avoid `any`
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  var TextEncoder: typeof globalThis.TextEncoder;
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  var TextDecoder: typeof globalThis.TextDecoder;
+}
 
-// 🧹 Optional cleanup between tests
+// Assign polyfills (Node's util) to global
+import { TextEncoder, TextDecoder } from "util";
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
+
+// Clear mocks between tests
 afterEach(() => {
   jest.clearAllMocks();
 });
