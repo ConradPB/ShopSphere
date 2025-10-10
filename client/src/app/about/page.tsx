@@ -1,77 +1,72 @@
 "use client";
 
-import { motion } from "framer-motion";
-import Image from "next/image";
+import Link from "next/link";
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen bg-background text-foreground pt-24 pb-16 px-6 md:px-16">
-      <section className="max-w-5xl mx-auto text-center mb-16">
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-4xl md:text-5xl font-bold mb-6"
-        >
-          About <span className="text-primary">ShopSphere</span>
-        </motion.h1>
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-lg md:text-xl text-muted-foreground"
-        >
-          Where technology meets style — your one-stop destination for smart,
-          seamless shopping.
-        </motion.p>
-      </section>
+    <main className="min-h-screen bg-neutral-900 text-gray-100 py-20 px-6">
+      <section className="max-w-4xl mx-auto text-center">
+        <h1 className="text-4xl md:text-5xl font-extrabold mb-6 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 bg-clip-text text-transparent">
+          About ShopSphere
+        </h1>
 
-      <section className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-        <motion.div
-          initial={{ opacity: 0, x: -30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
-          className="space-y-6"
-        >
-          <h2 className="text-2xl font-semibold text-primary">Our Story</h2>
-          <p className="text-muted-foreground leading-relaxed">
-            Founded in 2025, ShopSphere began as a small idea to make online
-            shopping fun again. Built by dreamers, coders, and caffeine addicts,
-            we wanted to create a platform where every shopper feels connected —
-            not just to products, but to possibilities.
-          </p>
-          <p className="text-muted-foreground leading-relaxed">
-            We blend powerful tech, user-first design, and just a touch of AI
-            magic to bring you the next evolution of e-commerce — smarter,
-            faster, and more personal.
-          </p>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
-          className="relative w-full h-72 md:h-96 rounded-2xl overflow-hidden shadow-lg"
-        >
-          <Image
-            src="https://unsplash.com/photos/a-group-of-people-sitting-around-a-table-working-on-a-laptop-kegLZjrNzpI"
-            alt="ShopSphere team at work"
-            fill
-            className="object-cover"
-          />
-        </motion.div>
-      </section>
-
-      <section className="max-w-5xl mx-auto mt-20 text-center">
-        <h2 className="text-2xl font-semibold mb-6 text-primary">
-          Our Mission
-        </h2>
-        <p className="text-muted-foreground leading-relaxed text-lg">
-          To empower every shopper to discover products they love — faster,
-          smarter, and with joy. We believe shopping should be more than a
-          transaction — it’s an experience that connects people, cultures, and
-          creativity.
+        <p className="text-lg text-gray-300 leading-relaxed mb-8">
+          Once upon a caffeine-fueled afternoon, a few overambitious devs asked
+          the question no one dared to:{" "}
+          <span className="text-cyan-400 font-semibold">
+            “What if online shopping actually felt... fun?”
+          </span>
+          <br />
+          Thus, <strong>ShopSphere</strong> was born — part marketplace, part
+          adventure, all powered by good code and bad jokes.
         </p>
+
+        <div className="bg-neutral-800/60 rounded-2xl p-6 shadow-lg border border-neutral-700 mb-8">
+          <h2 className="text-2xl font-semibold text-cyan-400 mb-4">
+            Our Mission
+          </h2>
+          <p className="text-gray-300 leading-relaxed">
+            We’re on a mission to make discovering products feel like opening a
+            gift — every single time. Whether you’re shopping for sneakers,
+            gadgets, or that weirdly specific kitchen tool you saw on TikTok,
+            we’ve got you covered.
+          </p>
+        </div>
+
+        <div className="bg-neutral-800/60 rounded-2xl p-6 shadow-lg border border-neutral-700 mb-8">
+          <h2 className="text-2xl font-semibold text-cyan-400 mb-4">
+            The ShopSphere Code
+          </h2>
+          <ul className="text-gray-300 leading-relaxed space-y-3 text-left md:text-center list-none">
+            <li>
+              🛍️ <strong>Shop smart.</strong> Never settle for boring deals.
+            </li>
+            <li>
+              🤖 <strong>Build cool stuff.</strong> Tech should make life
+              smoother.
+            </li>
+            <li>
+              💬 <strong>Keep it real.</strong> Humans &gt; algorithms (most
+              days).
+            </li>
+            <li>
+              🌍 <strong>Stay kind.</strong> We’re all in one big digital
+              bazaar.
+            </li>
+          </ul>
+        </div>
+
+        <p className="text-gray-400 italic mb-10">
+          ShopSphere — the only shopping platform where your cart is as smart as
+          your style.
+        </p>
+
+        <Link
+          href="/contact"
+          className="inline-flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-2xl shadow-lg hover:scale-[1.03] transition"
+        >
+          Get in Touch
+        </Link>
       </section>
     </main>
   );
