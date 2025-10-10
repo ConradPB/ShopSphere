@@ -54,7 +54,7 @@ export default function AboutPage() {
           className="relative w-full h-72 md:h-96 rounded-2xl overflow-hidden shadow-lg"
         >
           <Image
-            src="https://images.unsplash.com/photo-1556742043-3c52d6e88c62"
+            src="https://unsplash.com/photos/a-group-of-people-sitting-around-a-table-working-on-a-laptop-kegLZjrNzpI"
             alt="ShopSphere team at work"
             fill
             className="object-cover"
