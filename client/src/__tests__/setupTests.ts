@@ -3,13 +3,19 @@ import React from "react";
 
 /**
  * Mock next/image to a plain <img> element using React.createElement
- * (avoids using JSX in a .ts file which caused the parser errors).
+ * (avoids using JSX in a .ts file which caused parser complaints previously).
  */
+type NextImageProps = React.ImgHTMLAttributes<HTMLImageElement> & {
+  priority?: boolean;
+  placeholder?: string;
+  blurDataURL?: string;
+  unoptimized?: boolean;
+};
+
 jest.mock("next/image", () => {
   return {
     __esModule: true,
-    default: (props: any) =>
-      // createElement avoids JSX parsing issues in .ts files
+    default: (props: NextImageProps) =>
       React.createElement("img", {
         ...props,
         alt: props.alt ?? "mocked image",
@@ -18,8 +24,8 @@ jest.mock("next/image", () => {
 });
 
 /**
- * Mock next/navigation (useRouter / usePathname) to avoid "app router not mounted"
- * errors in tests that render components using those hooks.
+ * Mock next/navigation so components using useRouter / usePathname do not error.
+ * This prevents tests from requiring the full Next.js App Router to be mounted.
  */
 jest.mock("next/navigation", () => ({
   useRouter: () => ({
@@ -32,7 +38,7 @@ jest.mock("next/navigation", () => ({
 }));
 
 /**
- * Provide matchMedia polyfill used by some libs and components.
+ * matchMedia polyfill used by some libs and components.
  */
 Object.defineProperty(window, "matchMedia", {
   writable: true,
@@ -40,36 +46,41 @@ Object.defineProperty(window, "matchMedia", {
     matches: false,
     media: query,
     onchange: null,
-    addListener: jest.fn(), // deprecated API (some libs still call)
-    removeListener: jest.fn(),
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
+    addListener: () => {}, // deprecated API (kept for compatibility)
+    removeListener: () => {},
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    dispatchEvent: () => false,
   }),
 });
 
 /** Prevent scrollTo runtime errors in tests */
-window.scrollTo = jest.fn();
+window.scrollTo = () => {};
 
 /**
  * Optionally silence noisy React warnings during tests.
- * Keeps the console error behavior intact for other messages.
+ * Keep the console error behavior intact for other messages.
  */
-const originalConsoleError = console.error;
+const originalConsoleError = console.error.bind(console) as (
+  ...args: unknown[]
+) => void;
+
 beforeAll(() => {
-  console.error = (...args: any[]) => {
+  console.error = (...args: unknown[]) => {
     const first = args[0];
     if (
       typeof first === "string" &&
       (first.includes("Warning: An update to") ||
         first.includes("Warning: ReactDOM.render"))
     ) {
-      return; // ignore these noisy warnings in Jest output
+      // ignore these noisy warnings in Jest output
+      return;
     }
     originalConsoleError(...args);
   };
 });
 
 afterAll(() => {
+  // restore
   console.error = originalConsoleError;
 });
