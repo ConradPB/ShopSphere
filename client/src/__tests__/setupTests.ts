@@ -1,7 +1,6 @@
 import "@testing-library/jest-dom";
-import { expect } from "@jest/globals";
-import React from "react";
 
+// 🧭 Mock Next.js App Router hooks
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(() => ({
     push: jest.fn(),
@@ -11,65 +10,39 @@ jest.mock("next/navigation", () => ({
     replace: jest.fn(),
     refresh: jest.fn(),
   })),
+  usePathname: jest.fn(() => "/"),
+  useSearchParams: jest.fn(() => new URLSearchParams()),
 }));
 
-// Define a strict type for window.matchMedia to prevent 'any' issues
-interface MatchMedia {
-  matches: boolean;
-  media: string;
-  onchange: ((this: MediaQueryList, ev: MediaQueryListEvent) => unknown) | null;
-  addEventListener: (
-    type: "change",
-    listener: (this: MediaQueryList, ev: MediaQueryListEvent) => unknown
-  ) => void;
-  removeEventListener: (
-    type: "change",
-    listener: (this: MediaQueryList, ev: MediaQueryListEvent) => unknown
-  ) => void;
-  addListener: (
-    listener: (this: MediaQueryList, ev: MediaQueryListEvent) => unknown
-  ) => void;
-  removeListener: (
-    listener: (this: MediaQueryList, ev: MediaQueryListEvent) => unknown
-  ) => void;
-  dispatchEvent: (event: Event) => boolean;
-}
+// 🖼️ Mock Next.js Image component safely
+jest.mock("next/image", () => {
+  return function MockNextImage(props: any) {
+    const { src, alt, ...rest } = props;
 
-// ✅ Mock matchMedia to prevent JSDOM errors in tests
-Object.defineProperty(window, "matchMedia", {
-  writable: true,
-  value: (query: string): MatchMedia => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addEventListener: () => {},
-    removeEventListener: () => {},
-    addListener: () => {},
-    removeListener: () => {},
-    dispatchEvent: () => false,
-  }),
+    // Remove Next.js-only props that cause warnings in Jest
+    const safeProps = Object.fromEntries(
+      Object.entries(rest).filter(
+        ([key]) =>
+          !["priority", "unoptimized", "fill", "placeholder"].includes(key)
+      )
+    );
+
+    // Return a normal img for testing
+    return <img src={src} alt={alt} {...safeProps} />;
+  };
 });
 
-// ✅ Mock Next.js Image safely without JSX
-jest.mock("next/image", () => ({
-  __esModule: true,
-  default: (
-    props: React.ImgHTMLAttributes<HTMLImageElement>
-  ): React.ReactElement =>
-    React.createElement("img", {
-      ...props,
-      alt: props.alt ?? "mocked image",
-    }),
+// 🪣 Basic Supabase mock (prevents runtime import errors)
+jest.mock("@/lib/supabase", () => ({
+  getProducts: jest.fn(() => Promise.resolve({ data: [], error: null })),
 }));
 
-// ✅ Extend Jest matchers with type-safe version
-expect.extend({
-  toBeVisible(received: HTMLElement): { pass: boolean; message: () => string } {
-    const isVisible = received.offsetParent !== null;
-    return {
-      pass: isVisible,
-      message: () =>
-        isVisible ? "Element is visible" : "Element is not visible",
-    };
-  },
+// 🧩 Polyfill for TextEncoder/TextDecoder (some Next.js deps require it)
+import { TextEncoder, TextDecoder } from "util";
+(global as any).TextEncoder = TextEncoder;
+(global as any).TextDecoder = TextDecoder;
+
+// 🧹 Optional cleanup between tests
+afterEach(() => {
+  jest.clearAllMocks();
 });
