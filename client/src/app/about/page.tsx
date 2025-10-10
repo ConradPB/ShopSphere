@@ -58,6 +58,7 @@ export default function AboutPage() {
             alt="ShopSphere team at work"
             fill
             className="object-cover"
+            unoptimized
           />
         </motion.div>
       </section>
