@@ -1,3 +1,15 @@
+"use client";
+import { useState, useEffect } from "react";
+import { useAppSelector, useAppDispatch } from "@/redux/hooks";
+import { removeFromWishlist } from "@/redux/wishlistSlice";
+import { addToCart } from "@/redux/cartSlice";
+import Image from "next/image";
+import WishlistButton from "@/components/ui/WishlistButton";
+import type { Product } from "@/types/product";
+import toast, { Toaster } from "react-hot-toast";
+import { X } from "lucide-react";
+import Link from "next/link";
+
 export default function WishlistPage() {
   const wishlistItems = useAppSelector((state) => state.wishlist.items);
   const dispatch = useAppDispatch();
