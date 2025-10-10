@@ -51,9 +51,9 @@ export default function WishlistPage() {
     }
   };
 
-  // Empty state
   if (!mounted) return null; // prevents SSR mismatch
-  {
+  // Empty state
+  if (wishlistItems.length === 0) {
     return (
       <main className="min-h-screen bg-neutral-900 text-gray-100 py-20">
         <Toaster position="top-center" />
