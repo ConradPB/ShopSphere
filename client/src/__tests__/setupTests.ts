@@ -52,3 +52,13 @@ jest.mock("next/image", () => ({
 }));
 
 // ✅ Extend Jest matchers with type-safe version
+expect.extend({
+  toBeVisible(received: HTMLElement): { pass: boolean; message: () => string } {
+    const isVisible = received.offsetParent !== null;
+    return {
+      pass: isVisible,
+      message: () =>
+        isVisible ? "Element is visible" : "Element is not visible",
+    };
+  },
+});
