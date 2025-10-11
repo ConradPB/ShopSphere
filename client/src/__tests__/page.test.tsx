@@ -1,18 +1,15 @@
-// Mock supabase BEFORE importing the page so the module that creates a client
-// (which uses env vars) never runs in tests.
 jest.mock("@/lib/supabase", () => ({
   getProducts: jest.fn(),
 }));
 
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen, act } from "@testing-library/react";
 import * as supabaseLib from "@/lib/supabase";
 import HomePage from "@/app/page";
 import { Provider } from "react-redux";
 import { store } from "@/redux/store";
 import type { Product } from "@/types/product";
 
-// typed reference to mocked function (no `any`)
 const mockGetProducts = supabaseLib.getProducts as jest.MockedFunction<
   typeof supabaseLib.getProducts
 >;
@@ -41,35 +38,41 @@ describe("Home Page", () => {
     mockGetProducts.mockReset();
   });
 
-  it("renders product cards without crashing", async () => {
+  it("renders product list successfully", async () => {
     mockGetProducts.mockResolvedValue({ data: fakeProducts, error: null });
 
-    // HomePage is an async server component in your app so call it and render the result
-    const page = await HomePage();
-    render(<Provider store={store}>{page}</Provider>);
+    let page: React.ReactElement | null = null;
+    await act(async () => {
+      const component = await HomePage();
+      page = <Provider store={store}>{component}</Provider>;
+    });
 
-    // The page intentionally may render products in multiple places (featured + grid).
-    // Assert that each product title appears at least once.
+    render(page!);
+
     for (const product of fakeProducts) {
-      const matches = await screen.findAllByText(product.title);
-      expect(matches.length).toBeGreaterThan(0);
-      // price should appear at least once as well
-      const priceMatches = screen.getAllByText(`$${product.price.toFixed(2)}`);
-      expect(priceMatches.length).toBeGreaterThan(0);
+      expect(await screen.findByText(product.title)).toBeInTheDocument();
+      expect(
+        screen.getByText(`$${product.price.toFixed(2)}`)
+      ).toBeInTheDocument();
     }
+
+    const headings = screen.getAllByRole("heading", { level: 1 });
+    expect(headings.length).toBeGreaterThan(0);
   });
 
-  it("shows fallback message when products fail to load", async () => {
+  it("shows error message when products fail to load", async () => {
     mockGetProducts.mockResolvedValue({ data: null, error: "Failed" });
 
-    const page = await HomePage();
-    render(<Provider store={store}>{page}</Provider>);
+    let page: React.ReactElement | null = null;
+    await act(async () => {
+      const component = await HomePage();
+      page = <Provider store={store}>{component}</Provider>;
+    });
 
-    // The app may render different fallback messages depending on component,
-    // accept either "Failed to load products" or the visible "No products found."
-    const fallback = await screen.findByText(
-      /(?:Failed to load products|No products found)/i
-    );
-    expect(fallback).toBeInTheDocument();
+    render(page!);
+
+    expect(
+      await screen.findByText(/Failed to load products/i)
+    ).toBeInTheDocument();
   });
 });
