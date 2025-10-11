@@ -12,7 +12,7 @@ const mockProducts = [
 describe("HomePage", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    (productsLib.getAllProducts as jest.Mock).mockResolvedValue(mockProducts);
+    (productsLib.getProducts as jest.Mock).mockResolvedValue(mockProducts);
   });
 
   it("renders product cards correctly", async () => {
