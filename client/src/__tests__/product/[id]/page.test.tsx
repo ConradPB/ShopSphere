@@ -1,34 +1,31 @@
-import { render, screen, act } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import ProductPage from "@/app/product/[id]/page";
+import * as productsLib from "@/lib/products";
 
-// ✅ Define a type for the resolved params
-interface ProductPageParams {
-  id: string;
-}
+jest.mock("@/lib/products");
+
+const mockProduct = {
+  id: "1",
+  title: "Laptop",
+  description: "High performance laptop",
+  price: 1200,
+  image: "/laptop.png",
+};
 
 describe("ProductPage", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it("renders the product page with correct product info", async () => {
-    const params: ProductPageParams = { id: "1" };
+    (productsLib.getProductById as jest.Mock).mockResolvedValue(mockProduct);
 
-    // ✅ Explicitly type this as JSX.Element | null to fix 'Cannot find namespace JSX'
-    let page: React.ReactElement | null = null;
+    const params = { id: "1" };
+    const page = await ProductPage({ params: Promise.resolve(params) });
+    render(page as React.ReactElement);
 
-    await act(async () => {
-      // ✅ Next.js dynamic routes expect a promise for params
-      const resolvedPage = await ProductPage({
-        params: Promise.resolve(params),
-      });
-      page = resolvedPage as React.ReactElement;
-    });
-
-    // ✅ Render the resolved React element
-    render(await page);
-
-    // ✅ Check that product content appears
-    const laptopTexts = screen.getAllByText(/laptop/i);
-    expect(laptopTexts.length).toBeGreaterThan(0);
-
-    const price = screen.getByText(/\$/i);
-    expect(price).toBeInTheDocument();
+    // Expect product title and price to appear
+    expect(await screen.findByText(/laptop/i)).toBeInTheDocument();
+    expect(screen.getByText(/\$1200/i)).toBeInTheDocument();
   });
 });
