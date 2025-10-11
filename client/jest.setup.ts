@@ -1,3 +1,4 @@
+/// <reference types="jest" />
 import "@testing-library/jest-dom";
 import React from "react";
 
@@ -11,6 +12,8 @@ process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY =
 
 /**
  * Mocks for Next.js App Router hooks used in client components.
+ * We export plain jest.fn() stubs so components that call these hooks
+ * won't crash in tests.
  */
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(() => ({
@@ -26,14 +29,13 @@ jest.mock("next/navigation", () => ({
 }));
 
 /**
- * Mock next/image so it renders a plain <img> during tests.
- * We strip Next-only props that would otherwise cause DOM warnings.
+ * Mock next/image so tests render a plain <img>.
+ * Filter out Next-only props that would trigger DOM warnings.
  */
 jest.mock("next/image", () => {
   return function MockNextImage(props: Record<string, unknown>) {
     const { src, alt, ...rest } = props;
 
-    // Remove Next.js-only props that cause console warnings in JSDOM
     const safeProps = Object.fromEntries(
       Object.entries(rest).filter(
         ([key]) =>
@@ -48,7 +50,6 @@ jest.mock("next/image", () => {
       )
     );
 
-    // Use React.createElement to avoid JSX transform issues
     return React.createElement("img", {
       src,
       alt,
@@ -58,8 +59,9 @@ jest.mock("next/image", () => {
 });
 
 /**
- * Minimal supabase mock so importing modules that call supabase won't
- * attempt to initialize a real client during tests.
+ * Minimal supabase mock so importing modules that create a client
+ * won't attempt to initialize a real client during tests.
+ * Individual tests can still jest.spyOn/mock these functions as needed.
  */
 jest.mock("@/lib/supabase", () => ({
   getProducts: jest.fn(() => Promise.resolve({ data: [], error: null })),
@@ -70,7 +72,7 @@ jest.mock("@/lib/supabase", () => ({
 }));
 
 /**
- * IntersectionObserver stub for framer-motion / in-view usage in tests.
+ * IntersectionObserver stub (used by framer-motion / in-view features).
  */
 class IntersectionObserverMock {
   observe() {}
@@ -87,8 +89,8 @@ Object.defineProperty(globalThis, "IntersectionObserver", {
 });
 
 /**
- * Polyfill TextEncoder/TextDecoder for the test environment.
- * Cast via unknown to keep TypeScript happy.
+ * TextEncoder/TextDecoder polyfill for Node test env.
+ * Use Node's util implementations but cast so TS is happy.
  */
 import {
   TextEncoder as NodeTextEncoder,
@@ -96,6 +98,7 @@ import {
 } from "util";
 
 declare global {
+  // expose these names on globalThis for libraries that expect them
   var TextEncoder: typeof globalThis.TextEncoder;
   var TextDecoder: typeof globalThis.TextDecoder;
 }
@@ -109,34 +112,38 @@ declare global {
 ).TextDecoder = NodeTextDecoder as unknown as typeof globalThis.TextDecoder;
 
 /**
- * Silence known non-critical console warnings.
+ * Silence a few known non-critical console errors that happen during tests.
+ * This prevents test output pollution while still surfacing real problems.
  */
 const originalConsoleError = console.error.bind(console);
 console.error = (...args: unknown[]) => {
   try {
-    const msg = String(args[0] ?? "");
+    const first = String(args[0] ?? "");
     if (
-      msg.includes("blurDataURL") ||
-      msg.includes("Received `true` for a non-boolean attribute `priority`") ||
-      msg.includes(
+      first.includes("blurDataURL") ||
+      first.includes(
+        "Received `true` for a non-boolean attribute `priority`"
+      ) ||
+      first.includes(
         "Received `true` for a non-boolean attribute `unoptimized`"
       ) ||
-      msg.includes("<a> cannot contain a nested <a>") ||
-      msg.includes("React does not recognize the `blurDataURL` prop") ||
-      msg.includes(
+      first.includes("<a> cannot contain a nested <a>") ||
+      first.includes("React does not recognize the `blurDataURL` prop") ||
+      first.includes(
         "Warning: An update to %s inside a test was not wrapped in act("
       )
     ) {
       return;
     }
   } catch {
-    // ignore
+    // fall through to default
   }
   return originalConsoleError(...args);
 };
 
 /**
- * Clean mocks between tests.
+ * Clear mocks after each test to avoid state leaking.
+ * `afterEach` is provided by Jest (the triple-slash at the top brings in Jest types).
  */
 afterEach(() => {
   jest.clearAllMocks();
