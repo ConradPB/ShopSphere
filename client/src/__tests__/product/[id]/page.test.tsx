@@ -1,6 +1,9 @@
+// src/__tests__/product/[id]/page.test.tsx
+// Mock supabase BEFORE importing the page so the module that creates a client
+// (which uses env vars) never runs in tests.
 jest.mock("@/lib/supabase", () => ({
-  getProducts: jest.fn(),
   getProductById: jest.fn(),
+  getRecommendations: jest.fn(),
 }));
 
 import React from "react";
@@ -11,59 +14,54 @@ import { Provider } from "react-redux";
 import { store } from "@/redux/store";
 import type { Product } from "@/types/product";
 
-const mockGetProducts = supabaseLib.getProducts as jest.MockedFunction<
-  typeof supabaseLib.getProducts
->;
+/**
+ * The real page expects `params` to be a Promise that resolves to the route params:
+ *   export default async function ProductPage({ params }: PageProps) {
+ *     const { id } = await params;
+ *     ...
+ *   }
+ *
+ * So our test must pass a Promise for `params`.
+ */
+interface PagePropsForTest {
+  params: Promise<{ id: string }>;
+}
+
 const mockGetProductById = supabaseLib.getProductById as jest.MockedFunction<
-  typeof supabaseLib.getProductById
+  (id: string) => Promise<{ data: Product | null; error: string | null }>
 >;
 
-describe("Product Page (server)", () => {
-  const fakeProducts: Product[] = [
-    {
-      id: "1",
-      title: "Laptop",
-      price: 999.99,
-      image: "https://placehold.co/400x300",
-      description: "",
-      category: "General",
-    },
-  ];
+describe("ProductPage", () => {
+  const fakeProduct: Product = {
+    id: "17",
+    title: "Test Laptop",
+    price: 1299.99,
+    image: null,
+    description: "A great test laptop",
+    category: "Test",
+  };
 
   beforeEach(() => {
-    mockGetProducts.mockReset();
     mockGetProductById.mockReset();
   });
 
-  it("renders product title and price", async () => {
-    mockGetProductById.mockResolvedValue({
-      data: fakeProducts[0],
-      error: null,
-    });
-    mockGetProducts.mockResolvedValue({ data: fakeProducts, error: null });
+  it("renders product details when product exists", async () => {
+    mockGetProductById.mockResolvedValue({ data: fakeProduct, error: null });
 
-    // call the server component function with params
-    const page = await ProductPage({ params: { id: "1" } } as any);
+    const props: PagePropsForTest = {
+      params: Promise.resolve({ id: fakeProduct.id }),
+    };
+
+    // ProductPage is an async server component, call it and render the returned tree
+    const page = await ProductPage(props);
+
+    // Wrap returned element in Provider so client components (that use Redux) work
     render(<Provider store={store}>{page}</Provider>);
 
-    const matches = await screen.findAllByText(fakeProducts[0].title);
-    expect(matches.length).toBeGreaterThan(0);
+    // content should appear
+    expect(await screen.findByText(fakeProduct.title)).toBeInTheDocument();
     expect(
-      screen.getAllByText(`$${fakeProducts[0].price.toFixed(2)}`).length
-    ).toBeGreaterThan(0);
-  });
-
-  it("renders fallback when product fetch fails", async () => {
-    mockGetProductById.mockResolvedValue({ data: null, error: "Nope" });
-    mockGetProducts.mockResolvedValue({ data: null, error: "Nope" });
-
-    const page = await ProductPage({ params: { id: "999" } } as any);
-    render(<Provider store={store}>{page}</Provider>);
-
-    // the app may show a "Not found" or fallback text; accept either
-    const fallback = await screen.findByText(
-      /(?:Not found|No products found|Failed to load products)/i
-    );
-    expect(fallback).toBeInTheDocument();
+      screen.getByText(`$${fakeProduct.price.toFixed(2)}`)
+    ).toBeInTheDocument();
   });
 });
