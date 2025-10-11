@@ -8,7 +8,7 @@ const createJestConfig = nextJest({
 const customJestConfig: Config = {
   testEnvironment: "jest-environment-jsdom",
   moduleDirectories: ["node_modules", "<rootDir>/src"],
-  setupFilesAfterEnv: ["<rootDir>/src/__tests__/setupTests.ts"],
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"], // <- ensure this points to the root setup file
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
     "^@/lib/supabase$": "<rootDir>/src/__mocks__/supabase.ts",
