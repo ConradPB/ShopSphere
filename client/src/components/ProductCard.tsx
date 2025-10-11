@@ -67,6 +67,37 @@ export default function ProductCard({ product }: ProductCardProps) {
         />
       </Link>
 
+      <div className="p-5 text-center text-white relative z-10">
+        <Link href={`/product/${id}`}>
+          <h3 className="text-lg font-semibold line-clamp-1 hover:text-cyan-300 transition">
+            {title}
+          </h3>
+        </Link>
+
+        <p className="text-cyan-300 font-bold mt-2 text-lg drop-shadow-sm">
+          ${price.toFixed(2)}
+        </p>
+
+        <div className="mt-6 flex gap-3 justify-center">
+          <motion.button
+            type="button"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleAddToCart}
+            className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:shadow-cyan-500/40 transition-all duration-300"
+          >
+            Add to Cart
+          </motion.button>
+
+          <Link
+            href={`/product/${id}`}
+            className="px-4 py-2 border border-cyan-400/40 rounded-lg text-sm text-cyan-200 hover:bg-cyan-400/10 hover:text-cyan-300 transition-all duration-300"
+          >
+            View
+          </Link>
+        </div>
+      </div>
+
       <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-20 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 blur-2xl transition-opacity duration-700"></div>
     </motion.article>
   );
