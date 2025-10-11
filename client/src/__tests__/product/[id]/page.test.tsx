@@ -3,7 +3,7 @@ import { render, screen, act } from "@testing-library/react";
 import { Provider } from "react-redux";
 import { store } from "@/redux/store";
 
-// Mock Supabase before importing the page
+// --- Mock Supabase before importing the page ---
 jest.mock("@/lib/supabase", () => ({
   getProductById: jest.fn().mockResolvedValue({
     data: {
@@ -35,7 +35,8 @@ import ProductPage from "@/app/product/[id]/page";
 
 describe("Product Page", () => {
   it("renders product details and recommendations", async () => {
-    const params = { id: "1" };
+    // ✅ FIX: pass a Promise to match the expected type
+    const params = Promise.resolve({ id: "1" });
 
     let page: React.ReactElement | null = null;
     await act(async () => {
