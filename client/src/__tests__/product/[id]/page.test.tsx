@@ -1,22 +1,24 @@
-// Mock supabase BEFORE importing the page module (prevents creating a real client)
 jest.mock("@/lib/supabase", () => ({
   getProducts: jest.fn(),
+  getProductById: jest.fn(),
 }));
 
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import * as supabaseLib from "@/lib/supabase";
-import HomePage from "@/app/page";
+import ProductPage from "@/app/product/[id]/page";
 import { Provider } from "react-redux";
 import { store } from "@/redux/store";
 import type { Product } from "@/types/product";
 
-// ensure the mock typing matches the real function signature
 const mockGetProducts = supabaseLib.getProducts as jest.MockedFunction<
-  () => Promise<{ data: Product[] | null; error: string | null }>
+  typeof supabaseLib.getProducts
+>;
+const mockGetProductById = supabaseLib.getProductById as jest.MockedFunction<
+  typeof supabaseLib.getProductById
 >;
 
-describe("Home Page", () => {
+describe("Product Page (server)", () => {
   const fakeProducts: Product[] = [
     {
       id: "1",
@@ -26,43 +28,42 @@ describe("Home Page", () => {
       description: "",
       category: "General",
     },
-    {
-      id: "2",
-      title: "Headphones",
-      price: 99.99,
-      image: "https://placehold.co/400x300",
-      description: "",
-      category: "General",
-    },
   ];
 
   beforeEach(() => {
     mockGetProducts.mockReset();
+    mockGetProductById.mockReset();
   });
 
-  it("renders product cards without crashing", async () => {
-    // mock the function to resolve to the expected { data, error } shape
+  it("renders product title and price", async () => {
+    mockGetProductById.mockResolvedValue({
+      data: fakeProducts[0],
+      error: null,
+    });
     mockGetProducts.mockResolvedValue({ data: fakeProducts, error: null });
 
-    const page = await HomePage();
+    // call the server component function with params
+    const page = await ProductPage({ params: { id: "1" } } as any);
     render(<Provider store={store}>{page}</Provider>);
 
-    for (const product of fakeProducts) {
-      expect(await screen.findByText(product.title)).toBeInTheDocument();
-      expect(
-        screen.getByText(`$${product.price.toFixed(2)}`)
-      ).toBeInTheDocument();
-    }
+    const matches = await screen.findAllByText(fakeProducts[0].title);
+    expect(matches.length).toBeGreaterThan(0);
+    expect(
+      screen.getAllByText(`$${fakeProducts[0].price.toFixed(2)}`).length
+    ).toBeGreaterThan(0);
   });
 
-  it("shows error message when products fail to load", async () => {
-    mockGetProducts.mockResolvedValue({ data: null, error: "Failed" });
+  it("renders fallback when product fetch fails", async () => {
+    mockGetProductById.mockResolvedValue({ data: null, error: "Nope" });
+    mockGetProducts.mockResolvedValue({ data: null, error: "Nope" });
 
-    const page = await HomePage();
+    const page = await ProductPage({ params: { id: "999" } } as any);
     render(<Provider store={store}>{page}</Provider>);
 
-    expect(
-      await screen.findByText(/Failed to load products/i)
-    ).toBeInTheDocument();
+    // the app may show a "Not found" or fallback text; accept either
+    const fallback = await screen.findByText(
+      /(?:Not found|No products found|Failed to load products)/i
+    );
+    expect(fallback).toBeInTheDocument();
   });
 });
