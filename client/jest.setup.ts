@@ -1,4 +1,5 @@
 /// <reference types="jest" />
+import { jest, afterEach } from "@jest/globals";
 import "@testing-library/jest-dom";
 import React from "react";
 
@@ -11,26 +12,28 @@ process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY =
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "anon";
 
 /**
- * Mocks for Next.js App Router hooks used in client components.
- * We export plain jest.fn() stubs so components that call these hooks
- * won't crash in tests.
+ * Mock next/navigation hooks so client components using them don't crash in tests.
  */
+jest.unstable_mockModule // guard: if using node ESM jest; if not, fallback to jest.mock below
+  ? void 0
+  : void 0; // noop so TS doesn't complain about unstable_mockModule being missing in some setups
+
+// Use jest.mock normally — importing jest from @jest/globals gives us a runtime value.
 jest.mock("next/navigation", () => ({
-  useRouter: jest.fn(() => ({
+  useRouter: () => ({
     push: jest.fn(),
     prefetch: jest.fn(),
     back: jest.fn(),
     forward: jest.fn(),
     replace: jest.fn(),
     refresh: jest.fn(),
-  })),
-  usePathname: jest.fn(() => "/"),
-  useSearchParams: jest.fn(() => new URLSearchParams()),
+  }),
+  usePathname: () => "/",
+  useSearchParams: () => new URLSearchParams(),
 }));
 
 /**
- * Mock next/image so tests render a plain <img>.
- * Filter out Next-only props that would trigger DOM warnings.
+ * Mock next/image -> render a plain <img /> in tests and strip Next-only props.
  */
 jest.mock("next/image", () => {
   return function MockNextImage(props: Record<string, unknown>) {
@@ -59,9 +62,8 @@ jest.mock("next/image", () => {
 });
 
 /**
- * Minimal supabase mock so importing modules that create a client
- * won't attempt to initialize a real client during tests.
- * Individual tests can still jest.spyOn/mock these functions as needed.
+ * Minimal supabase mock to avoid creating a real client during tests.
+ * Individual tests can still override these with jest.spyOn/mockResolvedValue.
  */
 jest.mock("@/lib/supabase", () => ({
   getProducts: jest.fn(() => Promise.resolve({ data: [], error: null })),
@@ -72,7 +74,7 @@ jest.mock("@/lib/supabase", () => ({
 }));
 
 /**
- * IntersectionObserver stub (used by framer-motion / in-view features).
+ * IntersectionObserver stub (framer-motion / in-view utilities depend on it).
  */
 class IntersectionObserverMock {
   observe() {}
@@ -89,8 +91,8 @@ Object.defineProperty(globalThis, "IntersectionObserver", {
 });
 
 /**
- * TextEncoder/TextDecoder polyfill for Node test env.
- * Use Node's util implementations but cast so TS is happy.
+ * TextEncoder/TextDecoder polyfill for Node test env (use Node's util).
+ * Cast to satisfy TypeScript's global types.
  */
 import {
   TextEncoder as NodeTextEncoder,
@@ -99,21 +101,22 @@ import {
 
 declare global {
   // expose these names on globalThis for libraries that expect them
+  // eslint-disable-next-line vars-on-top
   var TextEncoder: typeof globalThis.TextEncoder;
+  // eslint-disable-next-line vars-on-top
   var TextDecoder: typeof globalThis.TextDecoder;
 }
 
 (
   globalThis as unknown as { TextEncoder: typeof globalThis.TextEncoder }
 ).TextEncoder = NodeTextEncoder as unknown as typeof globalThis.TextEncoder;
-
 (
   globalThis as unknown as { TextDecoder: typeof globalThis.TextDecoder }
 ).TextDecoder = NodeTextDecoder as unknown as typeof globalThis.TextDecoder;
 
 /**
- * Silence a few known non-critical console errors that happen during tests.
- * This prevents test output pollution while still surfacing real problems.
+ * Silence known non-actionable console errors that appear during tests
+ * (filters prevent noisy output while still showing real errors).
  */
 const originalConsoleError = console.error.bind(console);
 console.error = (...args: unknown[]) => {
@@ -136,14 +139,13 @@ console.error = (...args: unknown[]) => {
       return;
     }
   } catch {
-    // fall through to default
+    // fall through to original
   }
   return originalConsoleError(...args);
 };
 
 /**
  * Clear mocks after each test to avoid state leaking.
- * `afterEach` is provided by Jest (the triple-slash at the top brings in Jest types).
  */
 afterEach(() => {
   jest.clearAllMocks();
