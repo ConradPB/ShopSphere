@@ -40,6 +40,22 @@ export default function HomePage() {
                 Shop Now
               </motion.a>
 
-              
+              <motion.a
+                href="/about"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.97 }}
+                className="bg-white/20 hover:bg-white/30 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition"
+              >
+                Learn More
+              </motion.a>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Featured Products Carousel */}
+      <FeaturedProducts />
+      <ProductShowcaseSection />
+    </>
   );
 }
