@@ -29,5 +29,17 @@ export default function HomePage() {
             </p>
           </Reveal>
 
-          
+          <Reveal delay={0.4}>
+            <div className="mt-8 flex justify-center gap-4">
+              <motion.a
+                href="/products"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.97 }}
+                className="bg-accent-green hover:bg-green-500 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition glow-green"
+              >
+                Shop Now
+              </motion.a>
+
+              
+  );
 }
