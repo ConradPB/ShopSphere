@@ -1,3 +1,4 @@
+// components/FeaturedProducts.tsx
 "use client";
 
 import { useEffect, useState, useRef } from "react";
@@ -9,17 +10,28 @@ import ProductCard from "./ProductCard";
 export default function FeaturedProducts() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const controls = useAnimation();
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchFeatured = async () => {
-      const { data, error } = await getProducts();
-      if (!error && data) {
-        const subset = data.slice(0, 6);
-        setProducts([...subset, ...subset]); // duplicate for smooth loop
+      try {
+        const { data, error } = await getProducts();
+        if (error) {
+          // preserve original console error for debugging as tests also log
+          console.error("Error fetching products:", error);
+          setError(true);
+        } else if (data) {
+          const subset = data.slice(0, 6);
+          setProducts([...subset, ...subset]); // duplicate for smooth loop
+        }
+      } catch (e) {
+        console.error("Error fetching products:", e);
+        setError(true);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
     fetchFeatured();
   }, []);
@@ -30,7 +42,11 @@ export default function FeaturedProducts() {
       while (true) {
         await controls.start({
           x: ["-50%", "0%"],
-          transition: { duration: 30, ease: "linear", repeat: Infinity },
+          transition: {
+            duration: 30,
+            ease: "linear",
+            repeat: Infinity,
+          },
         });
       }
     };
@@ -42,6 +58,19 @@ export default function FeaturedProducts() {
       <p className="text-center py-10 text-gray-500 animate-pulse">
         Loading featured products...
       </p>
+    );
+  }
+
+  if (error) {
+    // EXACT TEXT tests look for:
+    return (
+      <p className="text-center py-10 text-gray-500">Failed to load products</p>
+    );
+  }
+
+  if (!products.length) {
+    return (
+      <p className="text-center py-10 text-gray-500">No products found.</p>
     );
   }
 
@@ -68,7 +97,11 @@ export default function FeaturedProducts() {
             onMouseLeave={() =>
               controls.start({
                 x: ["-50%", "0%"],
-                transition: { duration: 30, ease: "linear", repeat: Infinity },
+                transition: {
+                  duration: 30,
+                  ease: "linear",
+                  repeat: Infinity,
+                },
               })
             }
           >
@@ -81,7 +114,6 @@ export default function FeaturedProducts() {
               >
                 <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 via-teal-400/20 to-purple-500/20 opacity-0 group-hover:opacity-100 blur-xl transition duration-500" />
                 <div className="relative" aria-label={`View ${product.title}`}>
-                  {/* Note: ProductCard renders visible text, so we don’t repeat it here */}
                   <ProductCard product={product} />
                 </div>
               </motion.div>
