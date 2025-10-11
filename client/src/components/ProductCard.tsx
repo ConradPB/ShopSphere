@@ -12,3 +12,19 @@ import WishlistButton from "./ui/WishlistButton";
 interface ProductCardProps {
   product: Product;
 }
+
+export default function ProductCard({ product }: ProductCardProps) {
+  const dispatch = useAppDispatch();
+
+  const id = String(product.id);
+  const title = product.title ?? "Unnamed Product";
+  const price = Number(product.price ?? 0);
+  const imageSrc: string = product.image ?? "/fallback-image.jpg";
+
+  const wishlistItems = useAppSelector((state) => state.wishlist.items);
+  const isInWishlist = wishlistItems.some((item) => item.id === id);
+
+  const handleAddToCart = () => {
+    dispatch(addToCart({ id, title, price, image: imageSrc, quantity: 1 }));
+  };
+}
