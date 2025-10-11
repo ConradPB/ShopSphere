@@ -45,7 +45,8 @@ describe("ProductGrid", () => {
     mockGetProducts.mockResolvedValueOnce({ data: [], error: null });
 
     await act(async () => {
-      renderWithProvider(<ProductGrid />);
+      // pass the title prop the test expects
+      renderWithProvider(<ProductGrid title="Featured Products" />);
     });
 
     expect(screen.getByText(/Featured Products/i)).toBeInTheDocument();
