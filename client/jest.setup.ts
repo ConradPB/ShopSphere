@@ -14,11 +14,6 @@ process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY =
 /**
  * Mock next/navigation hooks so client components using them don't crash in tests.
  */
-jest.unstable_mockModule // guard: if using node ESM jest; if not, fallback to jest.mock below
-  ? void 0
-  : void 0; // noop so TS doesn't complain about unstable_mockModule being missing in some setups
-
-// Use jest.mock normally — importing jest from @jest/globals gives us a runtime value.
 jest.mock("next/navigation", () => ({
   useRouter: () => ({
     push: jest.fn(),
