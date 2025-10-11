@@ -35,3 +35,19 @@ export const fallbackProducts: Product[] = [
       "https://images.unsplash.com/photo-1602810318383-e386cc2a3f4c?auto=format&fit=crop&w=800&q=80",
   },
 ];
+
+/**
+ * ✅ Simulate fetching all products
+ * (In production, this could call Supabase or another API)
+ */
+export async function getAllProducts(): Promise<Product[]> {
+  return Promise.resolve(fallbackProducts);
+}
+
+/**
+ * ✅ Simulate fetching a single product by ID
+ */
+export async function getProductById(id: string): Promise<Product | undefined> {
+  const product = fallbackProducts.find((p) => p.id === id);
+  return Promise.resolve(product);
+}
