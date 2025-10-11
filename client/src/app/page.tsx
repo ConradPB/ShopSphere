@@ -16,9 +16,10 @@ export default function HomePage() {
       <section className="relative w-full bg-gradient-to-r from-teal-500 via-cyan-400 to-blue-600 text-white py-24 rounded-none shadow-lg overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <Reveal>
-            <h1 className="text-4xl md:text-6xl font-extrabold font-display drop-shadow-lg">
+            {/* Changed h1 -> h2 to keep only one top-level heading */}
+            <h2 className="text-4xl md:text-6xl font-extrabold font-display drop-shadow-lg">
               Welcome to ShopSphere
-            </h1>
+            </h2>
           </Reveal>
 
           <Reveal delay={0.2}>
@@ -28,32 +29,5 @@ export default function HomePage() {
             </p>
           </Reveal>
 
-          <Reveal delay={0.4}>
-            <div className="mt-8 flex justify-center gap-4">
-              <motion.a
-                href="/products"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.97 }}
-                className="bg-accent-green hover:bg-green-500 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition glow-green"
-              >
-                Shop Now
-              </motion.a>
-
-              <motion.a
-                href="/about"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.97 }}
-                className="bg-white/20 hover:bg-white/30 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition"
-              >
-                Learn More
-              </motion.a>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-      {/* Featured Products Carousel */}
-      <FeaturedProducts />
-      <ProductShowcaseSection />
-    </>
-  );
+          
 }
