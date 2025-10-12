@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { getProducts } from "@/lib/supabase";
-import { Product } from "@/types/product";
+import { getAllProducts, Product } from "@/lib/products";
 import ProductGrid from "@/components/ProductGrid";
 import Reveal from "@/components/Reveal";
 
@@ -12,13 +11,14 @@ export default function ProductsPage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data, error } = await getProducts();
-      if (error) {
-        console.error("Error loading products:", error);
-      } else {
+      try {
+        const data = await getAllProducts();
         setProducts(data ?? []);
+      } catch (error) {
+        console.error("Error loading products:", error);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
     fetchData();
   }, []);
