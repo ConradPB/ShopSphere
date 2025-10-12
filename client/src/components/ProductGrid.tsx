@@ -2,16 +2,18 @@
 
 import React, { useEffect, useState } from "react";
 import { getAllProducts } from "@/lib/products";
-import { Product } from "@/types/product";
+import { Product as ProductType } from "@/types/product";
 import ProductCard from "./ProductCard";
 
 type Props = {
-  initialProducts?: Product[];
+  initialProducts?: ProductType[];
   title?: string;
 };
 
 export default function ProductGrid({ initialProducts, title }: Props) {
-  const [products, setProducts] = useState<Product[]>(initialProducts ?? []);
+  const [products, setProducts] = useState<ProductType[]>(
+    initialProducts ?? []
+  );
   const [loading, setLoading] = useState<boolean>(!initialProducts);
 
   const heading = title ?? "Featured Products";
@@ -22,11 +24,10 @@ export default function ProductGrid({ initialProducts, title }: Props) {
       const fetchProducts = async () => {
         try {
           setLoading(true);
-          // getAllProducts returns Promise<Product[]>
-          const data = await getAllProducts();
+          // getAllProducts returns the simple lib/products.Product[]; cast to the app Product type
+          const data = (await getAllProducts()) as unknown as ProductType[];
           if (!isMounted) return;
-          // cast to local Product type (tests/mocks may use plain objects)
-          setProducts((data ?? []) as Product[]);
+          setProducts(data ?? []);
         } catch (err) {
           console.error("Error fetching products:", err);
           if (!isMounted) return;
@@ -74,7 +75,7 @@ export default function ProductGrid({ initialProducts, title }: Props) {
         "
       >
         {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
+          <ProductCard key={product.id} product={product as ProductType} />
         ))}
       </div>
     </section>
