@@ -49,4 +49,15 @@ export default function ProductGrid({ initialProducts, title }: Props) {
   }
 
   // 🚫 No products
-  
+  if (products.length === 0) {
+    return (
+      <section className="py-10 px-4 sm:px-6 lg:px-8 pb-0 text-center">
+        <h2 className="text-2xl font-bold mb-6 text-white">{heading}</h2>
+        <p className="text-gray-400">No products found.</p>
+      </section>
+    );
+  }
+
+  // ✅ Product grid
+  return (
+    
