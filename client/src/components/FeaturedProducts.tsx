@@ -48,4 +48,19 @@ export default function FeaturedProducts() {
       </p>
     );
   }
+
+  return (
+    <section className="relative py-16 bg-gradient-to-b from-neutral-900 via-black to-neutral-900 text-white overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6">
+        <h2 className="text-3xl font-extrabold text-center mb-10 bg-gradient-to-r from-blue-400 via-teal-400 to-purple-400 text-transparent bg-clip-text drop-shadow-md">
+          Featured Products
+        </h2>
+
+        <div className="relative overflow-hidden">
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-neutral-900 via-neutral-900/80 to-transparent z-20" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-neutral-900 via-neutral-900/80 to-transparent z-20" />
+        </div>
+      </div>
+    </section>
+  );
 }
