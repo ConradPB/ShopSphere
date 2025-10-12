@@ -20,17 +20,25 @@ describe("ProductPage", () => {
   });
 
   it("renders the product page with correct product info", async () => {
-    // lib/products.getProductById returns Product | undefined in your current implementation,
-    // so mock it to return the product directly.
     (productsLib.getProductById as jest.Mock).mockResolvedValue(mockProduct);
 
     const params = { id: "1" };
     const page = await ProductPage({ params: Promise.resolve(params) });
 
-    // Wrap the server-generated element in the redux Provider so client components using hooks work.
+    // wrap in Provider so client-side hooks work
     render(<Provider store={store}>{page as React.ReactElement}</Provider>);
 
-    expect(await screen.findByText(/laptop/i)).toBeInTheDocument();
+    // Use the heading role to target the product title distinctly (avoids matching description)
+    expect(
+      await screen.findByRole("heading", { name: /laptop/i, level: 1 })
+    ).toBeInTheDocument();
+
+    // Price check
     expect(screen.getByText(/\$1200/i)).toBeInTheDocument();
+
+    // Description check (explicit)
+    expect(
+      screen.getByText(/high performance laptop/i, { selector: "p" })
+    ).toBeInTheDocument();
   });
 });
