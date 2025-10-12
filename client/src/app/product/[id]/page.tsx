@@ -1,4 +1,4 @@
-import { getProductById, getRecommendations } from "@/lib/supabase";
+import { getProductById, Product, getAllProducts } from "@/lib/products";
 import ProductDetailClient from "@/components/ProductDetailClient";
 
 type PageProps = {
@@ -6,9 +6,9 @@ type PageProps = {
 };
 
 export default async function ProductPage({ params }: PageProps) {
-  const { id } = await params; // await params (Next.js 15+)
+  const { id } = await params; // Next.js 15+ async params
 
-  const { data: product } = await getProductById(id);
+  const product: Product | undefined = await getProductById(id);
   if (!product) {
     return (
       <main className="min-h-screen flex items-center justify-center text-gray-400">
@@ -17,7 +17,8 @@ export default async function ProductPage({ params }: PageProps) {
     );
   }
 
-  const { data: recs } = await getRecommendations(id, 4);
+  // Temporary recommendations: just get all products except this one
+  const recs = (await getAllProducts()).filter((p) => p.id !== id).slice(0, 4);
 
-  return <ProductDetailClient product={product} initialRecs={recs ?? []} />;
+  return <ProductDetailClient product={product} initialRecs={recs} />;
 }
