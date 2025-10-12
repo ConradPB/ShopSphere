@@ -51,3 +51,8 @@ export async function getProductById(id: string): Promise<Product | undefined> {
   const product = fallbackProducts.find((p) => p.id === id);
   return Promise.resolve(product);
 }
+
+export function getRecommendations(id: string, count: number) {
+  const recs = fallbackProducts.filter((p) => p.id !== id).slice(0, count);
+  return Promise.resolve({ data: recs });
+}
