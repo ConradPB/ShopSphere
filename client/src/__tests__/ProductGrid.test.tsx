@@ -1,17 +1,17 @@
-jest.mock("@/lib/supabase", () => ({
-  getProducts: jest.fn(),
+jest.mock("@/lib/products", () => ({
+  getAllProducts: jest.fn(),
 }));
 
 import React from "react";
 import { render, screen, waitFor, act } from "@testing-library/react";
 import ProductGrid from "@/components/ProductGrid";
-import * as supabaseLib from "@/lib/supabase";
+import * as productsLib from "@/lib/products";
 import { Provider } from "react-redux";
 import { store } from "@/redux/store";
 import type { Product } from "@/types/product";
 
-const mockGetProducts = supabaseLib.getProducts as jest.MockedFunction<
-  () => Promise<{ data: Product[] | null; error: string | null }>
+const mockGetAllProducts = productsLib.getAllProducts as jest.MockedFunction<
+  () => Promise<Product[]>
 >;
 
 const renderWithProvider = (ui: React.ReactElement) =>
@@ -38,14 +38,14 @@ describe("ProductGrid", () => {
   ];
 
   beforeEach(() => {
-    mockGetProducts.mockReset();
+    mockGetAllProducts.mockReset();
+    jest.clearAllMocks();
   });
 
   it("renders static title while loading", async () => {
-    mockGetProducts.mockResolvedValueOnce({ data: [], error: null });
+    mockGetAllProducts.mockResolvedValueOnce([]);
 
     await act(async () => {
-      // pass the title prop the test expects
       renderWithProvider(<ProductGrid title="Featured Products" />);
     });
 
@@ -53,7 +53,7 @@ describe("ProductGrid", () => {
   });
 
   it("renders products after fetching", async () => {
-    mockGetProducts.mockResolvedValueOnce({ data: mockProducts, error: null });
+    mockGetAllProducts.mockResolvedValueOnce(mockProducts);
 
     await act(async () => {
       renderWithProvider(<ProductGrid />);
@@ -66,10 +66,10 @@ describe("ProductGrid", () => {
   });
 
   it("renders empty grid if fetch fails", async () => {
-    // silence console.error for this test
     const spy = jest.spyOn(console, "error").mockImplementation(() => {});
 
-    mockGetProducts.mockResolvedValueOnce({ data: null, error: "failed" });
+    // Simulate fetch failure by throwing (ProductGrid catches and sets products=[]).
+    mockGetAllProducts.mockRejectedValueOnce(new Error("failed"));
 
     await act(async () => {
       renderWithProvider(<ProductGrid />);
