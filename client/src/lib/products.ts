@@ -47,7 +47,17 @@ export async function getAllProducts(): Promise<Product[]> {
 /**
  * ✅ Simulate fetching a single product by ID
  */
-export async function getProductById(id: string): Promise<Product | undefined> {
+export async function getProductB(id: string): Promise<Product | undefined> {
   const product = fallbackProducts.find((p) => p.id === id);
   return Promise.resolve(product);
+}
+
+export function getProductById(id: string) {
+  const product = fallbackProducts.find((p) => p.id === id);
+  return Promise.resolve({ data: product });
+}
+
+export function getRecommendations(id: string, count: number) {
+  const recs = fallbackProducts.filter((p) => p.id !== id).slice(0, count);
+  return Promise.resolve({ data: recs });
 }
