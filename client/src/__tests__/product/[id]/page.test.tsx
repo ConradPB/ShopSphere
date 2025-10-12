@@ -19,7 +19,7 @@ describe("ProductPage", () => {
 
   it("renders the product page with correct product info", async () => {
     (productsLib.getProductById as jest.Mock).mockResolvedValue(mockProduct);
-
+    // getAllProducts will fall back to actual implementation (fallbackProducts)
     const params = { id: "1" };
     const page = await ProductPage({ params: Promise.resolve(params) });
     render(page as React.ReactElement);
