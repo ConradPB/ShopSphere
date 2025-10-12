@@ -1,4 +1,4 @@
-import { getProductById, Product, getAllProducts } from "@/lib/products";
+import { getProductById, getAllProducts } from "@/lib/products";
 import ProductDetailClient from "@/components/ProductDetailClient";
 
 type PageProps = {
@@ -6,9 +6,10 @@ type PageProps = {
 };
 
 export default async function ProductPage({ params }: PageProps) {
-  const { id } = await params; // Next.js 15+ async params
+  const { id } = await params;
 
-  const product: Product | undefined = await getProductById(id);
+  const product = await getProductById(id);
+  // NOTE: If your getProductById returns the raw Product (not wrapped), adjust above.
   if (!product) {
     return (
       <main className="min-h-screen flex items-center justify-center text-gray-400">
@@ -17,7 +18,7 @@ export default async function ProductPage({ params }: PageProps) {
     );
   }
 
-  // Temporary recommendations: just get all products except this one
+  // Temporary recommendations: take some other products
   const recs = (await getAllProducts()).filter((p) => p.id !== id).slice(0, 4);
 
   return <ProductDetailClient product={product} initialRecs={recs} />;
