@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import HomePage from "@/app/page";
 import * as productsLib from "@/lib/products";
 import { Provider } from "react-redux";
-import store from "@/redux/store";
+import { store } from "@/redux/store";
 
 jest.mock("@/lib/products");
 
