@@ -1,4 +1,3 @@
-// src/__tests__/product/[id]/page.test.tsx
 import { render, screen } from "@testing-library/react";
 import ProductPage from "@/app/product/[id]/page";
 import * as productsLib from "@/lib/products";
