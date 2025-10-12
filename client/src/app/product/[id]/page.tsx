@@ -1,3 +1,4 @@
+// app/product/[id]/page.tsx
 import { getProductById, getAllProducts } from "@/lib/products";
 import ProductDetailClient from "@/components/ProductDetailClient";
 
@@ -8,8 +9,9 @@ type PageProps = {
 export default async function ProductPage({ params }: PageProps) {
   const { id } = await params;
 
+  // use lib/products so tests can mock it
   const product = await getProductById(id);
-  // NOTE: If your getProductById returns the raw Product (not wrapped), adjust above.
+
   if (!product) {
     return (
       <main className="min-h-screen flex items-center justify-center text-gray-400">
@@ -18,8 +20,9 @@ export default async function ProductPage({ params }: PageProps) {
     );
   }
 
-  // Temporary recommendations: take some other products
-  const recs = (await getAllProducts()).filter((p) => p.id !== id).slice(0, 4);
+  // Build recommendations from the simple product store
+  const all = (await getAllProducts()) ?? [];
+  const recs = all.filter((p) => p.id !== id).slice(0, 4);
 
   return <ProductDetailClient product={product} initialRecs={recs} />;
 }
