@@ -8,3 +8,45 @@ type Props = {
   initialProducts?: Product[];
   title?: string;
 };
+
+export default function ProductGrid({ initialProducts, title }: Props) {
+  const [products, setProducts] = useState<Product[]>(initialProducts ?? []);
+  const [loading, setLoading] = useState<boolean>(!initialProducts);
+
+  const heading = title ?? "Featured Products";
+
+  useEffect(() => {
+    if (!initialProducts) {
+      let isMounted = true;
+      const fetchProducts = async () => {
+        try {
+          setLoading(true);
+          const data = await getAllProducts();
+          if (!isMounted) return;
+          setProducts(data ?? []);
+        } catch (err) {
+          console.error("Error fetching products:", err);
+          setProducts([]);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchProducts();
+      return () => {
+        isMounted = false;
+      };
+    }
+  }, [initialProducts]);
+
+  // 🌀 Loading state
+  if (loading) {
+    return (
+      <section className="py-10 px-4 sm:px-6 lg:px-8 pb-0 text-center">
+        <h2 className="text-2xl font-bold mb-6 text-white">{heading}</h2>
+        <p className="text-gray-400 animate-pulse">Loading products...</p>
+      </section>
+    );
+  }
+
+  // 🚫 No products
+  
