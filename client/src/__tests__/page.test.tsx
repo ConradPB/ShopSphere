@@ -1,17 +1,17 @@
-jest.mock("@/lib/supabase", () => ({
-  getProducts: jest.fn(),
+jest.mock("@/lib/products", () => ({
+  getAllProducts: jest.fn(),
 }));
 
 import React from "react";
 import { render, screen, act } from "@testing-library/react";
-import * as supabaseLib from "@/lib/supabase";
+import * as productsLib from "@/lib/products";
 import HomePage from "@/app/page";
 import { Provider } from "react-redux";
 import { store } from "@/redux/store";
 import type { Product } from "@/types/product";
 
-const mockGetProducts = supabaseLib.getProducts as jest.MockedFunction<
-  typeof supabaseLib.getProducts
+const mockGetAllProducts = productsLib.getAllProducts as jest.MockedFunction<
+  () => Promise<Product[]>
 >;
 
 describe("Home Page", () => {
@@ -35,11 +35,12 @@ describe("Home Page", () => {
   ];
 
   beforeEach(() => {
-    mockGetProducts.mockReset();
+    mockGetAllProducts.mockReset();
+    jest.clearAllMocks();
   });
 
   it("renders product list successfully", async () => {
-    mockGetProducts.mockResolvedValue({ data: fakeProducts, error: null });
+    mockGetAllProducts.mockResolvedValue(fakeProducts);
 
     let page: React.ReactElement | null = null;
     await act(async () => {
@@ -61,7 +62,8 @@ describe("Home Page", () => {
   });
 
   it("shows error message when products fail to load", async () => {
-    mockGetProducts.mockResolvedValue({ data: null, error: "Failed" });
+    // Make the call return an empty value or throw so page renders failure UI.
+    mockGetAllProducts.mockRejectedValue(new Error("Failed"));
 
     let page: React.ReactElement | null = null;
     await act(async () => {
