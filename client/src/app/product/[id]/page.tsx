@@ -1,4 +1,3 @@
-// app/product/[id]/page.tsx
 import { getProductById, getAllProducts } from "@/lib/products";
 import ProductDetailClient from "@/components/ProductDetailClient";
 
