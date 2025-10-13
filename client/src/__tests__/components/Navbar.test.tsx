@@ -2,6 +2,13 @@ import { render, screen } from "@testing-library/react";
 import Navbar from "@/components/Navbar";
 import { Provider } from "react-redux";
 
+const mockStore = configureStore({
+  reducer: {
+    cart: cartReducer,
+    wishlist: wishlistReducer,
+  },
+});
+
 describe("Navbar Component", () => {
   it("renders the brand or logo text", () => {
     render(
