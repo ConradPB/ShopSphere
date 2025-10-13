@@ -12,7 +12,11 @@ const mockStore = configureStore({
 });
 describe("Cart Page", () => {
   it("renders without crashing", () => {
-    render(<CartPage />);
+    render(
+      <Provider>
+        <CartPage />
+      </Provider>
+    );
 
     expect(screen.getByText(/cart/i)).toBeInTheDocument();
   });
