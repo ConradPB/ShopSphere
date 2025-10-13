@@ -4,10 +4,11 @@ import { Provider } from "react-redux";
 
 describe("Navbar Component", () => {
   it("renders the brand or logo text", () => {
-    <Provider>
-      render(
-      <Navbar />)
-    </Provider>;
+    render(
+      <Provider store={mockStore}>
+        <Navbar />
+      </Provider>
+    );
 
     expect(screen.getByText(/shop/i)).toBeInTheDocument();
   });
