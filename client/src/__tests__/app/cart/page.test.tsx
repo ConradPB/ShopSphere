@@ -3,6 +3,7 @@ import Page from "@/app/cart/page";
 import { configureStore } from "@reduxjs/toolkit";
 import cartReducer from "@/redux/cartSlice";
 import wishlistReducer from "@/redux/wishlistSlice";
+import CartPage from "@/app/cart/page";
 
 const mockStore = configureStore({
   reducer: {
@@ -12,7 +13,8 @@ const mockStore = configureStore({
 });
 describe("Cart Page", () => {
   it("renders without crashing", () => {
-    render(<Page />);
+    render(<CartPage />);
+
     expect(screen.getByText(/cart/i)).toBeInTheDocument();
   });
 });
