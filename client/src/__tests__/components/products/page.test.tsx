@@ -1,6 +1,5 @@
 import { render, screen } from "@testing-library/react";
 import ProductsPage from "@/app/products/page";
-import ProductGrid from "@/components/ProductGrid";
 
 jest.mock("@/components/ProductGrid", () =>
   jest.fn(() => <div>Mocked Grid</div>)
