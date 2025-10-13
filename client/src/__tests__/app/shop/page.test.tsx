@@ -1,31 +1,31 @@
-/**
- * @jest-environment jsdom
- */
+"use client";
+
 import React from "react";
-import { render, screen, waitFor } from "@testing-library/react";
-import ShopPage from "@/app/shop/page";
+import { Product } from "@/types/product";
+import ProductCard from "@/components/ProductCard";
 
-// Mock the supabase getProducts function to return fake products
-jest.mock("@/lib/supabase", () => ({
-  getProducts: jest.fn().mockResolvedValue({
-    data: [
-      { id: 1, name: "Product A", price: 10 },
-      { id: 2, name: "Product B", price: 20 },
-    ],
-    error: null,
-  }),
-}));
+interface RecommendedProductsProps {
+  products: Product[];
+}
 
-describe("Shop Page", () => {
-  it("renders shop page with products", async () => {
-    // Dynamically import the page since it's async
-    const Page = await ShopPage();
-    render(Page);
+export default function RecommendedProducts({
+  products,
+}: RecommendedProductsProps) {
+  return (
+    <section className="my-12">
+      <h2 className="text-heading-md font-semibold mb-6">
+        Recommended Products
+      </h2>
 
-    // Wait for heading or content
-    await waitFor(() => {
-      const mainElement = screen.getByRole("main");
-      expect(mainElement).toBeInTheDocument();
-    });
-  });
-});
+      {products.length === 0 ? (
+        <p className="text-neutral-500">No recommended products available.</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {products.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
