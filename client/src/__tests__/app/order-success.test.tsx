@@ -1,9 +1,9 @@
 import { render, screen } from "@testing-library/react";
-import OrderSuccessPage from "@/app/order-success/page";
+import page from "@/app/order-success/page";
 
-test("order success page renders", async () => {
-  const page = await OrderSuccessPage();
+test("order success page renders", () => {
   render(page as React.ReactElement);
-  // look for common success words
-  expect(screen.getByText(/success|thank you|order/i)).toBeDefined();
+  // look for any success-related text — multiple allowed
+  const successMessages = screen.getAllByText(/success|thank you|order/i);
+  expect(successMessages.length).toBeGreaterThan(0);
 });
