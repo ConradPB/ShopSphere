@@ -24,7 +24,11 @@ describe("Navbar Component", () => {
   });
 
   it("renders navigation links", () => {
-    render(<Navbar />);
+    render(
+      <Provider store={mockStore}>
+        <Navbar />
+      </Provider>
+    );
     expect(screen.getByText(/home/i)).toBeInTheDocument();
     expect(screen.getByText(/shop/i)).toBeInTheDocument();
   });
