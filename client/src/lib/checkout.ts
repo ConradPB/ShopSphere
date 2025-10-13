@@ -49,7 +49,9 @@ export type OrderResponse = z.infer<typeof OrderResponseSchema>;
  * ✅ Main checkout function
  * Simulates an API checkout request.
  */
-export async function processCheckout(items: any[]): Promise<OrderResponse> {
+export async function processCheckout(
+  items: OrderItem[]
+): Promise<OrderResponse> {
   // 1. Handle empty cart
   if (!items || items.length === 0) {
     return { success: false, message: "Cart is empty" };
