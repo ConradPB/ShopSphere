@@ -25,9 +25,14 @@ describe("checkout utility", () => {
   });
 
   it("rejects invalid cart items", async () => {
-    // @ts-expect-error intentionally wrong structure for test
-    const invalidCart = [{ name: "Broken", cost: 99 }];
+    // create an intentionally malformed payload at runtime while keeping TypeScript happy
+    const invalidCart = [
+      { name: "Broken", cost: 99 },
+    ] as unknown as OrderItem[];
+
     const result = await processCheckout(invalidCart);
     expect(result.success).toBe(false);
+    // message should indicate invalid items
+    expect(result.message).toEqual(expect.stringContaining("Invalid"));
   });
 });
