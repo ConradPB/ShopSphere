@@ -1,9 +1,14 @@
 import { render, screen } from "@testing-library/react";
 import Navbar from "@/components/Navbar";
+import { Provider } from "react-redux";
 
 describe("Navbar Component", () => {
   it("renders the brand or logo text", () => {
-    render(<Navbar />);
+    <Provider>
+      render(
+      <Navbar />)
+    </Provider>;
+
     expect(screen.getByText(/shop/i)).toBeInTheDocument();
   });
 
