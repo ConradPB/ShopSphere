@@ -16,6 +16,13 @@ describe("CartDrawer Component", () => {
 
     // The component should render a cart heading or empty cart message.
     // Adjust the text matchers if your component uses different wording.
+
+    // Target the header only
+    expect(
+      screen.getByRole("heading", { name: /your cart/i })
+    ).toBeInTheDocument();
+
+    expect(screen.getByText(/your cart is empty/i)).toBeInTheDocument();
   });
 
   it("does not throw when closed", () => {
