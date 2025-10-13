@@ -1,9 +1,10 @@
 import { render, screen } from "@testing-library/react";
-import page from "@/app/order-success/page";
+import OrderSuccessPage from "@/app/order-success/page";
 
 test("order success page renders", () => {
-  render(page as React.ReactElement);
-  // look for any success-related text — multiple allowed
+  // Call the page function so it returns JSX
+  render(<>{OrderSuccessPage()}</>);
+
   const successMessages = screen.getAllByText(/success|thank you|order/i);
   expect(successMessages.length).toBeGreaterThan(0);
 });
