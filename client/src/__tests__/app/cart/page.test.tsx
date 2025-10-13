@@ -3,6 +3,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import cartReducer from "@/redux/cartSlice";
 import wishlistReducer from "@/redux/wishlistSlice";
 import CartPage from "@/app/cart/page";
+import { Provider } from "react-redux";
 
 const mockStore = configureStore({
   reducer: {
