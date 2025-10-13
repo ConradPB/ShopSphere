@@ -1,5 +1,4 @@
 import { render, screen } from "@testing-library/react";
-import Page from "@/app/cart/page";
 import { configureStore } from "@reduxjs/toolkit";
 import cartReducer from "@/redux/cartSlice";
 import wishlistReducer from "@/redux/wishlistSlice";
