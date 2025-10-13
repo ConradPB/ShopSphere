@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import Navbar from "@/components/Navbar";
 import { Provider } from "react-redux";
 import cartReducer from "@/redux/cartSlice";
+import wishlistReducer from "@/redux/wishlistSlice";
 import { configureStore } from "@reduxjs/toolkit";
 
 const mockStore = configureStore({
