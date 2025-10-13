@@ -1,7 +1,7 @@
-import React from "react";
 import SearchAndFilterClient from "@/components/SearchAndFilterClient";
 import { getProducts } from "@/lib/supabase";
 import { Product } from "@/types/product";
+import React from "react";
 
 export default async function ShopPage() {
   const { data, error } = await getProducts();
@@ -22,7 +22,7 @@ export default async function ShopPage() {
           </p>
         </header>
 
-        {/* Single source of truth: Search + Filter + Grid + Pagination */}
+        {/* Client-side Search and Filter logic */}
         <SearchAndFilterClient initialProducts={products} />
       </section>
     </main>
