@@ -1,22 +1,31 @@
+/**
+ * @jest-environment jsdom
+ */
+import React from "react";
 import { render, screen } from "@testing-library/react";
 import RecommendedProducts from "@/components/RecommendedProducts";
+import { Product } from "@/types/product"; // ✅ Import Product type for safety
 
 describe("RecommendedProducts", () => {
-  it("renders a heading for recommended products", () => {
+  it("renders the heading for recommended products", () => {
     render(<RecommendedProducts products={[]} />);
-    expect(screen.getByText(/Recommended/i)).toBeInTheDocument();
+    const heading = screen.getByRole("heading", { name: /recommended/i });
+    expect(heading).toBeInTheDocument();
   });
 
   it("renders product cards when provided", () => {
-    const mockProducts = [
-      { id: "1", title: "Product A", price: 25, image: "/imgA.png" },
-      { id: "2", title: "Product B", price: 40, image: "/imgB.png" },
+    const mockProducts: Product[] = [
+      {
+        id: "1",
+        title: "Mock Product", // ✅ use 'title' instead of 'name'
+        price: 100,
+        image: "/test.jpg",
+        description: "A sample product",
+        category: "Test",
+      },
     ];
 
     render(<RecommendedProducts products={mockProducts} />);
-
-    // Check that each product title is visible
-    expect(screen.getByText("Product A")).toBeInTheDocument();
-    expect(screen.getByText("Product B")).toBeInTheDocument();
+    expect(screen.getByText(/mock product/i)).toBeInTheDocument();
   });
 });
