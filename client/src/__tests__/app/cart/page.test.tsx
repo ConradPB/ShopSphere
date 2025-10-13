@@ -13,7 +13,7 @@ const mockStore = configureStore({
 describe("Cart Page", () => {
   it("renders without crashing", () => {
     render(
-      <Provider>
+      <Provider store={mockStore}>
         <CartPage />
       </Provider>
     );
