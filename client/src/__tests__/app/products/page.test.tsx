@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import ProductsPage from "@/app/products/page";
 
 jest.mock("@/components/ProductGrid", () =>
