@@ -1,4 +1,3 @@
-// src/__tests__/page.test.tsx
 jest.mock("@/lib/products", () => ({
   getAllProducts: jest.fn(),
 }));
