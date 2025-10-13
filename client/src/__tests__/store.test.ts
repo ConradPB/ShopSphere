@@ -1,4 +1,3 @@
-// src/__tests__/redux/store.test.ts
 import { addToCart } from "@/redux/cartSlice";
 
 const LOCAL_STORAGE_CART = "shop_sphere_cart_items";
