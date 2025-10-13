@@ -6,9 +6,16 @@ import { store } from "@/redux/store";
 
 describe("WishlistButton", () => {
   it("renders the wishlist button", () => {
+    const mockProduct = {
+      id: "test-1",
+      title: "Mock Product",
+      price: 20,
+      image: "/mock.jpg",
+    };
+
     render(
       <Provider store={store}>
-        <WishlistButton productId="test-1" />
+        <WishlistButton product={mockProduct} />
       </Provider>
     );
 
