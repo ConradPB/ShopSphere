@@ -71,6 +71,32 @@ describe("WishlistButton", () => {
     expect(screen.getByRole("button")).toHaveAttribute("aria-pressed", "true");
   });
 
+  it("removes product from wishlist when clicked again", async () => {
+    renderWithProviders(<WishlistButton product={mockProduct} />);
+
+    // Add first
+    fireEvent.click(screen.getByRole("button"));
+    await waitFor(() =>
+      expect(screen.getByRole("button")).toHaveAttribute("aria-pressed", "true")
+    );
+
+    // Remove next
+    fireEvent.click(screen.getByRole("button"));
+
+    // ✅ Wait for Redux + re-render to settle
+    await waitFor(
+      () =>
+        expect(screen.getByRole("button")).toHaveAttribute(
+          "aria-pressed",
+          "false"
+        ),
+      { timeout: 1500 } // gives React/Redux more breathing room
+    );
+
+    // Optional — ensure toast was triggered twice
+    expect(toast.custom).toHaveBeenCalledTimes(2);
+  });
+
   it("navigates to wishlist when View button clicked in toast", async () => {
     const t = { id: "t1", visible: true };
     const fakeToast = (toast.custom as jest.Mock).mock.calls[0]?.[0](t);
