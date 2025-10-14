@@ -36,3 +36,23 @@ const mockProducts = [
     category: "household",
   },
 ];
+
+describe("SearchAndFilterClient", () => {
+  it("renders all products initially", () => {
+    render(<SearchAndFilterClient initialProducts={mockProducts} />);
+    expect(screen.getByText("Apple")).toBeInTheDocument();
+    expect(screen.getByText("Banana")).toBeInTheDocument();
+    expect(screen.getByText("Carrot")).toBeInTheDocument();
+    expect(screen.getByText("Detergent")).toBeInTheDocument();
+  });
+
+  it("filters products by search input", () => {
+    render(<SearchAndFilterClient initialProducts={mockProducts} />);
+    const searchInput = screen.getByPlaceholderText("Search products...");
+    fireEvent.change(searchInput, { target: { value: "apple" } });
+
+    expect(screen.getByText("Apple")).toBeInTheDocument();
+    expect(screen.queryByText("Banana")).not.toBeInTheDocument();
+    expect(screen.queryByText("Carrot")).not.toBeInTheDocument();
+  });
+});
