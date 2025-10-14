@@ -1,31 +1,30 @@
-"use client";
-
-import React from "react";
+import SearchAndFilterClient from "@/components/SearchAndFilterClient";
+import { getProducts } from "@/lib/supabase";
 import { Product } from "@/types/product";
-import ProductCard from "@/components/ProductCard";
+import React from "react";
 
-interface RecommendedProductsProps {
-  products: Product[];
-}
+export default async function ShopPage() {
+  const { data, error } = await getProducts();
+  const products: Product[] = data ?? [];
 
-export default function RecommendedProducts({
-  products,
-}: RecommendedProductsProps) {
+  if (error) {
+    console.error("getProducts error:", error);
+  }
+
   return (
-    <section className="my-12">
-      <h2 className="text-heading-md font-semibold mb-6">
-        Recommended Products
-      </h2>
+    <main className="min-h-screen bg-neutral-50">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <header className="mb-8">
+          <h1 className="font-display text-heading-lg">Shop</h1>
+          <p className="text-body-base text-neutral-600 mt-2">
+            Browse our curated collection. Use search and filters to find
+            exactly what you’re looking for.
+          </p>
+        </header>
 
-      {products.length === 0 ? (
-        <p className="text-neutral-500">No recommended products available.</p>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      )}
-    </section>
+        {/* Client-side Search and Filter logic */}
+        <SearchAndFilterClient initialProducts={products} />
+      </section>
+    </main>
   );
 }
