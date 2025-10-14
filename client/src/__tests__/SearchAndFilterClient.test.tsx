@@ -55,4 +55,39 @@ describe("SearchAndFilterClient", () => {
     expect(screen.queryByText("Banana")).not.toBeInTheDocument();
     expect(screen.queryByText("Carrot")).not.toBeInTheDocument();
   });
+
+  it("filters products by category", () => {
+    render(<SearchAndFilterClient initialProducts={mockProducts} />);
+    const categorySelect = screen.getAllByRole("combobox")[0]; // first select (category)
+    fireEvent.change(categorySelect, { target: { value: "vegetables" } });
+
+    expect(screen.getByText("Carrot")).toBeInTheDocument();
+    expect(screen.queryByText("Apple")).not.toBeInTheDocument();
+  });
+
+  it("sorts products by price low to high", () => {
+    render(<SearchAndFilterClient initialProducts={mockProducts} />);
+    const sortSelect = screen.getAllByRole("combobox")[1]; // second select (sort)
+    fireEvent.change(sortSelect, { target: { value: "low-to-high" } });
+
+    const prices = screen
+      .getAllByText(/\$/)
+      .map((el) => parseFloat(el.textContent?.replace("$", "") || "0"));
+
+    const sorted = [...prices].sort((a, b) => a - b);
+    expect(prices).toEqual(sorted);
+  });
+
+  it("sorts products by price high to low", () => {
+    render(<SearchAndFilterClient initialProducts={mockProducts} />);
+    const sortSelect = screen.getAllByRole("combobox")[1];
+    fireEvent.change(sortSelect, { target: { value: "high-to-low" } });
+
+    const prices = screen
+      .getAllByText(/\$/)
+      .map((el) => parseFloat(el.textContent?.replace("$", "") || "0"));
+
+    const sorted = [...prices].sort((a, b) => b - a);
+    expect(prices).toEqual(sorted);
+  });
 });
