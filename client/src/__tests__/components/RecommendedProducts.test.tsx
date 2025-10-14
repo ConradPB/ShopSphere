@@ -1,31 +1,20 @@
-"use client";
-
-import React from "react";
+import { render, screen } from "@testing-library/react";
+import RecommendedProducts from "@/components/RecommendedProducts";
 import { Product } from "@/types/product";
-import ProductCard from "@/components/ProductCard";
 
-interface RecommendedProductsProps {
-  products: Product[];
-}
+describe("RecommendedProducts", () => {
+  it("renders product titles", () => {
+    const mockProducts: Product[] = [
+      {
+        id: 1,
+        title: "Test Product",
+        price: 29.99,
+        image: "/test.jpg",
+        description: "Nice item",
+      },
+    ];
 
-export default function RecommendedProducts({
-  products,
-}: RecommendedProductsProps) {
-  return (
-    <section className="my-12">
-      <h2 className="text-heading-md font-semibold mb-6">
-        Recommended Products
-      </h2>
-
-      {products.length === 0 ? (
-        <p className="text-neutral-500">No recommended products available.</p>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      )}
-    </section>
-  );
-}
+    render(<RecommendedProducts products={mockProducts} />);
+    expect(screen.getByText("Test Product")).toBeInTheDocument();
+  });
+});
