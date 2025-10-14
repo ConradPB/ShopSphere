@@ -90,4 +90,51 @@ describe("SearchAndFilterClient", () => {
     const sorted = [...prices].sort((a, b) => b - a);
     expect(prices).toEqual(sorted);
   });
+
+  it("clears filters when Clear Filters button is clicked", () => {
+    render(<SearchAndFilterClient initialProducts={mockProducts} />);
+    const searchInput = screen.getByPlaceholderText("Search products...");
+    const clearButton = screen.getByRole("button", { name: /clear filters/i });
+
+    // Apply some filters
+    fireEvent.change(searchInput, { target: { value: "apple" } });
+    expect(screen.getByText("Apple")).toBeInTheDocument();
+
+    // Clear
+    fireEvent.click(clearButton);
+
+    expect(searchInput).toHaveValue("");
+    expect(screen.getByText("Banana")).toBeInTheDocument(); // All products back
+    expect(screen.getByText("Carrot")).toBeInTheDocument();
+  });
+
+  it("shows 'No products found' when search yields nothing", () => {
+    render(<SearchAndFilterClient initialProducts={mockProducts} />);
+    const searchInput = screen.getByPlaceholderText("Search products...");
+    fireEvent.change(searchInput, { target: { value: "xyz" } });
+
+    expect(screen.getByText("No products found.")).toBeInTheDocument();
+  });
+
+  it("handles pagination correctly", () => {
+    // Create 20 mock items
+    const manyProducts = Array.from({ length: 20 }, (_, i) => ({
+      id: String(i + 1),
+      title: `Product ${i + 1}`,
+      price: i + 1,
+      image: "/img.jpg",
+      description: "test",
+      category: "misc",
+    }));
+
+    render(<SearchAndFilterClient initialProducts={manyProducts} />);
+    expect(screen.getByText("Product 1")).toBeInTheDocument();
+
+    const nextButton = screen.getByRole("button", { name: /next/i });
+    fireEvent.click(nextButton);
+
+    // Page 2 should not show Product 1 anymore
+    expect(screen.queryByText("Product 1")).not.toBeInTheDocument();
+    expect(screen.getByText("Page 2 of 3")).toBeInTheDocument();
+  });
 });
