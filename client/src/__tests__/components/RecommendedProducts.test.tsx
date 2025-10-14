@@ -6,7 +6,7 @@ describe("RecommendedProducts", () => {
   it("renders product titles", () => {
     const mockProducts: Product[] = [
       {
-        id: 1,
+        id: "1", // ✅ id is now a string
         title: "Test Product",
         price: 29.99,
         image: "/test.jpg",
