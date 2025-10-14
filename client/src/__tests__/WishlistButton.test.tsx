@@ -18,13 +18,19 @@ import { useRouter } from "next/navigation";
 // The code below handles both cases.
 import * as wishlistSliceModule from "@/redux/wishlistSlice";
 
+type WishlistSliceModule = {
+  default?: import("@reduxjs/toolkit").Reducer;
+  reducer?: import("@reduxjs/toolkit").Reducer;
+  wishlistReducer?: import("@reduxjs/toolkit").Reducer;
+};
+
 const wishlistReducer =
   // when slice file exports the reducer as default or named 'default'
-  ((wishlistSliceModule as any).default as any) ??
+  (wishlistSliceModule as WishlistSliceModule).default ??
   // OR the file might export the slice object, in which case use .reducer
-  ((wishlistSliceModule as any).reducer as any) ??
+  (wishlistSliceModule as WishlistSliceModule).reducer ??
   // OR it might export a named reducer
-  ((wishlistSliceModule as any).wishlistReducer as any);
+  (wishlistSliceModule as WishlistSliceModule).wishlistReducer;
 
 if (!wishlistReducer) {
   throw new Error(
