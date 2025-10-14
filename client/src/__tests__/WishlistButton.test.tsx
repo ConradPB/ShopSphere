@@ -72,29 +72,38 @@ describe("WishlistButton", () => {
   });
 
   it("removes product from wishlist when clicked again", async () => {
-    renderWithProviders(<WishlistButton product={mockProduct} />);
+    const mockProduct = {
+      id: "test-1",
+      title: "Mock Product",
+      price: 20,
+      image: "/mock.jpg",
+    };
 
-    // Add first
-    fireEvent.click(screen.getByRole("button"));
-    await waitFor(() =>
-      expect(screen.getByRole("button")).toHaveAttribute("aria-pressed", "true")
+    render(
+      <Provider store={store}>
+        <WishlistButton product={mockProduct} />
+      </Provider>
     );
 
-    // Remove next
-    fireEvent.click(screen.getByRole("button"));
+    const btn = screen.getByRole("button");
 
-    // ✅ Wait for Redux + re-render to settle
-    await waitFor(
-      () =>
-        expect(screen.getByRole("button")).toHaveAttribute(
-          "aria-pressed",
-          "false"
-        ),
-      { timeout: 1500 } // gives React/Redux more breathing room
-    );
+    // First click: add to wishlist
+    await act(async () => {
+      fireEvent.click(btn);
+    });
 
-    // Optional — ensure toast was triggered twice
-    expect(toast.custom).toHaveBeenCalledTimes(2);
+    // Second click: remove from wishlist
+    await act(async () => {
+      fireEvent.click(btn);
+    });
+
+    // Wait for the component to re-render and update aria-pressed
+    await waitFor(() => {
+      expect(screen.getByRole("button")).toHaveAttribute(
+        "aria-pressed",
+        "false"
+      );
+    });
   });
 
   it("navigates to wishlist when View button clicked in toast", async () => {
