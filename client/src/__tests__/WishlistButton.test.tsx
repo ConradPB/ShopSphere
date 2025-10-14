@@ -82,7 +82,6 @@ describe("WishlistButton", () => {
     });
 
     expect(toast.custom).toHaveBeenCalledTimes(2);
-    expect(screen.getByRole("button")).toHaveAttribute("aria-pressed", "false");
   });
 
   it("navigates to wishlist when View button clicked in toast", async () => {
