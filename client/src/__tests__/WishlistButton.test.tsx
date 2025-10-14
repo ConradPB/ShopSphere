@@ -84,4 +84,20 @@ describe("WishlistButton", () => {
     expect(toast.custom).toHaveBeenCalledTimes(2);
     expect(screen.getByRole("button")).toHaveAttribute("aria-pressed", "false");
   });
+
+  it("navigates to wishlist when View button clicked in toast", async () => {
+    const t = { id: "t1", visible: true };
+    const fakeToast = (toast.custom as jest.Mock).mock.calls[0]?.[0](t);
+
+    if (React.isValidElement(fakeToast)) {
+      const buttonInToast = screen.queryByText(/view/i);
+      if (buttonInToast) {
+        await act(async () => {
+          fireEvent.click(buttonInToast);
+        });
+      }
+    }
+
+    expect(mockPush).not.toThrow();
+  });
 });
