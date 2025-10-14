@@ -148,6 +148,7 @@ describe("WishlistButton", () => {
     const toastRenderer = call[0];
     // Simulate calling the toast renderer with a toast object (id + visible)
     const toastNode = toastRenderer({ id: "t1", visible: true });
+    expect(toastNode).toBeTruthy();
 
     // If the renderer returned a React element, the "View" control is inside it —
     // in this test we simply ensure calling the click handler (if present) does not crash.
