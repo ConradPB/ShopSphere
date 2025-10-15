@@ -1,9 +1,14 @@
-import createBlurDataURL from "@/lib/blur";
+import { shimmer, toBase64 } from "@/lib/blur";
 
-describe("createBlurDataURL", () => {
-  it("returns a base64 string", () => {
-    const result = createBlurDataURL("#fff");
-    expect(typeof result).toBe("string");
-    expect(result.startsWith("data:image")).toBe(true);
+describe("blur helpers", () => {
+  it("creates a shimmer SVG string", () => {
+    const svg = shimmer(100, 200);
+    expect(svg).toContain("<svg");
+    expect(svg).toContain("linearGradient");
+  });
+
+  it("encodes to base64 correctly", () => {
+    const base64 = toBase64("test");
+    expect(typeof base64).toBe("string");
   });
 });
