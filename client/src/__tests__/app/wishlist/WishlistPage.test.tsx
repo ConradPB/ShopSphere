@@ -40,10 +40,6 @@ jest.mock("@/redux/hooks", () => ({
 }));
 
 describe("WishlistPage", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   const renderWithProvider = () =>
     render(
       <Provider store={store}>
