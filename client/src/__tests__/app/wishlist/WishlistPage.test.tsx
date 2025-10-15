@@ -20,6 +20,13 @@ jest.mock("react-hot-toast", () => ({
 }));
 
 // Mock WishlistButton to avoid nested logic
+jest.mock("@/components/ui/WishlistButton", () => {
+  const MockWishlistButton: React.FC = () => (
+    <button data-testid="wishlist-btn">Mock Wishlist</button>
+  );
+  MockWishlistButton.displayName = "WishlistButton";
+  return MockWishlistButton;
+});
 
 const mockDispatch = jest.fn();
 const mockUseSelector = jest.spyOn(reduxHooks, "useAppSelector");
