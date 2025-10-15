@@ -13,6 +13,7 @@ interface BaseButtonProps
   className?: string;
   asLink?: false;
   href?: undefined;
+  as?: React.ElementType;
 }
 
 interface LinkButtonProps
