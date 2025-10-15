@@ -40,6 +40,12 @@ jest.mock("@/redux/hooks", () => ({
 }));
 
 describe("WishlistPage", () => {
+  beforeEach(() => {
+    (reduxHooks.useAppSelector as jest.Mock).mockReturnValue([
+      { id: "1", title: "Cool Shoes", price: 99.99 },
+    ]);
+  });
+
   const renderWithProvider = () =>
     render(
       <Provider store={store}>
