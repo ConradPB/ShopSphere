@@ -105,15 +105,15 @@ ShopSphere isn’t another store clone — it’s a production-grade, type-safe 
 - Modular architecture, AI-ready for future product recommendations
 
 🔮 Roadmap
- Complete backend with Supabase
+ - Complete backend with Supabase
 
- Add AI-powered recommendations
+ - Add AI-powered recommendations
 
- Integrate payments (Stripe/Crypto)
+ - Integrate payments (Stripe/Crypto)
 
- Push test coverage >90%
+ - Push test coverage >90%
 
- Global responsive & performance refinements
+ - Global responsive & performance refinements
 
 🤝 Contributing
 bash
