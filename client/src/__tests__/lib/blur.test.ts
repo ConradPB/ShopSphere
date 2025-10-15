@@ -4,25 +4,36 @@ describe("blur utility edge cases", () => {
   const originalWindow = globalThis.window;
 
   afterEach(() => {
-    // ✅ Restore original window after each test
-    (globalThis as typeof globalThis & { window?: Window }).window =
-      originalWindow;
+    // ✅ Restore original window safely
+    if (originalWindow) {
+      Object.defineProperty(globalThis, "window", {
+        value: originalWindow,
+        writable: true,
+      });
+    } else {
+      delete (globalThis as { window?: unknown }).window;
+    }
   });
 
   it("should return a base64 string when window is defined", () => {
-    // ✅ Mock window with a properly typed object (no `any`)
+    // ✅ Mock window object safely
     const mockWindow = {
       btoa: (str: string): string => "encoded:" + str,
-    } as unknown as Window;
+    };
 
-    (globalThis as typeof globalThis & { window?: Window }).window = mockWindow;
+    Object.defineProperty(globalThis, "window", {
+      value: mockWindow,
+      writable: true,
+    });
 
     const result = toBase64("data");
     expect(result).toBe("encoded:data");
   });
 
   it("should return a base64 string when window is undefined", () => {
-    (globalThis as typeof globalThis & { window?: Window }).window = undefined;
+    // ✅ Temporarily remove window
+    delete (globalThis as { window?: unknown }).window;
+
     const result = toBase64("data");
     expect(result).toBe("ZGF0YQ==");
   });
