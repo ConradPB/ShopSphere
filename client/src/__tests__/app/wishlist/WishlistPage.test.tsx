@@ -29,7 +29,7 @@ jest.mock("@/components/ui/WishlistButton", () => {
 });
 
 const mockDispatch = jest.fn();
-const mockUseSelector = jest.spyOn(reduxHooks, "useAppSelector");
+const mockUseSelector = ;
 jest.spyOn(reduxHooks, "useAppDispatch").mockReturnValue(mockDispatch);
 
 describe("WishlistPage", () => {
