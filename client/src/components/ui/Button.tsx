@@ -13,7 +13,6 @@ interface BaseButtonProps
   className?: string;
   asLink?: false;
   href?: undefined;
-  as?: string;
 }
 
 interface LinkButtonProps
