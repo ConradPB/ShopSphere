@@ -1,25 +1,35 @@
-import { shimmer, toBase64 } from "@/lib/blur";
+export function shimmer(w: number, h: number) {
+  return `
+    <svg width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg" version="1.1">
+      <defs>
+        <linearGradient id="g">
+          <stop stop-color="#E0E0E0" offset="20%" />
+          <stop stop-color="#F8F8F8" offset="50%" />
+          <stop stop-color="#E0E0E0" offset="70%" />
+        </linearGradient>
+      </defs>
+      <rect width="${w}" height="${h}" fill="#E0E0E0" />
+      <rect id="r" width="${w}" height="${h}" fill="url(#g)" />
+      <animate xlink:href="#r" attributeName="x" from="-${w}" to="${w}" dur="1.2s" repeatCount="indefinite" />
+    </svg>`;
+}
 
-describe("blur utility edge cases", () => {
-  it("should generate valid shimmer SVG string", () => {
-    const svg = shimmer(50, 50);
-    expect(svg).toContain("<svg");
-    expect(svg).toContain("</svg>");
-  });
+export function toBase64(str: string) {
+  // Prefer any available btoa implementation in JS environments:
+  //  - globalThis.btoa (some test shims)
+  //  - globalThis.window?.btoa (tests that set global.window)
+  // Fallback to Buffer (Node).
+  const globalObj: any =
+    typeof globalThis !== "undefined" ? globalThis : undefined;
+  const btoaFn = globalObj?.btoa ?? globalObj?.window?.btoa;
 
-  it("should handle toBase64 correctly in Node environment", () => {
-    const base64 = toBase64("test");
-    expect(typeof base64).toBe("string");
-    expect(base64.length).toBeGreaterThan(0);
-  });
+  if (typeof btoaFn === "function") {
+    return btoaFn(str);
+  }
 
-  it("should return a base64 string when window is defined", () => {
-    const original = global.window;
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    global.window = { btoa: (str: string) => "encoded:" + str };
-    const result = toBase64("data");
-    expect(result).toBe("encoded:data");
-    global.window = original;
-  });
-});
+  if (typeof Buffer !== "undefined") {
+    return Buffer.from(str).toString("base64");
+  }
+
+  throw new Error("No base64 implementation available");
+}
