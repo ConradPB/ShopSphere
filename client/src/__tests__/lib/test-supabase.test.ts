@@ -61,7 +61,7 @@ describe("testSupabase helper", () => {
 
     const consoleLogSpy = jest.spyOn(console, "log").mockImplementation();
 
-    const { testSupabase } = await import("./test-supabase");
+    const { testSupabase } = await import("../../lib/test-supabase");
     await testSupabase();
 
     expect(consoleLogSpy).toHaveBeenCalledWith("Products:", fakeData);
