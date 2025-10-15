@@ -12,3 +12,24 @@ if (!supabaseUrl || !supabaseKey) {
 }
 
 const supabase = createClient(supabaseUrl, supabaseKey);
+
+export async function testSupabase() {
+  try {
+    const { data: products, error } = await supabase
+      .from("products")
+      .select("*");
+
+    if (error) {
+      console.error("Supabase Error:", error.message);
+      return;
+    }
+
+    console.log("Products:", products);
+  } catch (e) {
+    console.error("Unexpected Error:", e);
+  }
+}
+
+if (require.main === module) {
+  testSupabase(); // Only runs when executed directly
+}
