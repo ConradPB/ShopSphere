@@ -9,58 +9,63 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
         node-version: [20]
 
     steps:
+      # --- Checkout repository ---
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      # --- Setup pnpm for backend ---
+      # --- Setup PNPM (backend) ---
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 8
 
-      # --- Setup Node & Yarn cache for frontend ---
+      # --- Setup Node.js + cache Yarn ---
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: "yarn"
-          cache-dependency-path: "./client/yarn.lock" # ✅ FIXED
 
-      # --- Cache both Yarn & pnpm stores ---
+      # --- Cache both pnpm + Yarn deps ---
       - name: Cache dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.pnpm-store
             ~/.cache/yarn
-          key: ${{ runner.os }}-deps-${{ hashFiles('server/pnpm-lock.yaml', 'client/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-deps-
+          key: ${{ runner.os }}-deps-${{ hashFiles('**/pnpm-lock.yaml', '**/yarn.lock') }}
 
-      # --- Backend install & test ---
+      # --- Install backend dependencies ---
       - name: Install backend dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
         working-directory: ./server
 
+      # --- Run backend tests ---
       - name: Run backend tests
         run: pnpm test
         working-directory: ./server
 
-      # --- Frontend install & test ---
+      # --- Install frontend dependencies ---
       - name: Install frontend dependencies
         run: yarn install --frozen-lockfile
         working-directory: ./client
 
+      # --- Run frontend tests ---
       - name: Run frontend tests
         run: yarn test --watchAll=false --passWithNoTests
         working-directory: ./client
 
-      # --- Frontend build ---
+      # --- Build frontend (Next.js) ---
       - name: Build frontend (Next.js)
         run: yarn build
         working-directory: ./client
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NODE_ENV: production
