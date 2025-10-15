@@ -1,19 +1,26 @@
 import * as dotenv from "dotenv";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
-// Load environment variables
+// Load environment variables once at module load
 dotenv.config();
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const supabaseUrl: string | undefined = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey: string | undefined =
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
+// Throw early if environment variables are missing
 if (!supabaseUrl || !supabaseKey) {
   throw new Error("Missing Supabase environment variables");
 }
 
-const supabase = createClient(supabaseUrl, supabaseKey);
+// Create the Supabase client once
+const supabase: SupabaseClient = createClient(supabaseUrl, supabaseKey);
 
-export async function testSupabase() {
+/**
+ * Queries all products from the Supabase 'products' table
+ * and logs them or any error that occurs.
+ */
+export async function testSupabase(): Promise<void> {
   try {
     const { data: products, error } = await supabase
       .from("products")
@@ -30,6 +37,8 @@ export async function testSupabase() {
   }
 }
 
-if (require.main === module) {
-  testSupabase(); // Only runs when executed directly
+// Allow this file to be run directly (node lib/test-supabase.ts)
+if (typeof require !== "undefined" && require.main === module) {
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises
+  testSupabase();
 }
