@@ -33,7 +33,6 @@ const mockUseSelector = jest.mock("@/redux/hooks", () => ({
   useAppDispatch: jest.fn(),
   useAppSelector: jest.fn(),
 }));
-jest.spyOn(reduxHooks, "useAppDispatch").mockReturnValue(mockDispatch);
 
 describe("WishlistPage", () => {
   beforeEach(() => {
