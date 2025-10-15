@@ -64,11 +64,16 @@ describe("WishlistPage", () => {
 
     // Provide a selector implementation that the page expects.
     // useAppSelector(selectorFn) => selectorFn({ wishlist: { items: mockItems }})
-    (useAppSelector as jest.Mock).mockImplementation((selectorFn: any) =>
-      // if they call without a selector or with something else, be defensive:
-      typeof selectorFn === "function"
-        ? selectorFn({ wishlist: { items: mockItems } })
-        : mockItems
+    (useAppSelector as jest.Mock).mockImplementation(
+      (
+        selectorFn: (state: {
+          wishlist: { items: typeof mockItems };
+        }) => unknown
+      ) =>
+        // if they call without a selector or with something else, be defensive:
+        typeof selectorFn === "function"
+          ? selectorFn({ wishlist: { items: mockItems } })
+          : mockItems
     );
 
     // Provide a fake dispatch
