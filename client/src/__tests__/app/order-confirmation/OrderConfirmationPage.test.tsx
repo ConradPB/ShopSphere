@@ -19,7 +19,7 @@ describe("OrderConfirmationPage", () => {
         id: "test-1",
         title: "Sample",
         price: 99.99,
-        image: null,
+        image: "/mock.png",
         quantity: 1,
       })
     );
