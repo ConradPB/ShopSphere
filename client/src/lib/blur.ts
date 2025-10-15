@@ -15,26 +15,12 @@ export function shimmer(w: number, h: number) {
 }
 
 export function toBase64(str: string): string {
-  // Global object typed safely to avoid "any"
-  const globalObj: Record<string, unknown> =
-    typeof globalThis !== "undefined"
-      ? (globalThis as Record<string, unknown>)
-      : {};
-
-  const maybeBtoa = globalObj.btoa as ((data: string) => string) | undefined;
-  const maybeWindow = globalObj.window as
-    | { btoa?: (data: string) => string }
-    | undefined;
-
-  const btoaFn = maybeBtoa ?? maybeWindow?.btoa;
-
-  if (typeof btoaFn === "function") {
-    return btoaFn(str);
+  // Prefer a runtime btoa implementation if available on globalThis
+  const maybeBtoa = (globalThis as { btoa?: (s: string) => string }).btoa;
+  if (typeof maybeBtoa === "function") {
+    return maybeBtoa(str);
   }
 
-  if (typeof Buffer !== "undefined") {
-    return Buffer.from(str).toString("base64");
-  }
-
-  throw new Error("No base64 implementation available");
+  // Otherwise, server-side fallback using Buffer
+  return Buffer.from(str).toString("base64");
 }
