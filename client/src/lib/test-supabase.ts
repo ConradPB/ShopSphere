@@ -1,4 +1,5 @@
 import * as dotenv from "dotenv";
+dotenv.config({ override: false, silent: true });
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
 // Load environment variables once at module load
