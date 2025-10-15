@@ -105,7 +105,7 @@ Realistic Redux flows for cart/wishlist
 Modular architecture, AI-ready for future product recommendations
 
 🔮 Roadmap
- Complete backend with MongoDB
+ Complete backend with Supabase
 
  Add AI-powered recommendations
 
