@@ -57,9 +57,9 @@ ShopSphere/
 └─ server/                  # Fastify backend (planned API layer)
 ⚡ Getting Started
 Prerequisites
-Node.js ≥ 18
+- Node.js ≥ 18
 
-Yarn
+- Yarn
 
 Clone & Install
 bash
@@ -96,13 +96,13 @@ ShopSphere isn’t another store clone — it’s a production-grade, type-safe 
 
 ✨ Highlights
 
-Clean UI + rich animations (Tailwind + Framer Motion)
+- Clean UI + rich animations (Tailwind + Framer Motion)
 
-TypeScript for reliability and scalability
+- TypeScript for reliability and scalability
 
-Realistic Redux flows for cart/wishlist
+- Realistic Redux flows for cart/wishlist
 
-Modular architecture, AI-ready for future product recommendations
+- Modular architecture, AI-ready for future product recommendations
 
 🔮 Roadmap
  Complete backend with Supabase
