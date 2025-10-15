@@ -33,6 +33,11 @@ const mockUseSelector = jest.mock("@/redux/hooks", () => ({
   useAppDispatch: jest.fn(),
   useAppSelector: jest.fn(),
 }));
+// Mock redux hooks once at top
+jest.mock("@/redux/hooks", () => ({
+  useAppDispatch: jest.fn(),
+  useAppSelector: jest.fn(),
+}));
 
 describe("WishlistPage", () => {
   beforeEach(() => {
