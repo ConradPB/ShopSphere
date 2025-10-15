@@ -19,16 +19,17 @@ describe("testSupabase helper", () => {
     jest.clearAllMocks();
   });
 
-  it("creates a Supabase client with correct URL and key", () => {
+  it("creates a Supabase client with correct URL and key", async () => {
     process.env.NEXT_PUBLIC_SUPABASE_URL = "https://fake-url.supabase.co";
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = "fake-key";
 
-    // Dynamically import after env setup
-    const { createClient: mockCreateClient } = require("@supabase/supabase-js");
-    expect(mockCreateClient).toBeCalledTimes(0);
+    const { createClient: mockCreateClient } = await import(
+      "@supabase/supabase-js"
+    );
+    expect(mockCreateClient).toHaveBeenCalledTimes(0);
 
-    // Simulate running the original module
-    require("./test-supabase");
+    // Dynamically import after env setup
+    await import("./test-supabase");
 
     expect(mockCreateClient).toHaveBeenCalledWith(
       "https://fake-url.supabase.co",
