@@ -14,14 +14,19 @@ export function shimmer(w: number, h: number) {
     </svg>`;
 }
 
-export function toBase64(str: string) {
-  // Prefer any available btoa implementation in JS environments:
-  //  - globalThis.btoa (some test shims)
-  //  - globalThis.window?.btoa (tests that set global.window)
-  // Fallback to Buffer (Node).
-  const globalObj: any =
-    typeof globalThis !== "undefined" ? globalThis : undefined;
-  const btoaFn = globalObj?.btoa ?? globalObj?.window?.btoa;
+export function toBase64(str: string): string {
+  // Global object typed safely to avoid "any"
+  const globalObj: Record<string, unknown> =
+    typeof globalThis !== "undefined"
+      ? (globalThis as Record<string, unknown>)
+      : {};
+
+  const maybeBtoa = globalObj.btoa as ((data: string) => string) | undefined;
+  const maybeWindow = globalObj.window as
+    | { btoa?: (data: string) => string }
+    | undefined;
+
+  const btoaFn = maybeBtoa ?? maybeWindow?.btoa;
 
   if (typeof btoaFn === "function") {
     return btoaFn(str);
