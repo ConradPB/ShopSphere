@@ -29,7 +29,7 @@ describe("testSupabase helper", () => {
     expect(mockCreateClient).toHaveBeenCalledTimes(0);
 
     // Dynamically import after env setup
-    await import("");
+    await import("../../lib/test-supabase");
 
     expect(mockCreateClient).toHaveBeenCalledWith(
       "https://fake-url.supabase.co",
