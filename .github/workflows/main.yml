@@ -17,25 +17,32 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # --- Setup pnpm for backend ---
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 8
 
+      # --- Setup Node & Yarn cache for frontend ---
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: "yarn"
+          cache-dependency-path: "./client/yarn.lock" # ✅ FIXED
 
+      # --- Cache both Yarn & pnpm stores ---
       - name: Cache dependencies
         uses: actions/cache@v3
         with:
           path: |
             ~/.pnpm-store
             ~/.cache/yarn
-          key: ${{ runner.os }}-deps-${{ hashFiles('**/pnpm-lock.yaml', '**/yarn.lock') }}
+          key: ${{ runner.os }}-deps-${{ hashFiles('server/pnpm-lock.yaml', 'client/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-deps-
 
+      # --- Backend install & test ---
       - name: Install backend dependencies
         run: pnpm install
         working-directory: ./server
@@ -44,6 +51,7 @@ jobs:
         run: pnpm test
         working-directory: ./server
 
+      # --- Frontend install & test ---
       - name: Install frontend dependencies
         run: yarn install --frozen-lockfile
         working-directory: ./client
@@ -52,6 +60,7 @@ jobs:
         run: yarn test --watchAll=false --passWithNoTests
         working-directory: ./client
 
+      # --- Frontend build ---
       - name: Build frontend (Next.js)
         run: yarn build
         working-directory: ./client
