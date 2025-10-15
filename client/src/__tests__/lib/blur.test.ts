@@ -1,4 +1,3 @@
-// src/__tests__/lib/blur.test.ts
 import { toBase64 } from "@/lib/blur";
 
 describe("blur utility edge cases", () => {
