@@ -57,6 +57,7 @@ ShopSphere/
 └─ server/                  # Fastify backend (planned API layer)
 ⚡ Getting Started
 Prerequisites
+
 - Node.js ≥ 18
 
 - Yarn
