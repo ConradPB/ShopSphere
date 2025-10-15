@@ -13,7 +13,7 @@ jobs:
       matrix:
         node-version: [20]
 
-    steps:
+    teps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
