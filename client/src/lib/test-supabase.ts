@@ -39,6 +39,5 @@ export async function testSupabase(): Promise<void> {
 
 // Allow this file to be run directly (node lib/test-supabase.ts)
 if (typeof require !== "undefined" && require.main === module) {
-  // eslint-disable-next-line @typescript-eslint/no-floating-promises
   testSupabase();
 }
