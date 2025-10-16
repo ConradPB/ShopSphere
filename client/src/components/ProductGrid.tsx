@@ -1,46 +1,83 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { getProducts } from "@/lib/supabase";
-import { Product } from "@/types/product";
+import { getAllProducts } from "@/lib/products";
+import { Product as ProductType } from "@/types/product";
 import ProductCard from "./ProductCard";
 
-export default function ProductGrid() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
+type Props = {
+  initialProducts?: ProductType[];
+  title?: string;
+};
+
+export default function ProductGrid({ initialProducts, title }: Props) {
+  const [products, setProducts] = useState<ProductType[]>(
+    initialProducts ?? []
+  );
+  const [loading, setLoading] = useState<boolean>(!initialProducts);
+
+  const heading = title ?? "Featured Products";
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      const { data, error } = await getProducts();
-
-      if (error) {
-        console.error("Error fetching products:", error);
-        setProducts([]);
-      } else {
-        setProducts(data ?? []);
-      }
-
-      setLoading(false);
-    };
-    fetchProducts();
-  }, []);
+    if (!initialProducts) {
+      let isMounted = true;
+      const fetchProducts = async () => {
+        try {
+          setLoading(true);
+          // getAllProducts returns the simple lib/products.Product[]; cast to the app Product type
+          const data = (await getAllProducts()) as unknown as ProductType[];
+          if (!isMounted) return;
+          setProducts(data ?? []);
+        } catch (err) {
+          console.error("Error fetching products:", err);
+          if (!isMounted) return;
+          setProducts([]);
+        } finally {
+          if (!isMounted) return;
+          setLoading(false);
+        }
+      };
+      fetchProducts();
+      return () => {
+        isMounted = false;
+      };
+    }
+  }, [initialProducts]);
 
   if (loading) {
     return (
-      <p className="text-center py-10 text-gray-500">Loading products...</p>
+      <section className="py-10 px-4 sm:px-6 lg:px-8 pb-0 text-center">
+        <h2 className="text-2xl font-bold mb-6 text-white">{heading}</h2>
+        <p className="text-gray-400 animate-pulse">Loading products...</p>
+      </section>
+    );
+  }
+
+  if (products.length === 0) {
+    return (
+      <section className="py-10 px-4 sm:px-6 lg:px-8 pb-0 text-center">
+        <h2 className="text-2xl font-bold mb-6 text-white">{heading}</h2>
+        <p className="text-gray-400">No products found.</p>
+      </section>
     );
   }
 
   return (
-    <div className="py-10 px-4 sm:px-6 lg:px-8">
-      <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-        Featured Products
+    <section className="py-10 px-4 sm:px-6 lg:px-8 pb-0">
+      <h2 className="text-2xl font-bold mb-8 text-white text-center">
+        {heading}
       </h2>
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+
+      <div
+        className="
+          grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 
+          animate-fadeIn
+        "
+      >
         {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
+          <ProductCard key={product.id} product={product as ProductType} />
         ))}
       </div>
-    </div>
+    </section>
   );
 }

@@ -1,0 +1,212 @@
+@import "tailwindcss";
+
+/* Google fonts */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap");
+
+/* ===========================
+   THEME VARIABLES
+   =========================== */
+:root {
+  --color-primary: #2563eb;
+  --color-accent: #10b981;
+  --color-accent-2: #8b5cf6;
+  --color-bg: #f8fafc;
+  --color-text: #0f172a;
+  --font-sans: "Inter", ui-sans-serif, system-ui;
+  --font-display: "Poppins", ui-sans-serif, system-ui;
+
+  /* Scrollbar colors */
+  --scroll-track: rgba(15, 23, 42, 0.06);
+  --scroll-thumb-start: rgba(16, 185, 129, 0.95); /* teal */
+  --scroll-thumb-end: rgba(37, 99, 235, 0.95); /* blue */
+}
+
+/* ===========================
+   GLOBAL LAYOUT RULES
+   =========================== */
+html,
+body,
+#__next {
+  height: 100%;
+  max-width: 100vw; /* prevent children from overflowing width */
+  overflow-x: hidden; /* fix right-gap */
+}
+
+/* Body */
+body {
+  @apply font-sans antialiased;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===========================
+   NEON-STYLE VISIBLE SCROLLBAR
+   ===========================
+   This shows a thin modern scrollbar across Chromium & Firefox.
+   If you want to scope it only to specific containers, apply the
+   `.use-visible-scrollbar` class to that element instead of using the
+   global rules below.
+*/
+
+/* ---------- Default: enable on document body ---------- */
+
+/* WebKit (Chrome, Edge, Safari) */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track {
+  background: linear-gradient(
+    180deg,
+    var(--scroll-track),
+    rgba(255, 255, 255, 0.02)
+  );
+  border-radius: 12px;
+  margin: 6px 0;
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    90deg,
+    var(--scroll-thumb-start),
+    var(--scroll-thumb-end)
+  );
+  border-radius: 999px;
+  box-shadow: 0 0 10px rgba(37, 99, 235, 0.12),
+    inset 0 0 6px rgba(255, 255, 255, 0.06);
+  border: 2px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Thumb hover */
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 18px rgba(37, 99, 235, 0.18),
+    inset 0 0 8px rgba(255, 255, 255, 0.08);
+}
+
+/* Firefox */
+html,
+body {
+  scrollbar-width: thin;
+  scrollbar-color: linear-gradient(
+      90deg,
+      var(--scroll-thumb-start),
+      var(--scroll-thumb-end)
+    )
+    transparent;
+}
+
+/* ---------- Optional utility for scoped enable/disable ---------- */
+/* Use .use-visible-scrollbar on an element to enable the same styles on that element
+   (useful if you prefer to keep the global scrollbar hidden). */
+.use-visible-scrollbar {
+  -ms-overflow-style: auto;
+  scrollbar-width: thin;
+}
+
+.use-visible-scrollbar::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.use-visible-scrollbar::-webkit-scrollbar-track {
+  background: linear-gradient(
+    180deg,
+    var(--scroll-track),
+    rgba(255, 255, 255, 0.02)
+  );
+  border-radius: 12px;
+}
+.use-visible-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    90deg,
+    var(--scroll-thumb-start),
+    var(--scroll-thumb-end)
+  );
+  border-radius: 999px;
+  box-shadow: 0 0 10px rgba(37, 99, 235, 0.12),
+    inset 0 0 6px rgba(255, 255, 255, 0.06);
+  border: 2px solid rgba(255, 255, 255, 0.06);
+}
+
+/* If you still want a hidden scrollbar helper, keep this class available */
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE/Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* WebKit */
+}
+
+/* ===========================
+   HELPERS
+   =========================== */
+
+/* Hero */
+.hero-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 2.25rem;
+}
+
+/* CTA */
+.btn-primary {
+  @apply inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-2 text-white font-semibold shadow transition-transform hover:-translate-y-0.5;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+}
+
+.btn-ghost {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg px-3 py-2 border font-medium transition hover:bg-neutral-100;
+}
+
+/* Card */
+.card {
+  @apply bg-white rounded-2xl shadow-md border border-neutral-100 overflow-hidden;
+}
+
+/* Site hero */
+.site-hero {
+  @apply relative py-20;
+  background: linear-gradient(135deg, #06b6d4 0%, #2563eb 100%);
+  color: white;
+  overflow: visible; /* allow pattern to show */
+}
+
+/* Hero pattern overlay */
+.hero-pattern {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-repeat: repeat;
+  background-position: center;
+  background-size: 140px 140px;
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+}
+
+/* Safe media */
+img,
+svg,
+video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Navbar transitions */
+.navbar-root {
+  transition: background-color 220ms, box-shadow 220ms, backdrop-filter 220ms;
+}
+
+/* Container safety */
+.container-safe {
+  max-width: 100%;
+  overflow-x: hidden;
+}

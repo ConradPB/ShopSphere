@@ -9,29 +9,16 @@ import Link from "next/link";
 
 export type ProductDetailClientProps = {
   product: Product;
-  recommendations?: Product[];
   initialRecs?: Product[];
-  // fetchRecs removed to avoid passing server functions to client components
 };
 
 export default function ProductDetailClient({
   product,
-  recommendations,
   initialRecs,
 }: ProductDetailClientProps) {
   const dispatch = useAppDispatch();
-
-  const seeded = useMemo(
-    () => recommendations ?? initialRecs ?? [],
-    [recommendations, initialRecs]
-  );
-  const [recs, setRecs] = useState<Product[]>(seeded);
+  const [recs, setRecs] = useState<Product[]>(initialRecs ?? []);
   const [adding, setAdding] = useState(false);
-
-  useEffect(() => {
-    // seeded already covers initialRecs; do nothing else for now.
-    setRecs(seeded ?? []);
-  }, [seeded]);
 
   const imgSrc = product.image ?? "/fallback-image.jpg";
 
@@ -49,88 +36,121 @@ export default function ProductDetailClient({
     setTimeout(() => setAdding(false), 250);
   }
 
+  useEffect(() => {
+    // Optionally fetch fresh random recs (if helper exists). If you prefer
+    // to rely only on initialRecs, you can remove this effect.
+    const fetchRecs = async () => {
+      try {
+        // if you implemented getRandomRecommendations on server/lib,
+        // uncomment the next lines. Otherwise this call will fail.
+        // const { data: products, error } = await getRandomRecommendations(4, product.id);
+        // if (!error && products) setRecs(products);
+      } catch {
+        // ignore
+      }
+    };
+    fetchRecs();
+  }, [product.id]);
+
   return (
-    <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 p-6">
-      {/* Left: image */}
-      <div className="relative w-full h-[420px] rounded-lg overflow-hidden shadow">
-        <Image
-          src={imgSrc}
-          alt={product.title || "Product image"}
-          fill
-          style={{ objectFit: "cover" }}
-          priority
-          unoptimized
-        />
-      </div>
-
-      {/* Right: info */}
-      <div>
-        <h1 className="text-2xl font-bold">{product.title}</h1>
-        <p className="text-indigo-600 text-xl font-semibold mb-4">
-          ${product.price.toFixed(2)}
-        </p>
-
-        <p className="text-gray-700 mb-6">
-          {product.description ??
-            "A high-quality product — description to come later."}
-        </p>
-
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => handleAdd(1)}
-            disabled={adding}
-            className="bg-indigo-600 text-white px-4 py-2 rounded-md shadow hover:bg-indigo-700 transition"
-          >
-            {adding ? "Adding..." : "Add to cart"}
-          </button>
-
-          <Link
-            href="/cart"
-            className="border border-gray-300 px-4 py-2 rounded-md hover:bg-gray-50"
-          >
-            Go to cart
-          </Link>
+    <main className="relative min-h-screen bg-gradient-to-b from-neutral-950 via-slate-900 to-neutral-950 text-white py-20">
+      <div className="relative max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8 z-10">
+        {/* LEFT: Image */}
+        <div className="relative w-full rounded-lg overflow-hidden shadow max-h-[70vh] bg-neutral-800">
+          <Image
+            src={imgSrc}
+            alt={product.title || "Product image"}
+            width={1200}
+            height={900}
+            className="object-cover w-full h-full"
+            priority
+            unoptimized
+          />
         </div>
 
-        {/* Recommendations */}
-        <section className="mt-10">
-          <h3 className="text-lg font-semibold mb-3">You might also like</h3>
-          {recs.length === 0 ? (
-            <p className="text-sm text-gray-500">No recommendations yet.</p>
-          ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {recs.map((r) => {
-                const rImg = r.image ?? "/fallback-image.jpg";
-                return (
-                  <a
-                    key={r.id}
-                    href={`/product/${r.id}`}
-                    className="bg-white rounded-md shadow-sm overflow-hidden hover:shadow transition block"
-                  >
-                    <div className="relative w-full h-28">
-                      <Image
-                        src={rImg}
-                        alt={r.title || "Recommended product"}
-                        fill
-                        style={{ objectFit: "cover" }}
-                        unoptimized
-                      />
-                    </div>
-                    <div className="p-2">
-                      <h4 className="text-sm font-medium truncate">
-                        {r.title}
-                      </h4>
-                      <p className="text-xs text-indigo-600">
-                        ${r.price.toFixed(2)}
-                      </p>
-                    </div>
-                  </a>
-                );
-              })}
-            </div>
-          )}
-        </section>
+        {/* RIGHT: Info */}
+        <div>
+          {/* Back link */}
+          <div className="mb-4">
+            <Link
+              href="/products"
+              className="inline-block text-sm text-cyan-300 hover:underline"
+            >
+              ← Back to products
+            </Link>
+          </div>
+
+          <h1 className="text-3xl font-bold mb-2">{product.title}</h1>
+          <p className="text-indigo-400 text-2xl font-semibold mb-4">
+            ${Number(product.price ?? 0).toFixed(2)}
+          </p>
+
+          <p className="text-gray-300 mb-6">
+            {product.description ??
+              "A high-quality product — description to come later."}
+          </p>
+
+          <div className="flex items-center gap-3 mb-10">
+            <button
+              onClick={() => handleAdd(1)}
+              disabled={adding}
+              className="bg-indigo-600 text-white px-5 py-2 rounded-md shadow hover:bg-indigo-700 transition"
+            >
+              {adding ? "Adding..." : "Add to Cart"}
+            </button>
+
+            <Link
+              href="/cart"
+              className="border border-gray-600 px-5 py-2 rounded-md hover:bg-gray-800 transition"
+            >
+              Go to Cart
+            </Link>
+          </div>
+        </div>
       </div>
-    </div>
+
+      {/* Related Products */}
+      <section className="max-w-6xl mx-auto px-6 mt-16">
+        <h2 className="text-2xl font-semibold mb-6 text-white">
+          You might also like
+        </h2>
+
+        {recs.length === 0 ? (
+          <p className="text-gray-400 text-sm">No recommendations available.</p>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+            {recs.map((r) => {
+              const rImg = r.image ?? "/fallback-image.jpg";
+              return (
+                <Link
+                  key={r.id}
+                  href={`/product/${r.id}`}
+                  className="bg-neutral-800 rounded-xl overflow-hidden shadow hover:shadow-indigo-500/30 transition"
+                >
+                  <div className="relative w-full aspect-square rounded overflow-hidden bg-neutral-700">
+                    <Image
+                      src={rImg}
+                      alt={r.title || "Recommended product"}
+                      width={400}
+                      height={400}
+                      className="object-cover w-full h-full"
+                      unoptimized
+                    />
+                  </div>
+                  <div className="p-3 text-center">
+                    <h4 className="text-sm font-medium text-white truncate">
+                      {r.title}
+                    </h4>
+                    <p className="text-indigo-400 text-xs mt-1">
+                      ${Number(r.price ?? 0).toFixed(2)}
+                    </p>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        )}
+      </section>
+    </main>
   );
 }

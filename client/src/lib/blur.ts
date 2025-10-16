@@ -14,10 +14,13 @@ export function shimmer(w: number, h: number) {
     </svg>`;
 }
 
-export function toBase64(str: string) {
-  if (typeof window === "undefined") {
-    return Buffer.from(str).toString("base64");
-  } else {
-    return window.btoa(str);
+export function toBase64(str: string): string {
+  // Prefer a runtime btoa implementation if available on globalThis
+  const maybeBtoa = (globalThis as { btoa?: (s: string) => string }).btoa;
+  if (typeof maybeBtoa === "function") {
+    return maybeBtoa(str);
   }
+
+  // Otherwise, server-side fallback using Buffer
+  return Buffer.from(str).toString("base64");
 }

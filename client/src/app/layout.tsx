@@ -1,8 +1,13 @@
-import "./globals.css";
+import "./global.css";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import { ReduxProvider } from "@/redux/Provider";
-import CartDebugger from "@/components/CartDebugger";
+import { Toaster } from "react-hot-toast";
 
-const ENABLE_CART_DEBUG = process.env.NEXT_PUBLIC_ENABLE_CART_DEBUG === "true";
+export const metadata = {
+  title: "ShopSphere",
+  description: "AI-powered E-commerce Platform",
+};
 
 export default function RootLayout({
   children,
@@ -11,10 +16,26 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body className="min-h-screen flex flex-col bg-[var(--color-bg)] text-[var(--color-text)]">
         <ReduxProvider>
-          {children}
-          {ENABLE_CART_DEBUG ? <CartDebugger /> : null}
+          {/* Navbar is fixed and overlays the hero */}
+          <Navbar />
+
+          {/* Main no longer has top padding — hero will start at the top and sit under the navbar */}
+          <main className="flex-1 w-full">{children}</main>
+          <Toaster
+            position="top-center"
+            toastOptions={{
+              duration: 3000,
+              style: {
+                background: "var(--toast-bg, #333)",
+                color: "#fff",
+                borderRadius: "0.5rem",
+              },
+            }}
+          />
+
+          <Footer />
         </ReduxProvider>
       </body>
     </html>

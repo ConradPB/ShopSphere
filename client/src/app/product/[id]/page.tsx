@@ -1,34 +1,27 @@
-import { getProductById, getRecommendations } from "@/lib/supabase";
+import { getProductById, getAllProducts } from "@/lib/products";
 import ProductDetailClient from "@/components/ProductDetailClient";
-import type { Product } from "@/types/product";
 
-interface PageProps {
-  params: { id: string } | Promise<{ id: string }>;
-}
-
-/**
- * Type guard that tells us whether `p` is a Promise resolving to { id: string }.
- * Uses `unknown` and checks for a callable `then` property without using `any`.
- */
-function isPromiseParams(p: unknown): p is Promise<{ id: string }> {
-  return !!p && typeof (p as { then?: unknown }).then === "function";
-}
+type PageProps = {
+  params: Promise<{ id: string }>;
+};
 
 export default async function ProductPage({ params }: PageProps) {
-  // Resolve params whether it's a plain object or a Promise
-  const resolvedParams = isPromiseParams(params) ? await params : params;
-  const id = String(resolvedParams.id);
+  const { id } = await params;
 
-  const { data: product } = await getProductById(id);
+  // use lib/products so tests can mock it
+  const product = await getProductById(id);
+
   if (!product) {
     return (
-      <div className="p-6 text-center text-gray-500">Product not found</div>
+      <main className="min-h-screen flex items-center justify-center text-gray-400">
+        <p>Product not found.</p>
+      </main>
     );
   }
 
-  // Only keep data; we don't need the error variable here
-  const { data: recs } = await getRecommendations(id, 4);
-  const initialRecs: Product[] = recs ?? [];
+  // Build recommendations from the simple product store
+  const all = (await getAllProducts()) ?? [];
+  const recs = all.filter((p) => p.id !== id).slice(0, 4);
 
-  return <ProductDetailClient product={product} initialRecs={initialRecs} />;
+  return <ProductDetailClient product={product} initialRecs={recs} />;
 }

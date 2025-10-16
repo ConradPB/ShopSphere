@@ -2,10 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { addToCart } from "@/redux/cartSlice";
-import { addToWishlist, removeFromWishlist } from "@/redux/wishlistSlice";
+import { shimmer, toBase64 } from "@/lib/blur";
 import type { Product } from "@/types/product";
+import WishlistButton from "./ui/WishlistButton";
 
 interface ProductCardProps {
   product: Product;
@@ -23,81 +25,80 @@ export default function ProductCard({ product }: ProductCardProps) {
   const isInWishlist = wishlistItems.some((item) => item.id === id);
 
   const handleAddToCart = () => {
-    dispatch(
-      addToCart({
-        id,
-        title,
-        price,
-        image: imageSrc,
-        quantity: 1,
-      })
-    );
-  };
-
-  const toggleWishlist = () => {
-    if (isInWishlist) {
-      dispatch(removeFromWishlist(id));
-    } else {
-      dispatch(
-        addToWishlist({
-          id,
-          title,
-          price,
-          image: imageSrc,
-        })
-      );
-    }
+    dispatch(addToCart({ id, title, price, image: imageSrc, quantity: 1 }));
   };
 
   return (
-    <article className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 overflow-hidden">
-      <div className="relative w-full h-48">
-        <Image
-          src={imageSrc}
-          alt={title}
-          fill
-          sizes="(max-width: 768px) 100vw, 33vw"
-          className="object-cover transition-transform duration-300 ease-in-out hover:scale-105"
-          priority={false}
-          unoptimized
-        />
+    <motion.article
+      data-testid="product-card"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      whileHover={{ scale: 1.03 }}
+      className="
+        group relative backdrop-blur-xl bg-white/5 border border-white/10 
+        rounded-2xl shadow-[0_0_15px_rgba(0,0,0,0.3)] 
+        hover:shadow-[0_0_25px_rgba(56,189,248,0.4)] 
+        overflow-hidden transition-all duration-500
+      "
+    >
+      <div className="absolute inset-0 border border-transparent rounded-2xl group-hover:border-cyan-400/60 transition-all duration-500" />
+
+      <div className="absolute top-3 right-3 z-20">
+        <WishlistButton product={product} compact />
       </div>
 
-      <div className="p-4">
-        <h3 className="text-lg font-semibold text-gray-900 truncate">
-          {title}
-        </h3>
-        <p className="text-indigo-600 font-bold mt-2">${price.toFixed(2)}</p>
+      <Link
+        href={`/product/${id}`}
+        className="block relative w-full h-64 overflow-hidden z-10"
+      >
+        <Image
+          src={imageSrc}
+          alt={title || "Product image"}
+          width={400}
+          height={300}
+          className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          placeholder="blur"
+          blurDataURL={`data:image/svg+xml;base64,${toBase64(
+            shimmer(400, 300)
+          )}`}
+          loading="lazy"
+        />
+      </Link>
 
-        <div className="mt-4 flex gap-2">
-          <button
+      <div className="p-5 text-center text-white relative z-10">
+        <Link href={`/product/${id}`}>
+          <h3 className="text-lg font-semibold line-clamp-1 hover:text-cyan-300 transition">
+            {title}
+          </h3>
+        </Link>
+
+        <p className="text-cyan-300 font-bold mt-2 text-lg drop-shadow-sm">
+          ${price.toFixed(2)}
+        </p>
+
+        <div className="mt-6 flex gap-3 justify-center">
+          <motion.button
+            type="button"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={handleAddToCart}
-            className="flex-1 bg-indigo-600 text-white px-3 py-2 rounded-md hover:bg-indigo-700 transition"
-            aria-label={`Add ${title} to cart`}
+            className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:shadow-cyan-500/40 transition-all duration-300"
           >
-            Add to cart
-          </button>
-
-          <button
-            onClick={toggleWishlist}
-            className={`px-3 py-2 border rounded-md text-sm transition ${
-              isInWishlist
-                ? "bg-red-100 text-red-600 border-red-300 hover:bg-red-200"
-                : "text-gray-700 hover:bg-gray-50"
-            }`}
-            aria-label={`${isInWishlist ? "Remove from" : "Add to"} wishlist`}
-          >
-            {isInWishlist ? "♥ Wishlisted" : "♡ Wishlist"}
-          </button>
+            Add to Cart
+          </motion.button>
 
           <Link
             href={`/product/${id}`}
-            className="px-3 py-2 border rounded-md text-sm text-gray-700 hover:bg-gray-50"
+            className="px-4 py-2 border border-cyan-400/40 rounded-lg text-sm text-cyan-200 hover:bg-cyan-400/10 hover:text-cyan-300 transition-all duration-300"
           >
             View
           </Link>
         </div>
       </div>
-    </article>
+
+      <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-20 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 blur-2xl transition-opacity duration-700"></div>
+    </motion.article>
   );
 }

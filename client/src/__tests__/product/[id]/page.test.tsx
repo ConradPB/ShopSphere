@@ -1,68 +1,44 @@
-// Mock supabase BEFORE importing the page module (prevents creating a real client)
-jest.mock("@/lib/supabase", () => ({
-  getProducts: jest.fn(),
-}));
-
-import React from "react";
 import { render, screen } from "@testing-library/react";
-import * as supabaseLib from "@/lib/supabase";
-import HomePage from "@/app/page";
+import ProductPage from "@/app/product/[id]/page";
+import * as productsLib from "@/lib/products";
 import { Provider } from "react-redux";
 import { store } from "@/redux/store";
-import type { Product } from "@/types/product";
 
-// ensure the mock typing matches the real function signature
-const mockGetProducts = supabaseLib.getProducts as jest.MockedFunction<
-  () => Promise<{ data: Product[] | null; error: string | null }>
->;
+jest.mock("@/lib/products");
 
-describe("Home Page", () => {
-  const fakeProducts: Product[] = [
-    {
-      id: "1",
-      title: "Laptop",
-      price: 999.99,
-      image: "https://placehold.co/400x300",
-      description: "",
-      category: "General",
-    },
-    {
-      id: "2",
-      title: "Headphones",
-      price: 99.99,
-      image: "https://placehold.co/400x300",
-      description: "",
-      category: "General",
-    },
-  ];
+const mockProduct = {
+  id: "1",
+  title: "Laptop",
+  description: "High performance laptop",
+  price: 1200,
+  image: "/laptop.png",
+};
 
+describe("ProductPage", () => {
   beforeEach(() => {
-    mockGetProducts.mockReset();
+    jest.clearAllMocks();
   });
 
-  it("renders product cards without crashing", async () => {
-    // mock the function to resolve to the expected { data, error } shape
-    mockGetProducts.mockResolvedValue({ data: fakeProducts, error: null });
+  it("renders the product page with correct product info", async () => {
+    (productsLib.getProductById as jest.Mock).mockResolvedValue(mockProduct);
 
-    const page = await HomePage();
-    render(<Provider store={store}>{page}</Provider>);
+    const params = { id: "1" };
+    const page = await ProductPage({ params: Promise.resolve(params) });
 
-    for (const product of fakeProducts) {
-      expect(await screen.findByText(product.title)).toBeInTheDocument();
-      expect(
-        screen.getByText(`$${product.price.toFixed(2)}`)
-      ).toBeInTheDocument();
-    }
-  });
+    // wrap in Provider so client-side hooks work
+    render(<Provider store={store}>{page as React.ReactElement}</Provider>);
 
-  it("shows error message when products fail to load", async () => {
-    mockGetProducts.mockResolvedValue({ data: null, error: "Failed" });
-
-    const page = await HomePage();
-    render(<Provider store={store}>{page}</Provider>);
-
+    // Use the heading role to target the product title distinctly (avoids matching description)
     expect(
-      await screen.findByText(/Failed to load products/i)
+      await screen.findByRole("heading", { name: /laptop/i, level: 1 })
+    ).toBeInTheDocument();
+
+    // Price check
+    expect(screen.getByText(/\$1200/i)).toBeInTheDocument();
+
+    // Description check (explicit)
+    expect(
+      screen.getByText(/high performance laptop/i, { selector: "p" })
     ).toBeInTheDocument();
   });
 });
