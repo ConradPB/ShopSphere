@@ -2,8 +2,7 @@ import { createBrowserClient } from "@supabase/ssr";
 import type { Product } from "@/types/product";
 
 /**
- * ✅ Safely load environment variables for CI / build
- * If missing, fallback to empty strings and warn — no runtime crash.
+ * Safely load environment variables for CI / build
  */
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
@@ -17,31 +16,45 @@ if (!supabaseUrl || !supabaseKey) {
 }
 
 /**
- * ✅ Create a Supabase client only if env vars exist.
- * Otherwise, use a mock client that won't throw errors during tests/builds.
+ * Infer the Supabase client type from the factory so we can type the mock without `any`.
  */
-const createSafeSupabaseClient = () => {
+type ClientType = ReturnType<typeof createBrowserClient>;
+
+const createSafeSupabaseClient = (): ClientType => {
   if (supabaseUrl && supabaseKey) {
     return createBrowserClient(supabaseUrl, supabaseKey);
   }
 
-  // --- Mock client for builds/tests ---
-  return {
-    from: () => ({
-      select: () => Promise.resolve({ data: [], error: null }),
-      eq: () => Promise.resolve({ data: null, error: null }),
-      neq: () => Promise.resolve({ data: [], error: null }),
-      limit: () => Promise.resolve({ data: [], error: null }),
-      single: () => Promise.resolve({ data: null, error: null }),
+  // Minimal mock implementing the chaining used in this repo:
+  const mock = {
+    from: (_table: string) => ({
+      // `select()` used to fetch arrays
+      select: async () => ({ data: [] as unknown[], error: null }),
+      // `eq().select()` and `eq().single()` patterns
+      eq: (_col: string, _val: string) => ({
+        select: async () => ({ data: null, error: null }),
+        single: async () => ({ data: null, error: null }),
+      }),
+      // `neq().limit()` and `neq().select()` patterns
+      neq: (_col: string, _val: string) => ({
+        select: async () => ({ data: [] as unknown[], error: null }),
+        limit: async (_n: number) => ({ data: [] as unknown[], error: null }),
+      }),
+      // some callers call `.limit()` directly after `.from(...).select(...).limit(...)`
+      limit: async (_n: number) => ({ data: [] as unknown[], error: null }),
+      // `.single()` sometimes used directly
+      single: async () => ({ data: null, error: null }),
     }),
-  } as any;
+  };
+
+  // cast via unknown to the real client type (avoids `any`)
+  return mock as unknown as ClientType;
 };
 
 export const supabase = createSafeSupabaseClient();
 
-/**
- * --- Type-safe DB row normalization ---
- */
+/* ---------- rest of your file unchanged ---------- */
+
 type DBRow = {
   id: string | number;
   title?: string | null;
@@ -62,9 +75,6 @@ function normalizeRow(row: DBRow): Product {
   };
 }
 
-/**
- * --- Public functions for fetching data ---
- */
 export async function getProducts(): Promise<{
   data: Product[] | null;
   error: string | null;
@@ -83,10 +93,8 @@ export async function getProductById(
     .select("*")
     .eq("id", id)
     .single();
-
   if (error || !data)
     return { data: null, error: error?.message ?? "Not found" };
-
   return { data: normalizeRow(data as DBRow), error: null };
 }
 
