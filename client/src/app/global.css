@@ -210,3 +210,47 @@ video {
   max-width: 100%;
   overflow-x: hidden;
 }
+
+/* ========================================
+   SAFARI COLOR & GRADIENT RENDER FIXES
+   ======================================== */
+
+/* Force Safari to render gradient layers correctly */
+section,
+div,
+main {
+  -webkit-transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  background-clip: border-box;
+  overflow-clip-margin: content-box;
+}
+
+/* Restore vivid gradients and prevent white background */
+.bg-gradient-to-r,
+.bg-gradient-to-l,
+.bg-gradient-to-b,
+.bg-gradient-to-t {
+  background-color: transparent !important;
+  background-blend-mode: normal;
+}
+
+/* Ensure tailwind colors display accurately on iOS */
+:root {
+  color-scheme: light dark;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Smooth scrolling and momentum fix for iOS */
+html,
+body {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* Optional: improve rendering sharpness on iOS */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
