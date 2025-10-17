@@ -210,3 +210,25 @@ video {
   max-width: 100%;
   overflow-x: hidden;
 }
+
+/* ========================================
+   SAFARI GRADIENT & COLOR RENDER FIXES
+   ======================================== */
+section,
+div,
+main {
+  -webkit-transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  background-clip: border-box;
+  overflow-clip-margin: content-box;
+}
+
+/* Ensure Tailwind gradients show on iOS */
+.bg-gradient-to-r,
+.bg-gradient-to-l,
+.bg-gradient-to-b,
+.bg-gradient-to-t {
+  background-color: currentColor; /* fallback */
+}
