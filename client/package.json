@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "preview": "next preview",
     "lint": "next lint",
     "test": "jest --passWithNoTests",
     "build:tailwind": "tailwindcss -i ./src/app/globals.css -o ./tmp/tw.css --minify"
