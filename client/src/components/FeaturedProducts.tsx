@@ -18,8 +18,7 @@ export default function FeaturedProducts() {
         const data = (await getAllProducts()) as unknown as ProductType[];
         if (data && data.length) {
           const subset = data.slice(0, 6);
-          // duplicate for smooth loop
-          setProducts([...subset, ...subset]);
+          setProducts([...subset, ...subset]); // duplicate for loop
         } else {
           setProducts([]);
         }
@@ -60,13 +59,23 @@ export default function FeaturedProducts() {
   }
 
   return (
-    <section className="relative py-16 bg-gradient-to-b from-neutral-900 via-black to-neutral-900 text-white overflow-hidden">
+    <section
+      className="relative py-16 bg-gradient-to-b from-neutral-900 via-black to-neutral-900 text-white overflow-hidden"
+      style={{
+        WebkitTransform: "translate3d(0,0,0)",
+        transform: "translate3d(0,0,0)",
+        WebkitBackfaceVisibility: "hidden",
+        backfaceVisibility: "hidden",
+        WebkitPerspective: 1000,
+      }}
+    >
       <div className="max-w-7xl mx-auto px-6">
         <h2 className="text-3xl font-extrabold text-center mb-10 bg-gradient-to-r from-blue-400 via-teal-400 to-purple-400 text-transparent bg-clip-text drop-shadow-md">
           Featured Products
         </h2>
 
-        <div className="relative overflow-hidden">
+        <div className="relative overflow-hidden will-change-transform">
+          {/* Edge gradients */}
           <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-neutral-900 via-neutral-900/80 to-transparent z-20" />
           <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-neutral-900 via-neutral-900/80 to-transparent z-20" />
 
@@ -77,7 +86,11 @@ export default function FeaturedProducts() {
             dragConstraints={{ left: -300, right: 300 }}
             dragElastic={0.15}
             whileTap={{ cursor: "grabbing" }}
-            className="flex gap-6 cursor-grab select-none"
+            className="flex gap-6 cursor-grab select-none will-change-transform"
+            style={{
+              WebkitOverflowScrolling: "touch",
+              WebkitTransform: "translateZ(0)",
+            }}
             onMouseEnter={() => controls.stop()}
             onMouseLeave={() =>
               controls.start({
