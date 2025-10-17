@@ -71,7 +71,7 @@ export default function FeaturedProducts() {
     >
       <div className="max-w-7xl mx-auto px-6">
         <h2 className="text-3xl font-extrabold text-center mb-10 bg-gradient-to-r from-blue-400 via-teal-400 to-purple-400 text-transparent bg-clip-text drop-shadow-md">
-          Featured Products
+          atured Products
         </h2>
 
         <div className="relative overflow-hidden will-change-transform">
