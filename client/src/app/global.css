@@ -254,3 +254,36 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* ========================================
+   iOS <15 COMPATIBILITY FALLBACKS
+   ======================================== */
+
+/* Fallback for hero sections that appear white */
+.site-hero {
+  background-color: #2563eb; /* fallback solid blue */
+  background-image: linear-gradient(
+    135deg,
+    #06b6d4 0%,
+    #2563eb 100%
+  ) !important;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: scroll;
+  color: white;
+  -webkit-background-clip: border-box;
+}
+
+/* Fallback for CTA buttons */
+.btn-primary {
+  background-color: #2563eb !important;
+  background-image: linear-gradient(90deg, #2563eb, #10b981) !important;
+  color: white !important;
+  border: none;
+}
+
+/* Optional: fallback for product section or cards */
+.products-section {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
